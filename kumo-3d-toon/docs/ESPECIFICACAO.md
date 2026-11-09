@@ -13,6 +13,10 @@ Este é o registro dos elementos **aprovados**. Um item só entra aqui depois de
 | P2: crista como geometria | 4 faces de material verde-escuro (losango frontal, topo, crista traseira, nuca) | proposta aprovada em 2026-11-09; resultado no RELATORIO-002 |
 | P8: vista 3/4 | segue a imagem de referência; câmera a 40° | decisão do dono em 2026-11-09 |
 | P9: cauda | segue a imagem de referência em cada vista; pose por vista: 3/4 −45°, costas +80°, frente e perfil 0° | decisão do dono em 2026-11-09 |
+| **Arquitetura deformável** | Personagem totalmente deformável: topologia de quads nas regiões que deformam; loops em olhos, boca, focinho, mandíbula, pescoço, ombros, cotovelos, punhos, quadris, joelhos e tornozelos; sem subdivisão nem suavização; partes rígidas só com justificativa técnica; pronto para rig facial e corporal | decisão do dono em 2026-11-09 (plano em [PLANO-003](PLANO-003-arquitetura-deformavel.md), aguardando aprovação) |
+| **Contorno** | Casca invertida (geometria expandida, normais invertidas, renderização de faces de trás) como sistema principal; espessura ajustável e constante; sem artefatos em sobreposições e articulações; acompanha a deformação; compatível com Blender e tempo real | decisão do dono em 2026-11-09 |
+| **Identidade visual (restrição crítica)** | Antropomórfico, bípede, facetado e angular, low poly, fiel às referências, cel shading controlado. A topologia deformável não pode comprometer a silhueta angular, as proporções faciais, a geometria da cabeça, a crista nem a identidade. | decisão do dono em 2026-11-09 |
+| **Versionamento** | A base original não é modificada sem autorização explícita; geometria, scripts e shaders novos ficam versionados em separado | decisão do dono em 2026-11-09 |
 
 ## Elementos em avaliação (ainda não aprovados)
 
@@ -28,7 +32,7 @@ Os itens abaixo existem na base v1, mas ainda não foram aprovados individualmen
 | Cauda em espiral | menor e mais baixa (S6) | P7 |
 | Paleta | `#1B5E3B` `#4CAF6B` `#C9D45B` `#EAD9B7` `#F4B642` `#5B3A2E` (da referência) | aprovação |
 | Shader toon | 4 faixas chapadas, luz fixa (−0,55, −0,62, 0,58) | aprovação |
-| Contorno | Freestyle `#5B3A2E`, espessura 3,0 | aprovação |
+| Contorno | Freestyle `#5B3A2E`, espessura 3,0. Será substituído pela casca invertida na v2. | substituição decidida; implementação na F5 do PLANO-003 |
 | Expressões (8) | pupilas, pálpebras planas, sobrancelhas, bocas | aprovação, P10 |
 
 ## Histórico de decisões
@@ -37,4 +41,5 @@ Os itens abaixo existem na base v1, mas ainda não foram aprovados individualmen
 |---|---|
 | 2026-11-09 | Base v1 congelada como ponto de partida para alterações futuras. |
 | 2026-11-09 | P1, P2 aprovadas; P8 e P9: seguir a imagem de referência (inclui a cauda). Executadas, ver RELATORIO-002. |
+| 2026-11-09 | Arquitetura deformável + casca invertida + preservação de identidade + versionamento separado (decisões do dono). PLANO-003 apresentado para aprovação. |
 | 2026-11-09 | Protocolo de trabalho: inspecionar → diagnosticar → propor → só alterar com autorização → render ortográfica e relatório após cada alteração. |
