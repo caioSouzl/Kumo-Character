@@ -16,7 +16,7 @@ A pasta [`base/`](base/) guarda uma cópia congelada desta versão, que é o pon
 | `base/kumo_toon_base_v1.py` | Script que gera exatamente essa versão |
 | `base/preview_base_v1.png` | Vista de frente da versão base |
 
-Os arquivos de `base/` **não devem ser editados**. Para mudar o Kumo, edite `kumo_toon.blend` ou `src/kumo_toon.py`. Se algo der errado, copie a base de volta. A mesma versão também fica marcada no Git com a tag `kumo-toon-base-v1`, e dá para recuperá-la com `git checkout kumo-toon-base-v1`.
+Os arquivos de `base/` **não devem ser editados**. Para mudar o Kumo, edite `kumo_toon.blend` ou `src/kumo_toon.py`. Se algo der errado, copie a base de volta.
 
 ## Arquivos
 
