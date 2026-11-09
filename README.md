@@ -6,6 +6,6 @@
 
 ## Character Model Sheet
 
-A folha técnica oficial do Kumo está em [`character-model-sheet/`](character-model-sheet/). As imagens de referência estão em [`referencia de modelo/`](referencia%20de%20modelo/).
+A folha técnica oficial do Kumo, montada com a arte da própria referência, está em [`character-model-sheet/`](character-model-sheet/). As imagens de referência estão em [`referencia de modelo/`](referencia%20de%20modelo/).
 
 ![Kumo — Character Model Sheet](character-model-sheet/kumo-model-sheet.png)
