@@ -1,0 +1,1 @@
+const {chromium}=require('playwright');(async()=>{const b=await chromium.launch();const p=await b.newPage({deviceScaleFactor:Number(process.argv[4]||1)});await p.goto('file://'+process.argv[2]);const s=await p.$('svg');await s.screenshot({path:process.argv[3]});await b.close();})();
