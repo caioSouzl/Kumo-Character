@@ -1,0 +1,3976 @@
+{
+ "file": "/tmp/claude-0/-home-user/259a692a-d786-5657-b14a-556acdb5cb6d/scratchpad/inspect_copy.blend",
+ "objects": [
+  {
+   "object": "Kumo_Arm_L",
+   "modifiers": [],
+   "vertices": 26,
+   "edges": 54,
+   "faces": 30,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 18,
+    "triangle": 12
+   },
+   "flat_faces": 30,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00426,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.1505,
+     -0.0963,
+     0.4512
+    ],
+    [
+     0.4554,
+     0.0557,
+     0.9133
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Arm_R",
+   "modifiers": [],
+   "vertices": 26,
+   "edges": 54,
+   "faces": 30,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 18,
+    "triangle": 12
+   },
+   "flat_faces": 30,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00426,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.4554,
+     -0.0963,
+     0.4512
+    ],
+    [
+     -0.1505,
+     0.0557,
+     0.9133
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Brow_L",
+   "modifiers": [],
+   "vertices": 17,
+   "edges": 35,
+   "faces": 20,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 10,
+    "triangle": 10
+   },
+   "flat_faces": 20,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0003,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.13,
+     -0.026,
+     -0.0189
+    ],
+    [
+     0.1343,
+     0.021,
+     0.0367
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Brow_R",
+   "modifiers": [],
+   "vertices": 17,
+   "edges": 35,
+   "faces": 20,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 10,
+    "triangle": 10
+   },
+   "flat_faces": 20,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0003,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.13,
+     -0.026,
+     -0.0189
+    ],
+    [
+     0.1343,
+     0.021,
+     0.0367
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Crest_Back",
+   "modifiers": [],
+   "vertices": 10073,
+   "edges": 19866,
+   "faces": 9794,
+   "euler_characteristic": 1,
+   "face_shapes": {
+    "quad": 9794
+   },
+   "flat_faces": 9794,
+   "smooth_faces": 0,
+   "closed": false,
+   "problems": {
+    "non_manifold_edges": 1,
+    "boundary_edges": 554,
+    "loose_vertices": 0,
+    "loose_edges": 1,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": null,
+   "normals": null,
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.16,
+     -0.0053,
+     1.2055
+    ],
+    [
+     0.16,
+     0.6288,
+     1.9645
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Crest_Front",
+   "modifiers": [],
+   "vertices": 10028,
+   "edges": 19777,
+   "faces": 9750,
+   "euler_characteristic": 1,
+   "face_shapes": {
+    "quad": 9750
+   },
+   "flat_faces": 9750,
+   "smooth_faces": 0,
+   "closed": false,
+   "problems": {
+    "non_manifold_edges": 1,
+    "boundary_edges": 552,
+    "loose_vertices": 0,
+    "loose_edges": 1,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": null,
+   "normals": null,
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.205,
+     -0.4794,
+     1.5331
+    ],
+    [
+     0.205,
+     -0.0158,
+     1.9637
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Eye_L",
+   "modifiers": [],
+   "vertices": 478,
+   "edges": 980,
+   "faces": 504,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 448,
+    "triangle": 56
+   },
+   "flat_faces": 0,
+   "smooth_faces": 504,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.01524,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.1223,
+     -0.5906,
+     1.088
+    ],
+    [
+     0.4777,
+     -0.3855,
+     1.532
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Eye_R",
+   "modifiers": [],
+   "vertices": 478,
+   "edges": 980,
+   "faces": 504,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 448,
+    "triangle": 56
+   },
+   "flat_faces": 0,
+   "smooth_faces": 504,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.01524,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.4777,
+     -0.5906,
+     1.088
+    ],
+    [
+     -0.1223,
+     -0.3855,
+     1.532
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Finger0_L",
+   "modifiers": [],
+   "vertices": 20,
+   "edges": 42,
+   "faces": 24,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 12,
+    "triangle": 12
+   },
+   "flat_faces": 24,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00047,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.3704,
+     -0.1223,
+     0.2506
+    ],
+    [
+     0.4506,
+     -0.0316,
+     0.4275
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Finger0_R",
+   "modifiers": [],
+   "vertices": 20,
+   "edges": 42,
+   "faces": 24,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 12,
+    "triangle": 12
+   },
+   "flat_faces": 24,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00047,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.4506,
+     -0.1223,
+     0.2506
+    ],
+    [
+     -0.3704,
+     -0.0316,
+     0.4275
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Finger1_L",
+   "modifiers": [],
+   "vertices": 20,
+   "edges": 42,
+   "faces": 24,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 12,
+    "triangle": 12
+   },
+   "flat_faces": 24,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00047,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.3893,
+     -0.1213,
+     0.2511
+    ],
+    [
+     0.4765,
+     -0.0315,
+     0.4275
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Finger1_R",
+   "modifiers": [],
+   "vertices": 20,
+   "edges": 42,
+   "faces": 24,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 12,
+    "triangle": 12
+   },
+   "flat_faces": 24,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00047,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.4765,
+     -0.1213,
+     0.2511
+    ],
+    [
+     -0.3893,
+     -0.0315,
+     0.4275
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Finger2_L",
+   "modifiers": [],
+   "vertices": 20,
+   "edges": 42,
+   "faces": 24,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 12,
+    "triangle": 12
+   },
+   "flat_faces": 24,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00047,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.401,
+     -0.1211,
+     0.2572
+    ],
+    [
+     0.509,
+     -0.0315,
+     0.4268
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Finger2_R",
+   "modifiers": [],
+   "vertices": 20,
+   "edges": 42,
+   "faces": 24,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 12,
+    "triangle": 12
+   },
+   "flat_faces": 24,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00047,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.509,
+     -0.1211,
+     0.2572
+    ],
+    [
+     -0.401,
+     -0.0315,
+     0.4268
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Foot_L",
+   "modifiers": [],
+   "vertices": 26,
+   "edges": 56,
+   "faces": 32,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 16,
+    "triangle": 16
+   },
+   "flat_faces": 32,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00408,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.0941,
+     -0.1374,
+     -0.015
+    ],
+    [
+     0.3484,
+     0.1561,
+     0.115
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Foot_R",
+   "modifiers": [],
+   "vertices": 26,
+   "edges": 56,
+   "faces": 32,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 16,
+    "triangle": 16
+   },
+   "flat_faces": 32,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00408,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.3484,
+     -0.1374,
+     -0.015
+    ],
+    [
+     -0.0941,
+     0.1561,
+     0.115
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Head",
+   "modifiers": [],
+   "vertices": 52,
+   "edges": 105,
+   "faces": 57,
+   "euler_characteristic": 4,
+   "face_shapes": {
+    "quad": 28,
+    "triangle": 25,
+    "ngon-5": 3,
+    "ngon-8": 1
+   },
+   "flat_faces": 57,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 2,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.73835,
+   "normals": "outward",
+   "loose_vertex_positions": [
+    [
+     0.12,
+     0.56,
+     1.43
+    ],
+    [
+     -0.12,
+     0.56,
+     1.43
+    ]
+   ],
+   "bbox": [
+    [
+     -0.555,
+     -0.585,
+     0.955
+    ],
+    [
+     0.555,
+     0.625,
+     1.965
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Highlight2_L",
+   "modifiers": [],
+   "vertices": 34,
+   "edges": 72,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 24,
+    "triangle": 16
+   },
+   "flat_faces": 0,
+   "smooth_faces": 40,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0,
+   "normals": "flat (no volume)",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.2666,
+     -0.6122,
+     1.228
+    ],
+    [
+     0.281,
+     -0.6038,
+     1.244
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Highlight2_R",
+   "modifiers": [],
+   "vertices": 34,
+   "edges": 72,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 24,
+    "triangle": 16
+   },
+   "flat_faces": 0,
+   "smooth_faces": 40,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0,
+   "normals": "flat (no volume)",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.3343,
+     -0.5949,
+     1.228
+    ],
+    [
+     -0.3198,
+     -0.5865,
+     1.244
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Highlight_L",
+   "modifiers": [],
+   "vertices": 52,
+   "edges": 110,
+   "faces": 60,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 20,
+    "quad": 40
+   },
+   "flat_faces": 0,
+   "smooth_faces": 60,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 1e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.3036,
+     -0.6006,
+     1.342
+    ],
+    [
+     0.3391,
+     -0.5845,
+     1.38
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Highlight_R",
+   "modifiers": [],
+   "vertices": 52,
+   "edges": 110,
+   "faces": 60,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 20,
+    "quad": 40
+   },
+   "flat_faces": 0,
+   "smooth_faces": 60,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 1e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2973,
+     -0.6142,
+     1.342
+    ],
+    [
+     -0.2617,
+     -0.5981,
+     1.38
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Leg_L",
+   "modifiers": [],
+   "vertices": 30,
+   "edges": 63,
+   "faces": 35,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 21,
+    "triangle": 14
+   },
+   "flat_faces": 35,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0083,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.0266,
+     -0.0958,
+     0.0088
+    ],
+    [
+     0.2589,
+     0.0924,
+     0.4766
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Leg_R",
+   "modifiers": [],
+   "vertices": 30,
+   "edges": 63,
+   "faces": 35,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 21,
+    "triangle": 14
+   },
+   "flat_faces": 35,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0083,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2665,
+     -0.0958,
+     0.0088
+    ],
+    [
+     -0.0354,
+     0.0924,
+     0.4766
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_LidLower_L",
+   "modifiers": [],
+   "vertices": 0,
+   "edges": 0,
+   "faces": 0,
+   "euler_characteristic": 0,
+   "face_shapes": {},
+   "flat_faces": 0,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0,
+   "normals": "flat (no volume)",
+   "loose_vertex_positions": [],
+   "bbox": null
+  },
+  {
+   "object": "Kumo_LidLower_R",
+   "modifiers": [],
+   "vertices": 0,
+   "edges": 0,
+   "faces": 0,
+   "euler_characteristic": 0,
+   "face_shapes": {},
+   "flat_faces": 0,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0,
+   "normals": "flat (no volume)",
+   "loose_vertex_positions": [],
+   "bbox": null
+  },
+  {
+   "object": "Kumo_LidUpper_L",
+   "modifiers": [],
+   "vertices": 0,
+   "edges": 0,
+   "faces": 0,
+   "euler_characteristic": 0,
+   "face_shapes": {},
+   "flat_faces": 0,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0,
+   "normals": "flat (no volume)",
+   "loose_vertex_positions": [],
+   "bbox": null
+  },
+  {
+   "object": "Kumo_LidUpper_R",
+   "modifiers": [],
+   "vertices": 0,
+   "edges": 0,
+   "faces": 0,
+   "euler_characteristic": 0,
+   "face_shapes": {},
+   "flat_faces": 0,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0,
+   "normals": "flat (no volume)",
+   "loose_vertex_positions": [],
+   "bbox": null
+  },
+  {
+   "object": "Kumo_Mouth_confused",
+   "modifiers": [
+    "SHRINKWRAP"
+   ],
+   "vertices": 77,
+   "edges": 155,
+   "faces": 80,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 70,
+    "triangle": 10
+   },
+   "flat_faces": 80,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 7e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2437,
+     -0.6275,
+     1.0573
+    ],
+    [
+     0.2459,
+     -0.6139,
+     1.1027
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_curious",
+   "modifiers": [
+    "SHRINKWRAP"
+   ],
+   "vertices": 57,
+   "edges": 115,
+   "faces": 60,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 50,
+    "triangle": 10
+   },
+   "flat_faces": 60,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 8e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2837,
+     -0.6275,
+     1.06
+    ],
+    [
+     0.2859,
+     -0.6139,
+     1.104
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_excited",
+   "modifiers": [],
+   "vertices": 2357,
+   "edges": 4590,
+   "faces": 2234,
+   "euler_characteristic": 1,
+   "face_shapes": {
+    "quad": 2234
+   },
+   "flat_faces": 2234,
+   "smooth_faces": 0,
+   "closed": false,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 244,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": null,
+   "normals": null,
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.29,
+     -0.5392,
+     0.956
+    ],
+    [
+     0.29,
+     -0.2108,
+     1.095
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_excited_Edge",
+   "modifiers": [
+    "SHRINKWRAP"
+   ],
+   "vertices": 127,
+   "edges": 255,
+   "faces": 130,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 120,
+    "triangle": 10
+   },
+   "flat_faces": 130,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 1,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00018,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2951,
+     -0.628,
+     0.9484
+    ],
+    [
+     0.2974,
+     -0.6135,
+     1.1026
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_excited_Tongue",
+   "modifiers": [],
+   "vertices": 1019,
+   "edges": 1956,
+   "faces": 938,
+   "euler_characteristic": 1,
+   "face_shapes": {
+    "quad": 938
+   },
+   "flat_faces": 938,
+   "smooth_faces": 0,
+   "closed": false,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 160,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": null,
+   "normals": null,
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.1115,
+     -0.3345,
+     0.956
+    ],
+    [
+     0.1115,
+     -0.2128,
+     1.001
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_happy",
+   "modifiers": [],
+   "vertices": 2339,
+   "edges": 4554,
+   "faces": 2216,
+   "euler_characteristic": 1,
+   "face_shapes": {
+    "quad": 2216
+   },
+   "flat_faces": 2216,
+   "smooth_faces": 0,
+   "closed": false,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 244,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": null,
+   "normals": null,
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.25,
+     -0.5285,
+     0.9907
+    ],
+    [
+     0.25,
+     -0.3047,
+     1.09
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_happy_Edge",
+   "modifiers": [
+    "SHRINKWRAP"
+   ],
+   "vertices": 127,
+   "edges": 255,
+   "faces": 130,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 120,
+    "triangle": 10
+   },
+   "flat_faces": 130,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 1,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00015,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2554,
+     -0.628,
+     0.9831
+    ],
+    [
+     0.2573,
+     -0.6135,
+     1.0976
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_happy_Tongue",
+   "modifiers": [],
+   "vertices": 1070,
+   "edges": 2058,
+   "faces": 989,
+   "euler_characteristic": 1,
+   "face_shapes": {
+    "quad": 989
+   },
+   "flat_faces": 989,
+   "smooth_faces": 0,
+   "closed": false,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 160,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": null,
+   "normals": null,
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.1346,
+     -0.4284,
+     0.9907
+    ],
+    [
+     0.1346,
+     -0.3067,
+     1.0357
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_neutral",
+   "modifiers": [
+    "SHRINKWRAP"
+   ],
+   "vertices": 57,
+   "edges": 115,
+   "faces": 60,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 50,
+    "triangle": 10
+   },
+   "flat_faces": 60,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": -0.0,
+   "normals": "flat (no volume)",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.3037,
+     -0.5618,
+     1.0779
+    ],
+    [
+     0.306,
+     -0.4938,
+     1.1021
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_surprised",
+   "modifiers": [],
+   "vertices": 2925,
+   "edges": 5728,
+   "faces": 2804,
+   "euler_characteristic": 1,
+   "face_shapes": {
+    "quad": 2804
+   },
+   "flat_faces": 2804,
+   "smooth_faces": 0,
+   "closed": false,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 240,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": null,
+   "normals": null,
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.055,
+     -0.5634,
+     0.975
+    ],
+    [
+     0.055,
+     -0.2621,
+     1.105
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_surprised_Edge",
+   "modifiers": [
+    "SHRINKWRAP"
+   ],
+   "vertices": 127,
+   "edges": 255,
+   "faces": 130,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 120,
+    "triangle": 10
+   },
+   "flat_faces": 130,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 6e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.063,
+     -0.6276,
+     0.967
+    ],
+    [
+     0.063,
+     -0.6124,
+     1.113
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_suspicious",
+   "modifiers": [
+    "SHRINKWRAP"
+   ],
+   "vertices": 57,
+   "edges": 115,
+   "faces": 60,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 50,
+    "triangle": 10
+   },
+   "flat_faces": 60,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 7e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2437,
+     -0.6275,
+     1.0629
+    ],
+    [
+     0.276,
+     -0.6139,
+     1.1057
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Mouth_thoughtful",
+   "modifiers": [
+    "SHRINKWRAP"
+   ],
+   "vertices": 37,
+   "edges": 75,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 30,
+    "triangle": 10
+   },
+   "flat_faces": 40,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 2e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.0263,
+     -0.6275,
+     1.068
+    ],
+    [
+     0.1959,
+     -0.6139,
+     1.0941
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Nostril_L",
+   "modifiers": [],
+   "vertices": 42,
+   "edges": 88,
+   "faces": 48,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 16,
+    "quad": 32
+   },
+   "flat_faces": 48,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 1e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.043,
+     -0.59,
+     1.159
+    ],
+    [
+     0.077,
+     -0.566,
+     1.181
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Nostril_R",
+   "modifiers": [],
+   "vertices": 42,
+   "edges": 88,
+   "faces": 48,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 16,
+    "quad": 32
+   },
+   "flat_faces": 48,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 1e-05,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.077,
+     -0.59,
+     1.159
+    ],
+    [
+     -0.043,
+     -0.566,
+     1.181
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Palm_L",
+   "modifiers": [],
+   "vertices": 12,
+   "edges": 30,
+   "faces": 20,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 20
+   },
+   "flat_faces": 20,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00085,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.3534,
+     -0.101,
+     0.38
+    ],
+    [
+     0.4966,
+     0.001,
+     0.52
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Palm_R",
+   "modifiers": [],
+   "vertices": 12,
+   "edges": 30,
+   "faces": 20,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 20
+   },
+   "flat_faces": 20,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00085,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.4966,
+     -0.101,
+     0.38
+    ],
+    [
+     -0.3534,
+     0.001,
+     0.52
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_PupilRing_L",
+   "modifiers": [],
+   "vertices": 182,
+   "edges": 380,
+   "faces": 200,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 160,
+    "triangle": 40
+   },
+   "flat_faces": 0,
+   "smooth_faces": 200,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0005,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.2225,
+     -0.6144,
+     1.174
+    ],
+    [
+     0.3709,
+     -0.5615,
+     1.438
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_PupilRing_R",
+   "modifiers": [],
+   "vertices": 182,
+   "edges": 380,
+   "faces": 200,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 160,
+    "triangle": 40
+   },
+   "flat_faces": 0,
+   "smooth_faces": 200,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0005,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.3709,
+     -0.6144,
+     1.174
+    ],
+    [
+     -0.2225,
+     -0.5615,
+     1.438
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Pupil_L",
+   "modifiers": [],
+   "vertices": 182,
+   "edges": 380,
+   "faces": 200,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 160,
+    "triangle": 40
+   },
+   "flat_faces": 0,
+   "smooth_faces": 200,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0004,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.2333,
+     -0.6155,
+     1.184
+    ],
+    [
+     0.3626,
+     -0.568,
+     1.428
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Pupil_R",
+   "modifiers": [],
+   "vertices": 182,
+   "edges": 380,
+   "faces": 200,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 160,
+    "triangle": 40
+   },
+   "flat_faces": 0,
+   "smooth_faces": 200,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0004,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.3626,
+     -0.6155,
+     1.184
+    ],
+    [
+     -0.2333,
+     -0.568,
+     1.428
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Spike0",
+   "modifiers": [],
+   "vertices": 5,
+   "edges": 8,
+   "faces": 5,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 4,
+    "quad": 1
+   },
+   "flat_faces": 5,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0002,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.04,
+     0.175,
+     0.905
+    ],
+    [
+     0.04,
+     0.26,
+     0.995
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Spike1",
+   "modifiers": [],
+   "vertices": 5,
+   "edges": 8,
+   "faces": 5,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 4,
+    "quad": 1
+   },
+   "flat_faces": 5,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00019,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.04,
+     0.1834,
+     0.825
+    ],
+    [
+     0.04,
+     0.2634,
+     0.915
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Spike2",
+   "modifiers": [],
+   "vertices": 5,
+   "edges": 8,
+   "faces": 5,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 4,
+    "quad": 1
+   },
+   "flat_faces": 5,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00018,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.04,
+     0.1841,
+     0.745
+    ],
+    [
+     0.04,
+     0.2591,
+     0.835
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Spike3",
+   "modifiers": [],
+   "vertices": 5,
+   "edges": 8,
+   "faces": 5,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 4,
+    "quad": 1
+   },
+   "flat_faces": 5,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00017,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.04,
+     0.1764,
+     0.665
+    ],
+    [
+     0.04,
+     0.2464,
+     0.755
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Spike4",
+   "modifiers": [],
+   "vertices": 5,
+   "edges": 8,
+   "faces": 5,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 4,
+    "quad": 1
+   },
+   "flat_faces": 5,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00016,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.04,
+     0.1674,
+     0.585
+    ],
+    [
+     0.04,
+     0.2324,
+     0.675
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Spike5",
+   "modifiers": [],
+   "vertices": 5,
+   "edges": 8,
+   "faces": 5,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 4,
+    "quad": 1
+   },
+   "flat_faces": 5,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00014,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.04,
+     0.1654,
+     0.505
+    ],
+    [
+     0.04,
+     0.2254,
+     0.595
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Spike6",
+   "modifiers": [],
+   "vertices": 5,
+   "edges": 8,
+   "faces": 5,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 4,
+    "quad": 1
+   },
+   "flat_faces": 5,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00013,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.04,
+     0.1722,
+     0.425
+    ],
+    [
+     0.04,
+     0.2272,
+     0.515
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Tail",
+   "modifiers": [],
+   "vertices": 338,
+   "edges": 678,
+   "faces": 342,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 330,
+    "triangle": 12
+   },
+   "flat_faces": 342,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0283,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.0753,
+     0.1071,
+     0.2222
+    ],
+    [
+     0.8417,
+     0.817,
+     0.7794
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Thumb_L",
+   "modifiers": [],
+   "vertices": 20,
+   "edges": 42,
+   "faces": 24,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 12,
+    "triangle": 12
+   },
+   "flat_faces": 24,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00029,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.3043,
+     -0.1564,
+     0.3585
+    ],
+    [
+     0.4127,
+     -0.0514,
+     0.4646
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Thumb_R",
+   "modifiers": [],
+   "vertices": 20,
+   "edges": 42,
+   "faces": 24,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "quad": 12,
+    "triangle": 12
+   },
+   "flat_faces": 24,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.00029,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.4127,
+     -0.1564,
+     0.3585
+    ],
+    [
+     -0.3043,
+     -0.0514,
+     0.4646
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Toe0_L",
+   "modifiers": [],
+   "vertices": 34,
+   "edges": 72,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 16,
+    "quad": 24
+   },
+   "flat_faces": 40,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0008,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.0556,
+     -0.2141,
+     -0.005
+    ],
+    [
+     0.1579,
+     -0.0559,
+     0.095
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Toe0_R",
+   "modifiers": [],
+   "vertices": 34,
+   "edges": 72,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 16,
+    "quad": 24
+   },
+   "flat_faces": 40,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0008,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.3183,
+     -0.2482,
+     -0.005
+    ],
+    [
+     -0.216,
+     -0.09,
+     0.095
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Toe1_L",
+   "modifiers": [],
+   "vertices": 34,
+   "edges": 72,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 16,
+    "quad": 24
+   },
+   "flat_faces": 40,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0008,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.1358,
+     -0.2311,
+     -0.005
+    ],
+    [
+     0.2381,
+     -0.073,
+     0.095
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Toe1_R",
+   "modifiers": [],
+   "vertices": 34,
+   "edges": 72,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 16,
+    "quad": 24
+   },
+   "flat_faces": 40,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0008,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2381,
+     -0.2311,
+     -0.005
+    ],
+    [
+     -0.1358,
+     -0.073,
+     0.095
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Toe2_L",
+   "modifiers": [],
+   "vertices": 34,
+   "edges": 72,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 16,
+    "quad": 24
+   },
+   "flat_faces": 40,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0008,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     0.216,
+     -0.2482,
+     -0.005
+    ],
+    [
+     0.3183,
+     -0.09,
+     0.095
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Toe2_R",
+   "modifiers": [],
+   "vertices": 34,
+   "edges": 72,
+   "faces": 40,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 16,
+    "quad": 24
+   },
+   "flat_faces": 40,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.0008,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.1579,
+     -0.2141,
+     -0.005
+    ],
+    [
+     -0.0556,
+     -0.0559,
+     0.095
+    ]
+   ]
+  },
+  {
+   "object": "Kumo_Torso",
+   "modifiers": [],
+   "vertices": 62,
+   "edges": 130,
+   "faces": 70,
+   "euler_characteristic": 2,
+   "face_shapes": {
+    "triangle": 20,
+    "quad": 50
+   },
+   "flat_faces": 70,
+   "smooth_faces": 0,
+   "closed": true,
+   "problems": {
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "loose_vertices": 0,
+    "loose_edges": 0,
+    "duplicate_vertices": 0,
+    "zero_area_faces": 0,
+    "inconsistent_winding_edges": 0
+   },
+   "signed_volume": 0.06189,
+   "normals": "outward",
+   "loose_vertex_positions": [],
+   "bbox": [
+    [
+     -0.2457,
+     -0.1852,
+     0.31
+    ],
+    [
+     0.2457,
+     0.1852,
+     0.97
+    ]
+   ]
+  }
+ ],
+ "detail_object": "Kumo_Head",
+ "detail": [
+  {
+   "face": 0,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.04617,
+   "center": [
+    0.497,
+    -0.405,
+    1.275
+   ],
+   "normal": [
+    0.864,
+    -0.503,
+    0.019
+   ],
+   "tilt_deg": 1.1,
+   "azimuth_deg": 59.8,
+   "region": "side-L",
+   "material": "Kumo_Head",
+   "neighbours": [
+    20,
+    39,
+    40,
+    53
+   ]
+  },
+  {
+   "face": 1,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.11418,
+   "center": [
+    0.0,
+    0.4,
+    0.997
+   ],
+   "normal": [
+    0.0,
+    0.391,
+    -0.92
+   ],
+   "tilt_deg": -67.0,
+   "azimuth_deg": 180.0,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    15,
+    19,
+    33,
+    54
+   ]
+  },
+  {
+   "face": 2,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.1179,
+   "center": [
+    0.51,
+    -0.024,
+    1.48
+   ],
+   "normal": [
+    0.928,
+    0.0,
+    0.371
+   ],
+   "tilt_deg": 21.8,
+   "azimuth_deg": 90.0,
+   "region": "side-L-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    20,
+    35,
+    48,
+    53
+   ]
+  },
+  {
+   "face": 3,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.0398,
+   "center": [
+    0.319,
+    -0.255,
+    0.997
+   ],
+   "normal": [
+    0.256,
+    -0.152,
+    -0.955
+   ],
+   "tilt_deg": -72.7,
+   "azimuth_deg": 59.3,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    14,
+    15,
+    37,
+    39
+   ]
+  },
+  {
+   "face": 4,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.05718,
+   "center": [
+    0.0,
+    -0.475,
+    1.063
+   ],
+   "normal": [
+    0.0,
+    -0.46,
+    -0.888
+   ],
+   "tilt_deg": -62.6,
+   "azimuth_deg": 0.0,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    5,
+    14,
+    18
+   ]
+  },
+  {
+   "face": 5,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.00863,
+   "center": [
+    -0.192,
+    -0.508,
+    1.083
+   ],
+   "normal": [
+    -0.064,
+    -0.594,
+    -0.802
+   ],
+   "tilt_deg": -53.3,
+   "azimuth_deg": -6.1,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    4,
+    7,
+    17
+   ]
+  },
+  {
+   "face": 6,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.03044,
+   "center": [
+    -0.348,
+    -0.52,
+    1.247
+   ],
+   "normal": [
+    -0.207,
+    -0.978,
+    0.004
+   ],
+   "tilt_deg": 0.2,
+   "azimuth_deg": -11.9,
+   "region": "front",
+   "material": "Kumo_Head",
+   "neighbours": [
+    7,
+    8,
+    23
+   ]
+  },
+  {
+   "face": 7,
+   "verts": 5,
+   "shape": "ngon-5",
+   "area": 0.02962,
+   "center": [
+    -0.161,
+    -0.548,
+    1.154
+   ],
+   "normal": [
+    -0.164,
+    -0.958,
+    -0.235
+   ],
+   "tilt_deg": -13.6,
+   "azimuth_deg": -9.7,
+   "region": "front",
+   "material": "Kumo_Head",
+   "neighbours": [
+    5,
+    6,
+    8,
+    17,
+    22
+   ]
+  },
+  {
+   "face": 8,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.01686,
+   "center": [
+    -0.2,
+    -0.548,
+    1.257
+   ],
+   "normal": [
+    -0.159,
+    -0.984,
+    0.077
+   ],
+   "tilt_deg": 4.4,
+   "azimuth_deg": -9.2,
+   "region": "front",
+   "material": "Kumo_Head",
+   "neighbours": [
+    6,
+    7,
+    9
+   ]
+  },
+  {
+   "face": 9,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.05131,
+   "center": [
+    -0.272,
+    -0.515,
+    1.387
+   ],
+   "normal": [
+    -0.095,
+    -0.97,
+    0.225
+   ],
+   "tilt_deg": 13.0,
+   "azimuth_deg": -5.6,
+   "region": "front",
+   "material": "Kumo_Head",
+   "neighbours": [
+    8,
+    42,
+    52
+   ]
+  },
+  {
+   "face": 10,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.17229,
+   "center": [
+    0.0,
+    0.555,
+    1.48
+   ],
+   "normal": [
+    0.0,
+    0.876,
+    0.482
+   ],
+   "tilt_deg": 28.8,
+   "azimuth_deg": 180.0,
+   "region": "back-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    30,
+    35,
+    45,
+    49
+   ]
+  },
+  {
+   "face": 11,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.07558,
+   "center": [
+    0.481,
+    0.435,
+    1.275
+   ],
+   "normal": [
+    0.917,
+    0.399,
+    -0.009
+   ],
+   "tilt_deg": -0.5,
+   "azimuth_deg": 113.5,
+   "region": "side-L",
+   "material": "Kumo_Head",
+   "neighbours": [
+    35,
+    51,
+    53,
+    56
+   ]
+  },
+  {
+   "face": 12,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.05264,
+   "center": [
+    -0.446,
+    0.395,
+    1.105
+   ],
+   "normal": [
+    -0.74,
+    0.329,
+    -0.586
+   ],
+   "tilt_deg": -35.9,
+   "azimuth_deg": -114.0,
+   "region": "side-R-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    29,
+    33,
+    34,
+    54
+   ]
+  },
+  {
+   "face": 13,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.15751,
+   "center": [
+    0.0,
+    -0.368,
+    1.678
+   ],
+   "normal": [
+    0.0,
+    -0.725,
+    0.688
+   ],
+   "tilt_deg": 43.5,
+   "azimuth_deg": 0.0,
+   "region": "front-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    24,
+    43,
+    44,
+    52
+   ]
+  },
+  {
+   "face": 14,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.13928,
+   "center": [
+    0.0,
+    -0.315,
+    0.997
+   ],
+   "normal": [
+    0.0,
+    -0.347,
+    -0.938
+   ],
+   "tilt_deg": -69.7,
+   "azimuth_deg": 0.0,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    3,
+    4,
+    15,
+    41
+   ]
+  },
+  {
+   "face": 15,
+   "verts": 8,
+   "shape": "ngon-8",
+   "area": 0.22606,
+   "center": [
+    0.0,
+    0.028,
+    0.955
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "tilt_deg": -90.0,
+   "azimuth_deg": 90.0,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    1,
+    3,
+    14,
+    19,
+    32,
+    37,
+    41,
+    54
+   ]
+  },
+  {
+   "face": 16,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.03285,
+   "center": [
+    -0.461,
+    -0.377,
+    1.105
+   ],
+   "normal": [
+    -0.699,
+    -0.406,
+    -0.588
+   ],
+   "tilt_deg": -36.0,
+   "azimuth_deg": -59.9,
+   "region": "side-R-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    17,
+    23,
+    34,
+    41
+   ]
+  },
+  {
+   "face": 17,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.0171,
+   "center": [
+    -0.34,
+    -0.487,
+    1.103
+   ],
+   "normal": [
+    -0.257,
+    -0.788,
+    -0.559
+   ],
+   "tilt_deg": -34.0,
+   "azimuth_deg": -18.1,
+   "region": "front-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    5,
+    7,
+    16
+   ]
+  },
+  {
+   "face": 18,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.00863,
+   "center": [
+    0.192,
+    -0.508,
+    1.083
+   ],
+   "normal": [
+    0.064,
+    -0.594,
+    -0.802
+   ],
+   "tilt_deg": -53.3,
+   "azimuth_deg": 6.1,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    4,
+    22,
+    50
+   ]
+  },
+  {
+   "face": 19,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.06088,
+   "center": [
+    0.309,
+    0.29,
+    0.997
+   ],
+   "normal": [
+    0.307,
+    0.129,
+    -0.943
+   ],
+   "tilt_deg": -70.5,
+   "azimuth_deg": 112.8,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    1,
+    15,
+    37,
+    56
+   ]
+  },
+  {
+   "face": 20,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.04491,
+   "center": [
+    0.459,
+    -0.389,
+    1.48
+   ],
+   "normal": [
+    0.812,
+    -0.454,
+    0.366
+   ],
+   "tilt_deg": 21.5,
+   "azimuth_deg": 60.8,
+   "region": "side-L-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    0,
+    2,
+    26,
+    43
+   ]
+  },
+  {
+   "face": 21,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.09795,
+   "center": [
+    -0.273,
+    0.238,
+    1.708
+   ],
+   "normal": [
+    -0.54,
+    0.24,
+    0.806
+   ],
+   "tilt_deg": 53.7,
+   "azimuth_deg": -114.0,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    28,
+    45,
+    49
+   ]
+  },
+  {
+   "face": 22,
+   "verts": 5,
+   "shape": "ngon-5",
+   "area": 0.02962,
+   "center": [
+    0.161,
+    -0.548,
+    1.154
+   ],
+   "normal": [
+    0.164,
+    -0.958,
+    -0.235
+   ],
+   "tilt_deg": -13.6,
+   "azimuth_deg": 9.7,
+   "region": "front",
+   "material": "Kumo_Head",
+   "neighbours": [
+    7,
+    18,
+    25,
+    40,
+    50
+   ]
+  },
+  {
+   "face": 23,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.04617,
+   "center": [
+    -0.497,
+    -0.405,
+    1.275
+   ],
+   "normal": [
+    -0.864,
+    -0.503,
+    0.019
+   ],
+   "tilt_deg": 1.1,
+   "azimuth_deg": -59.8,
+   "region": "side-R",
+   "material": "Kumo_Head",
+   "neighbours": [
+    6,
+    16,
+    36,
+    42
+   ]
+  },
+  {
+   "face": 24,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.03021,
+   "center": [
+    -0.352,
+    -0.34,
+    1.645
+   ],
+   "normal": [
+    -0.564,
+    -0.303,
+    0.768
+   ],
+   "tilt_deg": 50.2,
+   "azimuth_deg": -61.7,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    13,
+    27,
+    42
+   ]
+  },
+  {
+   "face": 25,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.01686,
+   "center": [
+    0.2,
+    -0.548,
+    1.257
+   ],
+   "normal": [
+    0.159,
+    -0.984,
+    0.077
+   ],
+   "tilt_deg": 4.4,
+   "azimuth_deg": 9.2,
+   "region": "front",
+   "material": "Kumo_Head",
+   "neighbours": [
+    22,
+    26,
+    40
+   ]
+  },
+  {
+   "face": 26,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.05131,
+   "center": [
+    0.272,
+    -0.515,
+    1.387
+   ],
+   "normal": [
+    0.095,
+    -0.97,
+    0.225
+   ],
+   "tilt_deg": 13.0,
+   "azimuth_deg": 5.6,
+   "region": "front",
+   "material": "Kumo_Head",
+   "neighbours": [
+    20,
+    25,
+    52
+   ]
+  },
+  {
+   "face": 27,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.04184,
+   "center": [
+    -0.227,
+    -0.19,
+    1.773
+   ],
+   "normal": [
+    -0.594,
+    -0.101,
+    0.798
+   ],
+   "tilt_deg": 52.9,
+   "azimuth_deg": -80.4,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    24,
+    28,
+    44
+   ]
+  },
+  {
+   "face": 28,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.15499,
+   "center": [
+    -0.313,
+    -0.023,
+    1.708
+   ],
+   "normal": [
+    -0.634,
+    0.0,
+    0.774
+   ],
+   "tilt_deg": 50.7,
+   "azimuth_deg": -90.0,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    21,
+    27,
+    55
+   ]
+  },
+  {
+   "face": 29,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.07558,
+   "center": [
+    -0.481,
+    0.435,
+    1.275
+   ],
+   "normal": [
+    -0.917,
+    0.399,
+    -0.009
+   ],
+   "tilt_deg": -0.5,
+   "azimuth_deg": -113.5,
+   "region": "side-R",
+   "material": "Kumo_Head",
+   "neighbours": [
+    12,
+    31,
+    36,
+    49
+   ]
+  },
+  {
+   "face": 30,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.06541,
+   "center": [
+    0.0,
+    0.615,
+    1.327
+   ],
+   "normal": [
+    0.0,
+    0.996,
+    0.093
+   ],
+   "tilt_deg": 5.4,
+   "azimuth_deg": 180.0,
+   "region": "back",
+   "material": "Kumo_Head",
+   "neighbours": [
+    10,
+    31,
+    51
+   ]
+  },
+  {
+   "face": 31,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.04334,
+   "center": [
+    -0.273,
+    0.608,
+    1.257
+   ],
+   "normal": [
+    -0.073,
+    0.993,
+    -0.093
+   ],
+   "tilt_deg": -5.4,
+   "azimuth_deg": -175.8,
+   "region": "back",
+   "material": "Kumo_Head",
+   "neighbours": [
+    29,
+    30,
+    33
+   ]
+  },
+  {
+   "face": 32,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.09203,
+   "center": [
+    -0.355,
+    -0.008,
+    0.997
+   ],
+   "normal": [
+    -0.347,
+    0.0,
+    -0.938
+   ],
+   "tilt_deg": -69.7,
+   "azimuth_deg": -90.0,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    15,
+    34,
+    41,
+    54
+   ]
+  },
+  {
+   "face": 33,
+   "verts": 5,
+   "shape": "ngon-5",
+   "area": 0.145,
+   "center": [
+    0.0,
+    0.561,
+    1.128
+   ],
+   "normal": [
+    0.0,
+    0.822,
+    -0.57
+   ],
+   "tilt_deg": -34.7,
+   "azimuth_deg": 180.0,
+   "region": "back-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    1,
+    12,
+    31,
+    51,
+    56
+   ]
+  },
+  {
+   "face": 34,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.08287,
+   "center": [
+    -0.512,
+    -0.022,
+    1.105
+   ],
+   "normal": [
+    -0.837,
+    0.0,
+    -0.547
+   ],
+   "tilt_deg": -33.2,
+   "azimuth_deg": -90.0,
+   "region": "side-R-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    12,
+    16,
+    32,
+    36
+   ]
+  },
+  {
+   "face": 35,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.07378,
+   "center": [
+    0.444,
+    0.402,
+    1.48
+   ],
+   "normal": [
+    0.828,
+    0.359,
+    0.431
+   ],
+   "tilt_deg": 25.6,
+   "azimuth_deg": 113.5,
+   "region": "side-L-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    2,
+    10,
+    11,
+    46
+   ]
+  },
+  {
+   "face": 36,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.12183,
+   "center": [
+    -0.553,
+    -0.02,
+    1.275
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    0.024
+   ],
+   "tilt_deg": 1.4,
+   "azimuth_deg": -90.0,
+   "region": "side-R",
+   "material": "Kumo_Head",
+   "neighbours": [
+    23,
+    29,
+    34,
+    55
+   ]
+  },
+  {
+   "face": 37,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.09203,
+   "center": [
+    0.355,
+    -0.008,
+    0.997
+   ],
+   "normal": [
+    0.347,
+    0.0,
+    -0.938
+   ],
+   "tilt_deg": -69.7,
+   "azimuth_deg": 90.0,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    3,
+    15,
+    19,
+    38
+   ]
+  },
+  {
+   "face": 38,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.08287,
+   "center": [
+    0.512,
+    -0.022,
+    1.105
+   ],
+   "normal": [
+    0.837,
+    0.0,
+    -0.547
+   ],
+   "tilt_deg": -33.2,
+   "azimuth_deg": 90.0,
+   "region": "side-L-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    37,
+    39,
+    53,
+    56
+   ]
+  },
+  {
+   "face": 39,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.03285,
+   "center": [
+    0.461,
+    -0.377,
+    1.105
+   ],
+   "normal": [
+    0.699,
+    -0.406,
+    -0.588
+   ],
+   "tilt_deg": -36.0,
+   "azimuth_deg": 59.9,
+   "region": "side-L-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    0,
+    3,
+    38,
+    50
+   ]
+  },
+  {
+   "face": 40,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.03044,
+   "center": [
+    0.348,
+    -0.52,
+    1.247
+   ],
+   "normal": [
+    0.207,
+    -0.978,
+    0.004
+   ],
+   "tilt_deg": 0.2,
+   "azimuth_deg": 11.9,
+   "region": "front",
+   "material": "Kumo_Head",
+   "neighbours": [
+    0,
+    22,
+    25
+   ]
+  },
+  {
+   "face": 41,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.0398,
+   "center": [
+    -0.319,
+    -0.255,
+    0.997
+   ],
+   "normal": [
+    -0.256,
+    -0.152,
+    -0.955
+   ],
+   "tilt_deg": -72.7,
+   "azimuth_deg": -59.3,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    14,
+    15,
+    16,
+    32
+   ]
+  },
+  {
+   "face": 42,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.04491,
+   "center": [
+    -0.459,
+    -0.389,
+    1.48
+   ],
+   "normal": [
+    -0.812,
+    -0.454,
+    0.366
+   ],
+   "tilt_deg": 21.5,
+   "azimuth_deg": -60.8,
+   "region": "side-R-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    9,
+    23,
+    24,
+    55
+   ]
+  },
+  {
+   "face": 43,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.03021,
+   "center": [
+    0.352,
+    -0.34,
+    1.645
+   ],
+   "normal": [
+    0.564,
+    -0.303,
+    0.768
+   ],
+   "tilt_deg": 50.2,
+   "azimuth_deg": 61.7,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    13,
+    20,
+    47
+   ]
+  },
+  {
+   "face": 44,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.06848,
+   "center": [
+    0.0,
+    -0.187,
+    1.838
+   ],
+   "normal": [
+    0.0,
+    -0.583,
+    0.813
+   ],
+   "tilt_deg": 54.4,
+   "azimuth_deg": 0.0,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    13,
+    27,
+    47
+   ]
+  },
+  {
+   "face": 45,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.22225,
+   "center": [
+    0.0,
+    0.33,
+    1.708
+   ],
+   "normal": [
+    -0.0,
+    0.603,
+    0.798
+   ],
+   "tilt_deg": 53.0,
+   "azimuth_deg": -180.0,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    10,
+    21,
+    46
+   ]
+  },
+  {
+   "face": 46,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.09795,
+   "center": [
+    0.273,
+    0.238,
+    1.708
+   ],
+   "normal": [
+    0.54,
+    0.24,
+    0.806
+   ],
+   "tilt_deg": 53.7,
+   "azimuth_deg": 114.0,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    35,
+    45,
+    48
+   ]
+  },
+  {
+   "face": 47,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.04184,
+   "center": [
+    0.227,
+    -0.19,
+    1.773
+   ],
+   "normal": [
+    0.594,
+    -0.101,
+    0.798
+   ],
+   "tilt_deg": 52.9,
+   "azimuth_deg": 80.4,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    43,
+    44,
+    48
+   ]
+  },
+  {
+   "face": 48,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.15499,
+   "center": [
+    0.313,
+    -0.023,
+    1.708
+   ],
+   "normal": [
+    0.634,
+    0.0,
+    0.774
+   ],
+   "tilt_deg": 50.7,
+   "azimuth_deg": 90.0,
+   "region": "top",
+   "material": "Kumo_Head",
+   "neighbours": [
+    2,
+    46,
+    47
+   ]
+  },
+  {
+   "face": 49,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.07378,
+   "center": [
+    -0.444,
+    0.402,
+    1.48
+   ],
+   "normal": [
+    -0.828,
+    0.359,
+    0.431
+   ],
+   "tilt_deg": 25.6,
+   "azimuth_deg": -113.5,
+   "region": "side-R-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    10,
+    21,
+    29,
+    55
+   ]
+  },
+  {
+   "face": 50,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.0171,
+   "center": [
+    0.34,
+    -0.487,
+    1.103
+   ],
+   "normal": [
+    0.257,
+    -0.788,
+    -0.559
+   ],
+   "tilt_deg": -34.0,
+   "azimuth_deg": 18.1,
+   "region": "front-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    18,
+    22,
+    39
+   ]
+  },
+  {
+   "face": 51,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.04334,
+   "center": [
+    0.273,
+    0.608,
+    1.257
+   ],
+   "normal": [
+    0.073,
+    0.993,
+    -0.093
+   ],
+   "tilt_deg": -5.4,
+   "azimuth_deg": 175.8,
+   "region": "back",
+   "material": "Kumo_Head",
+   "neighbours": [
+    11,
+    30,
+    33
+   ]
+  },
+  {
+   "face": 52,
+   "verts": 3,
+   "shape": "triangle",
+   "area": 0.15041,
+   "center": [
+    0.0,
+    -0.502,
+    1.453
+   ],
+   "normal": [
+    0.0,
+    -0.95,
+    0.312
+   ],
+   "tilt_deg": 18.2,
+   "azimuth_deg": 0.0,
+   "region": "front-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    9,
+    13,
+    26
+   ]
+  },
+  {
+   "face": 53,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.12183,
+   "center": [
+    0.553,
+    -0.02,
+    1.275
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    0.024
+   ],
+   "tilt_deg": 1.4,
+   "azimuth_deg": 90.0,
+   "region": "side-L",
+   "material": "Kumo_Head",
+   "neighbours": [
+    0,
+    2,
+    11,
+    38
+   ]
+  },
+  {
+   "face": 54,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.06088,
+   "center": [
+    -0.309,
+    0.29,
+    0.997
+   ],
+   "normal": [
+    -0.307,
+    0.129,
+    -0.943
+   ],
+   "tilt_deg": -70.5,
+   "azimuth_deg": -112.8,
+   "region": "bottom",
+   "material": "Kumo_Head",
+   "neighbours": [
+    1,
+    12,
+    15,
+    32
+   ]
+  },
+  {
+   "face": 55,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.1179,
+   "center": [
+    -0.51,
+    -0.024,
+    1.48
+   ],
+   "normal": [
+    -0.928,
+    0.0,
+    0.371
+   ],
+   "tilt_deg": 21.8,
+   "azimuth_deg": -90.0,
+   "region": "side-R-upper",
+   "material": "Kumo_Head",
+   "neighbours": [
+    28,
+    36,
+    42,
+    49
+   ]
+  },
+  {
+   "face": 56,
+   "verts": 4,
+   "shape": "quad",
+   "area": 0.05264,
+   "center": [
+    0.446,
+    0.395,
+    1.105
+   ],
+   "normal": [
+    0.74,
+    0.329,
+    -0.586
+   ],
+   "tilt_deg": -35.9,
+   "azimuth_deg": 114.0,
+   "region": "side-L-lower",
+   "material": "Kumo_Head",
+   "neighbours": [
+    11,
+    19,
+    33,
+    38
+   ]
+  }
+ ],
+ "totals": {
+  "vertices": 33490,
+  "edges": 66102,
+  "faces": 32729
+ }
+}
