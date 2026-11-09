@@ -21,6 +21,7 @@ Este é o registro dos elementos **aprovados**. Um item só entra aqui depois de
 | **D5: pupilas** | Pequenas malhas independentes, presas ao respectivo globo ocular | decisão do dono em 2026-11-09 |
 | **Orçamento de polígonos** | Sem limite rígido: a qualidade da topologia e das deformações prevalece | decisão do dono em 2026-11-09 |
 | **F1: cabeça deformável** | `v2-deformavel/`: 745 faces, 97 % quads, 0 n-gons, anéis nos olhos e na boca, rig de teste; IoU contra a P1 de 0,99 a 1,00 | executada; aguardando aprovação visual e técnica ([RELATORIO-F1](../v2-deformavel/relatorios/RELATORIO-F1.md)) |
+| **F1.2: segunda versão visual da cabeça** | `v2-deformavel/f1.2/`: boca em "^", pupilas e brilho medidos na referência 01, faixa escura da pálpebra, narinas inclinadas, só linhas marcadas, 2 anéis de dobra, pesos da mandíbula corrigidos; IoU contra a P1 de 0,983 a 0,997 | executada; aguardando aprovação visual e técnica ([RELATORIO-F1.2](../v2-deformavel/f1.2/RELATORIO-F1.2.md)) |
 | **Versionamento** | A base original não é modificada sem autorização explícita; geometria, scripts e shaders novos ficam versionados em separado | decisão do dono em 2026-11-09 |
 
 ## Elementos em avaliação (ainda não aprovados)
@@ -48,4 +49,5 @@ Os itens abaixo existem na base v1, mas ainda não foram aprovados individualmen
 | 2026-11-09 | P1, P2 aprovadas; P8 e P9: seguir a imagem de referência (inclui a cauda). Executadas, ver RELATORIO-002. |
 | 2026-11-09 | Arquitetura deformável + casca invertida + preservação de identidade + versionamento separado (decisões do dono). PLANO-003 apresentado para aprovação. |
 | 2026-11-09 | PLANO-003 aprovado com D3, D4 e D5; F1 autorizada com condições (silhueta e facetas preservadas, sem subdivisão nem suavização, testes reais de deformação, comparações e wireframes, sem limite rígido de polígonos). F1 executada em `v2-deformavel/`. Referência complementar `kumo-referencia-03-analise-geometrica.png` adicionada. |
+| 2026-11-09 | F1.2 feita a pedido do dono ("segunda versão visual"), com as referências 01 e 03. A F1.0 foi preservada. A F2 não foi iniciada. |
 | 2026-11-09 | Protocolo de trabalho: inspecionar → diagnosticar → propor → só alterar com autorização → render ortográfica e relatório após cada alteração. |

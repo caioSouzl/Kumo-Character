@@ -1,4 +1,11 @@
-"""Kumo v2 — F1: deformable head (approved 2026-11-09, PLANO-003).
+"""Kumo v2 — F1.2: deformable head, second visual pass (2026-11-09).
+
+F1.2 = F1.0 (frozen in kumo_v2_head_f1_0.py) + face measured on reference 01:
+  inverted-V mouth line, larger pupils set toward the nose, one highlight, dark upper-lid
+  band, slanted nostril slits, two on-surface lid-fold rings, smoother jaw weights,
+  outline = external contour + marked feature lines only.
+
+F1.0 docstring:
 
     python kumo_v2_head.py --out DIR [--render] [--res 900]
 
@@ -40,9 +47,21 @@ os.makedirs(OUT, exist_ok=True)
 # ------------------------------------------------------------------ parameters (approved values)
 EYE_X, EYE_Z, EYE_ROT, EYE_SEAT = 0.30, 1.31, 18.0, 0.04   # from kumo_toon.py (P1 state)
 EYE_R = (0.185, 0.09, 0.222)                               # eyeball radii (x, depth, z)
-MZ = 1.085                                                 # mouth line height
-MOUTH_HALF_W = 0.21          # measured on reference 01 (mouth from x -0.20 to +0.23 H)
-NOSTRILS = [(-0.06, 1.17), (0.06, 1.17)]
+# measured on reference 01 (front view, 1 H = head height), F1.2
+MOUTH_HALF_W = 0.255         # mouth corners at x = +-0.255
+MZ_C, MZ_E = 1.097, 1.046    # mouth line: centre height and corner height (inverted V)
+MZ = MZ_C                    # hinge/bag reference height
+
+
+def mouth_z(x):
+    t = min(1.0, abs(x) / MOUTH_HALF_W)
+    return MZ_C - (MZ_C - MZ_E) * t ** 1.15
+
+
+NOSTRILS = [(-0.065, 1.148, -35.0), (0.065, 1.148, 35.0)]   # x, z, slant (deg)
+PUPIL_DX, PUPIL_DZ = -0.073, -0.010     # pupil centre offset toward the nose (eye local, x * side)
+PUPIL_R, RING_R = (0.067, 0.139), (0.083, 0.155)
+HIGHLIGHT = (0.054, 0.074, 0.025)       # offset from pupil centre (same +x for both eyes), radius
 LID_SCALE = (1.08, 1.55, 1.08)       # lid shell around the eyeball (deep enough to clear pupil + highlights)
 LID_OPEN_F = 0.86                    # lid margin opening, share of the eyeball outline
 BLINK_Z = -0.45                      # where the lids meet (normalised, eye local): mostly the upper lid travels
@@ -77,8 +96,9 @@ M = {
     "pupil": flat_material("Kumo_Pupil", PAL["pupil"]),
     "pupilring": flat_material("Kumo_PupilRing", "#E7961F"),
     "white": flat_material("Kumo_Highlight", "#FFFFFF"),
+    "nostril": flat_material("Kumo_Nostril", PAL["pupil"]),
 }
-MAT_ORDER = ["head", "crest", "mouth", "line"]
+MAT_ORDER = ["head", "crest", "mouth", "line", "nostril"]
 MI = {k: i for i, k in enumerate(MAT_ORDER)}
 
 
@@ -241,62 +261,79 @@ for tag in ("R", "L"):
     # rings: orbit border -> fold -> lid1 -> lid2 -> margin -> socket lining
     # lid1/lid2/margin lie ON the lid ellipsoid, so the lid stays a curved cap over the eyeball
     ell = lambda f, th: Vector((f * rx * math.cos(th), -ry * math.sqrt(max(0.0, 1 - f * f)), f * rz * math.sin(th)))
-    rings = {k: [] for k in ("fold", "lid1", "lid2", "margin", "socket")}
+    into = (EYES[tag]["rot"].to_3x3() @ Vector((0, 1, 0))).normalized()
+
+    def on_surface(lp, tag=tag, into=into):
+        w = from_eye(tag, lp)
+        loc, _n, _i, _d = P1_BVH.ray_cast(w - into * 1.0, into)
+        return loc if loc is not None else w
+
+    RING_KEYS = ("fold1", "fold2", "lid1", "lid2", "margin", "socket")
+    rings = {k: [] for k in RING_KEYS}
     for v, th in zip(loop, angles):
         b_local = to_eye(tag, v.co)
         l1 = ell(0.985, th)
-        mid = (b_local + l1) / 2
-        mid.y -= 0.018                       # lid fold sits slightly forward
-        rings["fold"].append(bm.verts.new(from_eye(tag, mid)))
+        # two fold rings lying ON the approved facet planes (no visible crease at rest)
+        rings["fold1"].append(bm.verts.new(on_surface(b_local.lerp(l1, 0.35))))
+        rings["fold2"].append(bm.verts.new(on_surface(b_local.lerp(l1, 0.70))))
         rings["lid1"].append(bm.verts.new(from_eye(tag, l1)))
         rings["lid2"].append(bm.verts.new(from_eye(tag, ell(0.93, th))))
         rings["margin"].append(bm.verts.new(from_eye(tag, ell(LID_OPEN_F, th))))
         rings["socket"].append(bm.verts.new(from_eye(tag, Vector((1.02 * EYE_R[0] * math.cos(th), 0.25 * EYE_R[1], 1.02 * EYE_R[2] * math.sin(th))))))
     prev = loop
-    for k in ("fold", "lid1", "lid2", "margin", "socket"):
-        ring_faces(bm, prev, rings[k], MI["head"])
+    for k in RING_KEYS:
+        fs_ = ring_faces(bm, prev, rings[k], MI["head"])
+        if k == "margin":                    # dark upper-lid band (lash line), top of the eye
+            for f_, th in zip(fs_, angles):
+                if math.sin(th) > 0.30:
+                    f_.material_index = MI["line"]
         prev = rings[k]
     LID_RINGS[tag] = rings
 
 # ------------------------------------------------------------------ 4. mouth rings
 def inside_mouth(f):
     p = f.calc_center_median()
-    return f.normal.y < -0.3 and p.y < -0.3 and (p.x / 0.27) ** 2 + ((p.z - MZ) / 0.055) ** 2 < 1.0
+    return f.normal.y < -0.3 and p.y < -0.3 and (p.x / 0.31) ** 2 + ((p.z - mouth_z(p.x)) / 0.05) ** 2 < 1.0
 
 
 mb_edges = cut_hole(bm, inside_mouth)
-mloop, mangles = ordered_ring(mb_edges, lambda co: (co.x / 0.27, (co.z - MZ) / 0.055))
+mloop, mangles = ordered_ring(mb_edges, lambda co: (co.x / 0.31, (co.z - mouth_z(co.x)) / 0.05))
 lip, lmargin, bag = [], [], []
 for v, th in zip(mloop, mangles):
     # lip margin: a thin lens along the mouth line (upper and lower margins nearly touch)
     x = MOUTH_HALF_W * math.cos(th)
-    z = MZ + 0.006 * math.sin(th)
-    y = surface_y(x, MZ) or v.co.y
+    z = mouth_z(x) + 0.006 * math.sin(th)
+    y = surface_y(x, z) or v.co.y
     m = Vector((x, y + 0.006, z))
     mid = (v.co + m) / 2
     mid.y -= 0.004
     lip.append(bm.verts.new(mid))
     lmargin.append(bm.verts.new(m))
-    bag.append(bm.verts.new(Vector((x * 0.75, y + 0.12, MZ + 0.035 * math.sin(th)))))
+    bag.append(bm.verts.new(Vector((x * 0.75, y + 0.12, mouth_z(x) + 0.035 * math.sin(th)))))
 ring_faces(bm, mloop, lip, MI["head"])
 ring_faces(bm, lip, lmargin, MI["head"])
 ring_faces(bm, lmargin, bag, MI["mouth"])
 # close the mouth bag with a fan (hidden inside the head: triangles are acceptable there)
-centre = bm.verts.new(Vector((0.0, (sum(b.co.y for b in bag) / len(bag)) + 0.04, MZ)))
+centre = bm.verts.new(Vector((0.0, (sum(b.co.y for b in bag) / len(bag)) + 0.04, MZ - 0.02)))
 for i in range(len(bag)):
     f = bm.faces.new((bag[i], bag[(i + 1) % len(bag)], centre))
     f.material_index = MI["mouth"]
 MOUTH = dict(margin=lmargin, lip=lip)
 
 # ------------------------------------------------------------------ 5. nostrils
-for nx, nz in NOSTRILS:
+for nx, nz, slant in NOSTRILS:
     target = Vector((nx, surface_y(nx, nz), nz))
-    f = min((f for f in bm.faces if f.material_index == MI["head"]), key=lambda f: (f.calc_center_median() - target).length)
+    f = min((f for f in bm.faces if f.material_index == MI["head"] and not f.tag),
+            key=lambda f: (f.calc_center_median() - target).length)
     bmesh.ops.inset_individual(bm, faces=[f], thickness=0.004, depth=0.0)
-    c = f.calc_center_median()
-    for v in f.verts:                      # shrink to a small round-ish nostril and push it in
-        v.co = c + (v.co - c) * 0.22 + Vector((0, 0.012, 0))
-    f.material_index = MI["line"]
+    vs = sorted(f.verts, key=lambda v: math.atan2(v.co.z - target.z, v.co.x - target.x))
+    a = math.radians(slant)
+    for k, v in enumerate(vs):             # slanted slit (rhombus) at the measured spot, pushed in
+        t = 2 * math.pi * k / len(vs)
+        u, w = 0.024 * math.cos(t), 0.011 * math.sin(t)
+        x_, z_ = target.x + u * math.cos(a) - w * math.sin(a), target.z + u * math.sin(a) + w * math.cos(a)
+        v.co = Vector((x_, (surface_y(x_, z_) or target.y) + 0.003, z_))
+    f.material_index = MI["nostril"]
 
 bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
 for e in bm.edges:
@@ -334,7 +371,7 @@ for tag in ("R", "L"):
         pm = bpy.data.meshes.new(name + tag)
         b3 = bmesh.new()
         # polar disc (smooth elliptical edge) in eye-local x/z, lifted onto the unit sphere
-        cx = (-0.034 * e["side"] + dx) / EYE_R[0]
+        cx = (PUPIL_DX * e["side"] + dx) / EYE_R[0]
         NR, NS = 6, 48
         centre_v = None
         rings_v = []
@@ -343,7 +380,7 @@ for tag in ("R", "L"):
             for k in range(NS if r else 1):
                 t = 2 * math.pi * k / NS
                 ux = cx + (r / NR) * (rx_c / EYE_R[0]) * math.cos(t)
-                uz = (-0.004 / EYE_R[2]) + (r / NR) * (rz_c / EYE_R[2]) * math.sin(t)
+                uz = (PUPIL_DZ / EYE_R[2]) + (r / NR) * (rz_c / EYE_R[2]) * math.sin(t)
                 uy = -math.sqrt(max(0.0, 1 - ux * ux - uz * uz))
                 row.append(b3.verts.new((ux, uy, uz)))
             rings_v.append(row)
@@ -364,11 +401,11 @@ for tag in ("R", "L"):
         po = link(bpy.data.objects.new(f"Kumo_v2_{name}_{tag}", pm))
         po.matrix_world = Matrix.Translation(e["center"]) @ e["rot"] @ Matrix.Diagonal(Vector(tuple(r * grow for r in EYE_R) + (1,)))
         return po
-    parts.append(cap("PupilRing", "pupilring", 0.078, 0.132, 1.006))
-    parts.append(cap("Pupil", "pupil", 0.068, 0.122, 1.012))
-    for name, loc, sc in (("Highlight", (0.022, 0.055), 0.019), ("Highlight2", (-0.028, -0.07), 0.008)):
-        lx = -0.034 * e["side"] + loc[0]
-        lz = -0.004 + loc[1]
+    parts.append(cap("PupilRing", "pupilring", RING_R[0], RING_R[1], 1.006))
+    parts.append(cap("Pupil", "pupil", PUPIL_R[0], PUPIL_R[1], 1.012))
+    for name, loc, sc in (("Highlight", HIGHLIGHT[:2], HIGHLIGHT[2]),):   # reference 01: one highlight
+        lx = PUPIL_DX * e["side"] + loc[0]
+        lz = PUPIL_DZ + loc[1]
         ly = -EYE_R[1] * math.sqrt(max(0.0, 1 - (lx / EYE_R[0]) ** 2 - (lz / EYE_R[2]) ** 2)) * 1.015
         pm = bpy.data.meshes.new(name + tag)
         b3 = bmesh.new()
@@ -405,8 +442,8 @@ for tag in ("L", "R"):
     # each ring travels a share of the way to the meeting line, staying on the lid ellipsoid
     # upper lid sweeps down (all rings travel); lower lid only lifts its margin, so the
     # eyeball's lower edge stays covered
-    W_UP = {"margin": 1.0, "lid2": 0.8, "lid1": 0.5, "fold": 0.45}
-    W_LO = {"margin": 1.0, "lid2": 0.5, "lid1": 0.15, "fold": 0.0}
+    W_UP = {"margin": 1.0, "lid2": 0.8, "lid1": 0.5}
+    W_LO = {"margin": 1.0, "lid2": 0.5, "lid1": 0.15}
     for ring_name in ("margin", "lid2", "lid1"):
         for j, i in enumerate(RING_IDX[tag][ring_name]):
             lp = to_eye(tag, head.data.vertices[i].co)
@@ -419,13 +456,16 @@ for tag in ("L", "R"):
             sk.data[i].co = from_eye(tag, new)
     # upper half: the fold rolls onto lid1's rest place (the top edge of the eyeball), so the
     # part of the eyeball that stands proud of the face stays covered while lid1 travels down
-    for j, i in enumerate(RING_IDX[tag]["fold"]):
-        lp = to_eye(tag, head.data.vertices[i].co)
-        if lp.z / rz > BLINK_Z:
-            l1 = to_eye(tag, head.data.vertices[RING_IDX[tag]["lid1"][j]].co)
-            new = l1 * 1.0
-            new.y = min(l1.y * 1.06, lp.y)
-            sk.data[i].co = from_eye(tag, new)
+    # fold2 rolls onto lid1's rest place, fold1 onto fold2's rest place (two-step roll keeps
+    # the fold quads from folding over each other)
+    for src, dst in (("fold2", "lid1"), ("fold1", "fold2")):
+        for j, i in enumerate(RING_IDX[tag][src]):
+            lp = to_eye(tag, head.data.vertices[i].co)
+            if lp.z / rz > BLINK_Z:
+                tgt = to_eye(tag, head.data.vertices[RING_IDX[tag][dst][j]].co)
+                new = lp.lerp(tgt, 0.9)
+                new.y = min(new.y, lp.y)
+                sk.data[i].co = from_eye(tag, new)
 
 # ------------------------------------------------------------------ 6c. armature (Head, Jaw, Eye.L, Eye.R)
 arm_data = bpy.data.armatures.new("Kumo_v2_Rig")
@@ -450,16 +490,22 @@ bpy.ops.object.mode_set(mode="OBJECT")
 # weights: Jaw = everything below the mouth line at the front, fading toward the hinge
 vg_head = head.vertex_groups.new(name="Head")
 vg_jaw = head.vertex_groups.new(name="Jaw")
-upper_margin = set()
+LOWER_LIP = {i for i in MOUTH_IDX["margin"] + MOUTH_IDX["lip"]}
+front = side = 1.0
 for i, v in enumerate(head.data.vertices):
     p = v.co
     w = 0.0
-    if p.z < MZ - 0.001:
-        depth = min(1.0, (MZ - p.z) / 0.03)          # lower lip and below
-        front = min(1.0, max(0.0, (0.30 - p.y) / 0.35))  # fade out toward the back of the jaw
-        side = 1.0 if abs(p.x) < 0.42 else max(0.0, 1 - (abs(p.x) - 0.42) / 0.12)
+    mz = mouth_z(p.x)
+    if p.z < mz - 0.001:
+        t = min(1.0, (mz - p.z) / 0.012)
+        depth = t * t * (3 - 2 * t)                     # lower lip and below follow the jaw
+        front = min(1.0, max(0.0, (0.35 - p.y) / 0.45))  # fade out toward the back of the jaw
+        t = min(1.0, max(0.0, (abs(p.x) - 0.30) / 0.20))
+        side = 1.0 - t * t * (3 - 2 * t)                  # fade over the cheeks
         w = depth * front * side
-    if v.index in MOUTH_IDX["margin"] and p.z >= MZ - 0.001:
+    if v.index in LOWER_LIP and p.z < mz:                # lower lip margin opens fully with the jaw
+        w = front * side
+    if v.index in MOUTH_IDX["margin"] and p.z >= mz - 0.001:
         w = 0.0
     vg_jaw.add([i], w, "REPLACE")
     vg_head.add([i], 1.0 - w, "REPLACE")
@@ -484,7 +530,8 @@ fs = vl.freestyle_settings
 for ls in list(fs.linesets):
     fs.linesets.remove(ls)
 ls_out = fs.linesets.new("Outline")
-ls_out.select_silhouette = ls_out.select_border = ls_out.select_contour = ls_out.select_external_contour = True
+ls_out.select_silhouette = ls_out.select_border = ls_out.select_contour = False
+ls_out.select_external_contour = True        # outer silhouette only; feature lines are marked edges
 ls_out.select_crease = ls_out.select_material_boundary = False
 ls_out.linestyle.color = hexrgb(PAL["outline"])[:3]
 ls_out.linestyle.thickness = 3.0
@@ -496,8 +543,22 @@ ls_wire.select_edge_mark = True
 ls_wire.linestyle.color = (0.08, 0.08, 0.08)
 ls_wire.linestyle.thickness = 1.2
 ls_wire.show_render = False
+ls_feat = fs.linesets.new("Features")         # eye rim + lip line (marked edges), deform with the mesh
+ls_feat.select_by_edge_types = True
+for k in ("silhouette", "border", "crease", "contour", "external_contour", "material_boundary"):
+    setattr(ls_feat, "select_" + k, False)
+ls_feat.select_edge_mark = True
+ls_feat.linestyle.color = hexrgb(PAL["outline"])[:3]
+ls_feat.linestyle.thickness = 2.2
 fe = head.data.attributes.get("freestyle_edge") or head.data.attributes.new("freestyle_edge", "BOOLEAN", "EDGE")
-fe.data.foreach_set("value", [True] * len(head.data.edges))
+FEATURE_VERTS = set()
+for tag in RING_IDX:
+    m = RING_IDX[tag]["margin"]
+    FEATURE_VERTS |= {tuple(sorted((m[k], m[(k + 1) % len(m)]))) for k in range(len(m))}
+mm = MOUTH_IDX["margin"]
+FEATURE_VERTS |= {tuple(sorted((mm[k], mm[(k + 1) % len(mm)]))) for k in range(len(mm))}
+FEATURE_MARKS = [tuple(sorted(e.vertices)) in FEATURE_VERTS for e in head.data.edges]
+fe.data.foreach_set("value", FEATURE_MARKS)
 
 # ------------------------------------------------------------------ cameras
 def camera(name, az, ortho=1.45, target=(0.0, 0.0, 1.43)):
@@ -528,7 +589,7 @@ POSES = {
     "blink-R": {"Blink_R": 1.0},
     "blink-both": {"Blink_L": 1.0, "Blink_R": 1.0},
     "half-blink": {"Blink_L": 0.5, "Blink_R": 0.5},
-    "jaw-open": {"bone": {"Jaw": (math.radians(22), 0, 0)}},
+    "jaw-open": {"bone": {"Jaw": (math.radians(15), 0, 0)}},
     "jaw-side": {"bone": {"Jaw": (math.radians(10), 0, math.radians(9))}},
     "eyes-indep": {"bone": {"Eye.L": (0, 0, math.radians(18)), "Eye.R": (math.radians(14), 0, math.radians(-8))}},
 }
@@ -555,8 +616,9 @@ def evaluated_faces():
 def render(path, cam, res, wire=False):
     scene.camera = cam
     scene.render.resolution_x = scene.render.resolution_y = res
-    ls_out.show_render = not wire
+    ls_out.show_render = ls_feat.show_render = not wire
     ls_wire.show_render = wire
+    head.data.attributes["freestyle_edge"].data.foreach_set("value", [True] * len(head.data.edges) if wire else FEATURE_MARKS)
     vl.material_override = WIRE_MAT if wire else None
     scene.render.filepath = path
     bpy.ops.render.render(write_still=True)
