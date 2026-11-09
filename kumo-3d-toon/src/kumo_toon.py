@@ -338,30 +338,55 @@ def on_face(ob, offset):
 
 # ------------------------------------------------------------------ head (faceted polyhedron)
 # Rings measured on the reference silhouettes (front half-width w, side front yf / back yb).
-HEAD_RINGS = [
-    # z,    w,    yf,    yb
-    (1.58, 0.47, -0.46, 0.50),
-    (1.38, 0.55, -0.50, 0.61),
-    (1.17, 0.555, -0.50, 0.59),
-    (1.04, 0.47, -0.43, 0.50),
-    (0.955, 0.24, -0.20, 0.30),
-]
-HEAD_PTS = []
-for z, w, yf, yb in HEAD_RINGS:
-    # flat front and back planes (no centre bulge) keep the head boxy and faceted
-    HEAD_PTS += [(w * 0.80, yf, z), (w, yf * 0.62, z), (w, yb * 0.45, z), (w * 0.74, yb, z)]
-# short symmetrical snout + upper-lip ledge (mouth sits under it)
-HEAD_PTS += [(0.0, -0.585, 1.20), (0.16, -0.56, 1.19), (0.28, -0.52, 1.12), (0.0, -0.565, 1.11), (0.20, -0.53, 1.10)]
-# the crest is part of the same polyhedron: a pyramid on top of the skull with a V
-# running down between the eyes and a ridge down the back of the head.
-CREST_PTS = [
-    (0.0, -0.01, 1.965),                         # crest tip = 1.96 H
-    (0.0, -0.475, 1.535),                        # V point between the eyes
-    (0.21, -0.275, 1.775),                       # widest point of the front diamond
-    (0.17, 0.22, 1.79),                          # top ridge, back
-    (0.12, 0.56, 1.43), (0.0, 0.625, 1.22),      # occipital ridge down the back of the head
-]
-head = hull("Kumo_Head", HEAD_PTS + CREST_PTS, M["head"])
+# P1 + P2 (approved 2026-11-09): explicit low-poly head. Every vertex below has a role;
+# the crest is real geometry (faces whose vertices are all crest vertices get the dark material).
+# Half of the head (x >= 0); mirrored across X.
+HEAD_VERTS = {
+    # crest (raised pyramid): tip, front corner, V between the eyes, back corner, occipital end
+    "T": (0.0, 0.02, 1.965), "S": (0.21, -0.21, 1.79), "V": (0.0, -0.50, 1.53),
+    "Q": (0.13, 0.49, 1.62), "Bt": (0.0, 0.66, 1.24),
+    # skull box: top corners, mid-side corners, lower corners
+    "A": (0.50, -0.45, 1.57), "B": (0.47, 0.51, 1.55),
+    "D": (0.555, -0.43, 1.24), "E": (0.555, 0.60, 1.30),
+    "F": (0.47, -0.34, 1.04), "G": (0.44, 0.53, 1.04),
+    # flat chin plate
+    "J": (0.23, -0.17, 0.955), "K": (0.22, 0.36, 0.955),
+    # short symmetrical snout and upper-lip ledge
+    "N": (0.0, -0.565, 1.20), "L": (0.0, -0.50, 1.09),
+}
+CREST_KEYS = ("T", "S", "V", "Q", "Bt")
+
+
+def build_head():
+    pts = []
+    for k, (x, y, z) in HEAD_VERTS.items():
+        pts.append((x, y, z))
+        if abs(x) > 1e-6:
+            pts.append((-x, y, z))
+    bm = bmesh.new()
+    for p in pts:
+        bm.verts.new(p)
+    res = bmesh.ops.convex_hull(bm, input=bm.verts)
+    # drop any point that ended up inside the hull (no loose vertices)
+    bmesh.ops.delete(bm, geom=[v for v in res["geom_interior"] if isinstance(v, bmesh.types.BMVert)], context="VERTS")
+    crest = [Vector(HEAD_VERTS[k]) for k in CREST_KEYS] + [Vector((-HEAD_VERTS[k][0],) + HEAD_VERTS[k][1:]) for k in CREST_KEYS]
+    is_crest = lambda v: any((v.co - c).length < 1e-5 for c in crest)
+    for f in bm.faces:
+        f.material_index = 1 if all(is_crest(v) for v in f.verts) else 0
+        f.smooth = False
+    # merge coplanar triangle pairs into quads only (never n-gons); never across the crest border
+    bmesh.ops.join_triangles(bm, faces=bm.faces, angle_face_threshold=math.radians(1.0), angle_shape_threshold=math.radians(180),
+                             cmp_seam=False, cmp_sharp=False, cmp_uvs=False, cmp_vcols=False, cmp_materials=True)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new("Kumo_Head")
+    bm.to_mesh(me)
+    bm.free()
+    me.materials.append(M["head"])
+    me.materials.append(M["crest"])
+    return link(bpy.data.objects.new("Kumo_Head", me))
+
+
+head = build_head()
 DECALS = bpy.data.collections.new("Kumo_Decals")  # painted-on shapes (no outline)
 scene.collection.children.link(DECALS)
 
@@ -430,10 +455,6 @@ def decal(name, outline, axis, mat, offset=0.004, n=48):
     return ob
 
 
-# front diamond: tip -> widest at z 1.775 -> V between the eyes
-decal("Kumo_Crest_Front", [(0.0, 1.97), (0.205, 1.775), (0.0, 1.53), (-0.205, 1.775)], "Y+", M["crest"], n=140)
-# occipital ridge down the back of the head
-decal("Kumo_Crest_Back", [(0.0, 1.97), (0.16, 1.62), (0.0, 1.20), (-0.16, 1.62)], "Y-", M["crest"], n=140)
 
 # eyes ------------------------------------------------------------
 EYE = {}
@@ -567,6 +588,10 @@ for i in range(1, N2 + 1):
     pts.append(C + U * (math.cos(a) * (R1 + (RH0 - R1) * k)) + Zv * (math.sin(a) * (R1 + (RV0 - R1) * k)))
     rad.append(0.078 + (0.022 - 0.078) * t)
 tail = tube("Kumo_Tail", pts, rad, M["body"], sides=6)
+# pivot the tail at its base so it can be posed per view (it is a flexible part)
+TAIL_BASE = Vector(pts[0])
+tail.data.transform(Matrix.Translation(-TAIL_BASE))
+tail.location = TAIL_BASE
 
 # ------------------------------------------------------------------ outlines (Freestyle)
 scene.render.use_freestyle = True
@@ -678,11 +703,25 @@ def camera(name, azimuth_deg, ortho=2.45, target=(0.06, 0, 1.0)):
     return ob
 
 
+# P8/P9 (approved 2026-11-09): the 3/4 view and the tail follow the reference image.
+# VIEW_AZ: camera azimuth per view. TAIL_POSE: tail rotation about its base (x, y, z degrees)
+# and mirror flag per view; the tail is flexible, so each sheet view carries its own pose.
+VIEW_AZ = {"front": 0, "three-quarter": -40, "side": -90, "back": 180}
+TAIL_POSE = {"front": (0, 0, 0, False), "three-quarter": (0, 0, -45, False), "side": (0, 0, 0, False), "back": (0, 0, 80, False)}
+
+
+def pose_tail(view):
+    rx, ry, rz, mirror = TAIL_POSE.get(view, (0, 0, 0, False))
+    tail.rotation_euler = (math.radians(rx), math.radians(ry), math.radians(rz))
+    tail.scale = (-1 if mirror else 1, 1, 1)
+    tail.location = Vector((-TAIL_BASE.x, TAIL_BASE.y, TAIL_BASE.z)) if mirror else TAIL_BASE
+
+
 VIEWS = {
-    "front": camera("Cam_Front", 0),
-    "three-quarter": camera("Cam_ThreeQuarter", -45),  # turned to the viewer's right
-    "side": camera("Cam_Side", -90),                    # profile facing right
-    "back": camera("Cam_Back", 180),
+    "front": camera("Cam_Front", VIEW_AZ["front"]),
+    "three-quarter": camera("Cam_ThreeQuarter", VIEW_AZ["three-quarter"]),  # turned to the viewer's right
+    "side": camera("Cam_Side", VIEW_AZ["side"]),                    # profile facing right
+    "back": camera("Cam_Back", VIEW_AZ["back"]),
 }
 FACE_CAM = camera("Cam_Face", 0, ortho=1.32, target=(0, 0, 1.40))
 scene.camera = VIEWS["front"]
@@ -701,12 +740,14 @@ if DO_RENDER:
         if ONLY and ONLY not in name:
             continue
         set_expression(ex)
+        pose_tail(name[5:] if name.startswith("view-") else "front")
         scene.camera = cam
         scene.render.resolution_x = scene.render.resolution_y = res
         scene.render.filepath = os.path.join(OUT, "renders", name + ".png")
         bpy.ops.render.render(write_still=True)
         print("rendered", name)
     set_expression("neutral")
+    pose_tail("front")
     scene.camera = VIEWS["front"]
     scene.render.resolution_x = scene.render.resolution_y = RES
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "kumo_toon.blend"))

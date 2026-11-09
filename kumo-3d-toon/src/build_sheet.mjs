@@ -36,7 +36,7 @@ s += t(2352, 96, 'ORTHOGRAPHIC · 1 H = HEAD HEIGHT · TOTAL 1.96 H', { size: 11
   const X = 40, Y = 130, Wp = 2320, Hp = 760;
   s += rect(X, Y, Wp, Hp) + head(X, Y, '1', 'TURNAROUND', '· same orthographic scale and ground line');
   const size = 660;
-  const views = [['view-front.png', 'FRONT', '0°'], ['view-three-quarter.png', '3/4', '45°'], ['view-side.png', 'SIDE', '90°'], ['view-back.png', 'BACK', '180°']];
+  const views = [['view-front.png', 'FRONT', '0°'], ['view-three-quarter.png', '3/4', '40°'], ['view-side.png', 'SIDE', '90°'], ['view-back.png', 'BACK', '180°']];
   const sw = (Wp - 40) / 4;
   views.forEach(([f, n, d], i) => {
     const cx = X + 20 + sw * i + sw / 2;

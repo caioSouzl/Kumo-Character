@@ -96,6 +96,14 @@ def main():
                 elif m_:
                     op[x, y] = (60, 110, 230)
         iou = inter / union if union else 0
+        # head-only IoU: rows above the chin (z >= 0.95 H)
+        hi = hu = 0
+        for y in range(0, h - round(0.95 * S)):
+            for x in range(rm.width):
+                r_, m_ = rp[x, y] > 0, mp[x, y] > 0
+                hi += r_ and m_
+                hu += r_ or m_
+        iou_head = hi / hu if hu else 0
         ov.save(os.path.join(a.out, f"overlay-{v}.png"))
         pr, pm = profile(rm), profile(mm)
         rows = []
@@ -103,8 +111,8 @@ def main():
             rows.append(dict(z=z, ref=[rl, rr], model=[ml, mr],
                              d_left=None if rl is None or ml is None else round(ml - rl, 3),
                              d_right=None if rr is None or mr is None else round(mr - rr, 3)))
-        res[v] = dict(iou=round(iou, 4), profile=rows)
-        md += [f"## {v} — IoU {iou:.3f}", "", f"![overlay](overlay-{v}.png)", "",
+        res[v] = dict(iou=round(iou, 4), iou_head=round(iou_head, 4), profile=rows)
+        md += [f"## {v} — IoU {iou:.3f} · head {iou_head:.3f}", "", f"![overlay](overlay-{v}.png)", "",
                "| z (H) | ref left | ref right | model left | model right | Δ left | Δ right |", "|---|---|---|---|---|---|---|"]
         f = lambda x: "—" if x is None else f"{x:+.3f}"
         for r in rows:
@@ -116,7 +124,7 @@ def main():
         fh.write("\n".join(md))
     with open(os.path.join(a.out, "silhuetas.json"), "w") as fh:
         json.dump(res, fh, indent=1)
-    print(json.dumps({v: res[v]["iou"] for v in res}))
+    print(json.dumps({v: [res[v]["iou"], res[v]["iou_head"]] for v in res}))
 
 
 if __name__ == "__main__":
