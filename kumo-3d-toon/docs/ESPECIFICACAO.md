@@ -16,6 +16,11 @@ Este é o registro dos elementos **aprovados**. Um item só entra aqui depois de
 | **Arquitetura deformável** | Personagem totalmente deformável: topologia de quads nas regiões que deformam; loops em olhos, boca, focinho, mandíbula, pescoço, ombros, cotovelos, punhos, quadris, joelhos e tornozelos; sem subdivisão nem suavização; partes rígidas só com justificativa técnica; pronto para rig facial e corporal | decisão do dono em 2026-11-09 (plano em [PLANO-003](PLANO-003-arquitetura-deformavel.md), aguardando aprovação) |
 | **Contorno** | Casca invertida (geometria expandida, normais invertidas, renderização de faces de trás) como sistema principal; espessura ajustável e constante; sem artefatos em sobreposições e articulações; acompanha a deformação; compatível com Blender e tempo real | decisão do dono em 2026-11-09 |
 | **Identidade visual (restrição crítica)** | Antropomórfico, bípede, facetado e angular, low poly, fiel às referências, cel shading controlado. A topologia deformável não pode comprometer a silhueta angular, as proporções faciais, a geometria da cabeça, a crista nem a identidade. | decisão do dono em 2026-11-09 |
+| **D3: pose de repouso** | A-pose, braços cerca de 45° abaixo da horizontal, pernas levemente afastadas, mãos e dedos separados, cauda natural, cabeça alinhada. A pose da referência é preservada como pose de apresentação. | decisão do dono em 2026-11-09 |
+| **D4: expressões** | Sistema híbrido: shape keys para pálpebras, boca, bochechas e expressões; ossos para a mandíbula e os olhos; controles independentes por olho | decisão do dono em 2026-11-09 |
+| **D5: pupilas** | Pequenas malhas independentes, presas ao respectivo globo ocular | decisão do dono em 2026-11-09 |
+| **Orçamento de polígonos** | Sem limite rígido: a qualidade da topologia e das deformações prevalece | decisão do dono em 2026-11-09 |
+| **F1: cabeça deformável** | `v2-deformavel/`: 745 faces, 97 % quads, 0 n-gons, anéis nos olhos e na boca, rig de teste; IoU contra a P1 de 0,99 a 1,00 | executada; aguardando aprovação visual e técnica ([RELATORIO-F1](../v2-deformavel/relatorios/RELATORIO-F1.md)) |
 | **Versionamento** | A base original não é modificada sem autorização explícita; geometria, scripts e shaders novos ficam versionados em separado | decisão do dono em 2026-11-09 |
 
 ## Elementos em avaliação (ainda não aprovados)
@@ -42,4 +47,5 @@ Os itens abaixo existem na base v1, mas ainda não foram aprovados individualmen
 | 2026-11-09 | Base v1 congelada como ponto de partida para alterações futuras. |
 | 2026-11-09 | P1, P2 aprovadas; P8 e P9: seguir a imagem de referência (inclui a cauda). Executadas, ver RELATORIO-002. |
 | 2026-11-09 | Arquitetura deformável + casca invertida + preservação de identidade + versionamento separado (decisões do dono). PLANO-003 apresentado para aprovação. |
+| 2026-11-09 | PLANO-003 aprovado com D3, D4 e D5; F1 autorizada com condições (silhueta e facetas preservadas, sem subdivisão nem suavização, testes reais de deformação, comparações e wireframes, sem limite rígido de polígonos). F1 executada em `v2-deformavel/`. Referência complementar `kumo-referencia-03-analise-geometrica.png` adicionada. |
 | 2026-11-09 | Protocolo de trabalho: inspecionar → diagnosticar → propor → só alterar com autorização → render ortográfica e relatório após cada alteração. |
