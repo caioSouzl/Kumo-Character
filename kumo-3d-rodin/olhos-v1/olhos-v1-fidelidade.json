@@ -1,0 +1,132 @@
+{
+ "frente": {
+  "diferenca_media_regiao_olhos": 4.45,
+  "pixels_regiao_olhos": 64659,
+  "pct_pixels_diferenca_maior_que_24": 4.73,
+  "pct_pixels_diferenca_maior_que_48": 2.01,
+  "diferenca_media_imagem_inteira": 1.178,
+  "centroides_olhos_px": {
+   "antes": [
+    [
+     140.7,
+     290.8
+    ],
+    [
+     466.5,
+     279.4
+    ]
+   ],
+   "depois": [
+    [
+     140.6,
+     290.8
+    ],
+    [
+     466.9,
+     279.4
+    ]
+   ]
+  },
+  "distancia_entre_olhos_px": {
+   "antes": 326.0,
+   "depois": 326.5
+  },
+  "deslocamento_max_centroide_px": 0.4
+ },
+ "34": {
+  "diferenca_media_regiao_olhos": 1.65,
+  "pixels_regiao_olhos": 47455,
+  "pct_pixels_diferenca_maior_que_24": 1.54,
+  "pct_pixels_diferenca_maior_que_48": 0.34,
+  "diferenca_media_imagem_inteira": 0.522,
+  "centroides_olhos_px": {
+   "antes": [
+    [
+     250.7,
+     292.0
+    ]
+   ],
+   "depois": [
+    [
+     251.0,
+     291.9
+    ]
+   ]
+  },
+  "deslocamento_max_centroide_px": 0.32
+ },
+ "perfil_E": {
+  "diferenca_media_regiao_olhos": 4.32,
+  "pixels_regiao_olhos": 31836,
+  "pct_pixels_diferenca_maior_que_24": 3.48,
+  "pct_pixels_diferenca_maior_que_48": 1.84,
+  "diferenca_media_imagem_inteira": 0.633,
+  "centroides_olhos_px": {
+   "antes": [
+    [
+     100.0,
+     400.0
+    ],
+    [
+     400.6,
+     293.6
+    ]
+   ],
+   "depois": [
+    [
+     100.0,
+     400.0
+    ],
+    [
+     401.2,
+     293.3
+    ]
+   ]
+  },
+  "distancia_entre_olhos_px": {
+   "antes": 318.9,
+   "depois": 319.5
+  },
+  "deslocamento_max_centroide_px": 0.67
+ },
+ "perfil_D": {
+  "diferenca_media_regiao_olhos": 2.82,
+  "pixels_regiao_olhos": 52027,
+  "pct_pixels_diferenca_maior_que_24": 2.25,
+  "pct_pixels_diferenca_maior_que_48": 0.9,
+  "diferenca_media_imagem_inteira": 0.635,
+  "centroides_olhos_px": {
+   "antes": [
+    [
+     272.4,
+     284.1
+    ]
+   ],
+   "depois": [
+    [
+     272.2,
+     284.0
+    ]
+   ]
+  },
+  "deslocamento_max_centroide_px": 0.22
+ },
+ "silhueta_corpo": {
+  "frente": {
+   "iou": 0.99979,
+   "pixels_diferentes": 30
+  },
+  "34": {
+   "iou": 0.99984,
+   "pixels_diferentes": 23
+  },
+  "perfil": {
+   "iou": 1.0,
+   "pixels_diferentes": 0
+  },
+  "costas": {
+   "iou": 0.99987,
+   "pixels_diferentes": 19
+  }
+ }
+}
