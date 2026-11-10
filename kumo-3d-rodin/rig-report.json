@@ -1,0 +1,45 @@
+{
+ "measures": {
+  "body_y": -0.04,
+  "head_y": -0.15,
+  "tail_length": 1.052
+ },
+ "bones": 30,
+ "unweighted_vertices": 0,
+ "arm_angle_before": -66.0,
+ "arm_angle_rest": -45.0,
+ "deformation": {
+  "rest-apose": {
+   "flipped": 0,
+   "collapsed": 0
+  },
+  "apresentacao": {
+   "flipped": 1,
+   "collapsed": 1
+  },
+  "aceno": {
+   "flipped": 108,
+   "collapsed": 0
+  },
+  "passo": {
+   "flipped": 1,
+   "collapsed": 0
+  },
+  "cabeca-gira": {
+   "flipped": 0,
+   "collapsed": 0
+  },
+  "cauda-enrola": {
+   "flipped": 0,
+   "collapsed": 0
+  },
+  "piscada": {
+   "flipped": 0,
+   "collapsed": 0
+  },
+  "piscadela": {
+   "flipped": 0,
+   "collapsed": 0
+  }
+ }
+}

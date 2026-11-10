@@ -68,3 +68,33 @@ Arquivos: `kumo_quad.blend`, `export/kumo_quad.glb` (PBR, sem contorno), `textur
 - a malha de quads é uniforme, ainda **sem** anéis concentrados nos olhos e na boca. Esses anéis vêm na etapa de rig e expressões.
 
 Regenerar: `python src/quad_retopo_bake.py --faces 8000 --tex 2048 --res 1200` (de dentro de `kumo-3d-rodin/`).
+
+## Etapa 5: esqueleto, A-pose e piscada (2026-11-10)
+
+`src/kumo_rig.py` transforma o `kumo_quad.blend` em **`kumo_rigged.blend`**, pronto para animar. Exporta também `export/kumo_rigged.glb` e `export/kumo_rigged.fbx`, com esqueleto, pesos e shape keys, sem o contorno.
+
+- **Esqueleto `Kumo_Rig`, 30 ossos:** root, hips, spine, chest, neck, head; shoulder, upper_arm, forearm e hand dos dois lados; thigh, shin e foot dos dois lados; tail_01 a tail_10. As articulações foram medidas na própria malha. A cauda foi traçada pela distância ao longo da malha desde a base.
+- **Pesos automáticos (bone heat):** 0 vértices sem peso.
+- **Pose de repouso, decisão D3:** braços de -66.0° para **-45.0°**, ou seja, 45° abaixo da horizontal, e pernas levemente afastadas. A pose da referência, de braços baixos, fica guardada como a ação **`Pose_Apresentacao`**.
+- **Piscada:** pálpebras de cima e de baixo (`Kumo_Lid_L` e `Kumo_Lid_R`) presas ao osso da cabeça. A cor é amostrada da própria textura. Shape keys `Blink_L` e `Blink_R`, independentes por olho.
+
+![poses de teste](renders/rig-poses.png)
+
+| Pose de teste | Faces invertidas | Faces colapsadas |
+|---|---|---|
+| rest-apose | 0 | 0 |
+| apresentacao | 1 | 1 |
+| aceno | 108 | 0 |
+| passo | 1 | 0 |
+| cabeca-gira | 0 | 0 |
+| cauda-enrola | 0 | 0 |
+| piscada | 0 | 0 |
+| piscadela | 0 | 0 |
+
+**Limitações:**
+- **Aceno (braço levantado a 75°):** 108 faces dobram no ombro. Para movimentos amplos de braço, convém refinar os pesos do ombro ou incluir um osso de deltoide.
+- **Os olhos são pintados na textura:** a pupila não gira, então o olhar não muda de direção. Para isso, os olhos precisariam virar malhas próprias, como na decisão D5.
+- **A boca também é pintada:** ainda não abre. Abrir exige cortar a linha da boca na malha e criar a cavidade.
+- **A linha do olho fechado** tem bordas um pouco serrilhadas.
+
+Regenerar: `python src/quad_retopo_bake.py` e depois `python src/kumo_rig.py`.
