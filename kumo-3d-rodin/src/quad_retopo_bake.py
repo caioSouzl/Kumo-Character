@@ -105,8 +105,8 @@ scene.render.engine = "CYCLES"
 scene.cycles.device = "CPU"
 scene.cycles.samples = 4
 scene.render.bake.use_selected_to_active = True
-scene.render.bake.cage_extrusion = 0.03
-scene.render.bake.max_ray_distance = 0.08
+scene.render.bake.cage_extrusion = 0.015
+scene.render.bake.max_ray_distance = 0.04
 scene.render.bake.use_pass_direct = False
 scene.render.bake.use_pass_indirect = False
 scene.render.bake.use_pass_color = True
@@ -167,7 +167,60 @@ bpy.ops.export_scene.gltf(filepath=os.path.join(ROOT, "export", "kumo_quad.glb")
 # Blender scene: toon + outline
 qme.materials[0] = toon
 qme.materials.append(line)
+# outline weight: 0 on the eyes (amber / cream / black in the baked texture, grown by 2 rings)
+# so the shell never shows through the concave eye sockets; 1 elsewhere
+px = list(img.pixels)
+uvl = qme.uv_layers.active.data
+
+
+def tex_rgb(u, v):
+    x = min(TEX - 1, max(0, int(u * TEX)))
+    y = min(TEX - 1, max(0, int(v * TEX)))
+    i = (y * TEX + x) * 4
+    return px[i], px[i + 1], px[i + 2]
+
+
+def is_eye(r, g, b):
+    mx_, mn_ = max(r, g, b), min(r, g, b)
+    sat = (mx_ - mn_) / mx_ if mx_ > 1e-6 else 0
+    hue_warm = r > g * 0.95 and r > b * 1.4          # amber / cream / orange (linear values)
+    return (mx_ < 0.02) or (hue_warm and r > 0.25 and sat > 0.15)
+
+
+eye_v = set()
+for poly in qme.polygons:
+    for li in poly.loop_indices:
+        u, v = uvl[li].uv
+        if is_eye(*tex_rgb(u, v)):
+            eye_v.add(qme.loops[li].vertex_index)
+adj = {i: set() for i in range(len(qme.vertices))}
+for e in qme.edges:
+    a_, b_ = e.vertices
+    adj[a_].add(b_)
+    adj[b_].add(a_)
+grown = set(eye_v)
+for _ in range(2):
+    grown |= {n for v in grown for n in adj[v]}
+# belly is also warm (beige): keep it, only the head region counts as eye
+grown = {v for v in grown if qme.vertices[v].co.z > 1.0}
+vg = quad.vertex_groups.new(name="outline_cut")      # 1 = eye region
+vg.add(list(grown), 1.0, "REPLACE")
+vg.add([i for i in range(len(qme.vertices)) if i not in grown], 0.0, "REPLACE")
+quad.vertex_groups.new(name="outline_shell")
+print("outline: eye vertices excluded", len(grown))
+# Solidify builds the shell and tags it; WeightMix keeps the tag only on shell vertices of the
+# eye region; Mask removes exactly those. Works after armature / shape-key deformation.
 sol = quad.modifiers.new("Outline", "SOLIDIFY")
+sol.shell_vertex_group = "outline_shell"
+wm = quad.modifiers.new("OutlineCut", "VERTEX_WEIGHT_MIX")
+wm.vertex_group_a = "outline_cut"
+wm.vertex_group_b = "outline_shell"
+wm.mix_mode = "MUL"
+wm.mix_set = "ALL"
+mk = quad.modifiers.new("OutlineMask", "MASK")
+mk.vertex_group = "outline_cut"
+mk.invert_vertex_group = True
+mk.threshold = 0.5
 sol.offset = 1.0
 sol.use_flip_normals = True
 sol.use_rim = False
@@ -235,14 +288,14 @@ c_out = cn.nodes.new("ShaderNodeOutputMaterial")
 c_em = cn.nodes.new("ShaderNodeEmission")
 c_em.inputs[0].default_value = (0.75, 0.75, 0.72, 1)
 cn.links.new(c_em.outputs[0], c_out.inputs[0])
-sol.show_render = False
+sol.show_render = wm.show_render = mk.show_render = False
 vl.material_override = clay
 for v in ("front", "side"):
     scene.camera = cams[v]
     scene.render.filepath = os.path.join(ROOT, "renders", f"quad-wire-{v}.png")
     bpy.ops.render.render(write_still=True)
 vl.material_override = None
-sol.show_render = True
+sol.show_render = wm.show_render = mk.show_render = True
 scene.render.use_freestyle = False
 fe.data.foreach_set("value", [False] * len(qme.edges))
 scene.camera = cams["front"]
