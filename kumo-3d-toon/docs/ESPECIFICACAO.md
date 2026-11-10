@@ -1,5 +1,7 @@
 # Especificação oficial — Kumo 3D (2,5D cel-shaded)
 
+> **2026-11-10: modelo oficial substituído.** Por decisão do dono, o modelo oficial é o gerado no Rodin, em `kumo-3d-rodin/`. O modelo procedural deste diretório foi arquivado (veja `../ARQUIVADO.md`). As decisões abaixo ficam como histórico.
+
 Este é o registro dos elementos **aprovados**. Um item só entra aqui depois de aprovado. Para mudar um item já aprovado, é preciso primeiro apresentar a divergência e pedir aprovação; nada aqui é substituído direto.
 
 ## Fonte da verdade
@@ -50,5 +52,6 @@ Os itens abaixo existem na base v1, mas ainda não foram aprovados individualmen
 | 2026-11-09 | Arquitetura deformável + casca invertida + preservação de identidade + versionamento separado (decisões do dono). PLANO-003 apresentado para aprovação. |
 | 2026-11-09 | PLANO-003 aprovado com D3, D4 e D5; F1 autorizada com condições (silhueta e facetas preservadas, sem subdivisão nem suavização, testes reais de deformação, comparações e wireframes, sem limite rígido de polígonos). F1 executada em `v2-deformavel/`. Referência complementar `kumo-referencia-03-analise-geometrica.png` adicionada. |
 | 2026-11-09 | F1.2 feita a pedido do dono ("segunda versão visual"), com as referências 01 e 03. A F1.0 foi preservada. A F2 não foi iniciada. |
+| 2026-11-10 | **Modelo oficial substituído pelo modelo Rodin (`kumo-3d-rodin/`). Atividades com o modelo procedural encerradas e arquivadas. P3 não foi aprovada nem aplicada.** |
 | 2026-11-10 | F1.2 aprovada. Geração Rodin `fc410dfd` guardada como referência 3D externa. Skill `hyper3d-rodin` criada em `.claude/skills/`. |
 | 2026-11-09 | Protocolo de trabalho: inspecionar → diagnosticar → propor → só alterar com autorização → render ortográfica e relatório após cada alteração. |
