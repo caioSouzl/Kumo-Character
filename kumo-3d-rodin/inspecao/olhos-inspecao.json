@@ -1,0 +1,164 @@
+{
+ "L": {
+  "painted_verts": 405,
+  "centre": [
+   0.389,
+   -0.28,
+   1.386
+  ],
+  "half_width": 0.159,
+  "half_height": 0.326,
+  "dome_front_y": -0.589,
+  "socket_deepest_y": 0.18,
+  "rim_front_y": -0.67,
+  "dome_protrusion_vs_rim": -0.082,
+  "colour_classes": {
+   "skin": 139,
+   "iris_or_sclera": 161,
+   "amber_ring": 46,
+   "dark_rim": 18,
+   "pupil": 39,
+   "catchlight": 2
+  },
+  "sphere_fit": {
+   "centre": [
+    0.035,
+    -0.1,
+    1.332
+   ],
+   "radius": 0.458,
+   "rms": 0.0157
+  }
+ },
+ "R": {
+  "painted_verts": 416,
+  "centre": [
+   -0.271,
+   -0.392,
+   1.349
+  ],
+  "half_width": 0.247,
+  "half_height": 0.32,
+  "dome_front_y": -0.653,
+  "socket_deepest_y": 0.201,
+  "rim_front_y": -0.699,
+  "dome_protrusion_vs_rim": -0.046,
+  "colour_classes": {
+   "iris_or_sclera": 168,
+   "skin": 157,
+   "dark_rim": 10,
+   "amber_ring": 41,
+   "pupil": 38,
+   "catchlight": 2
+  },
+  "sphere_fit": {
+   "centre": [
+    0.041,
+    -0.1,
+    1.289
+   ],
+   "radius": 0.516,
+   "rms": 0.0087
+  }
+ },
+ "lids": {
+  "L": {
+   "parent": "Kumo_Rig",
+   "parent_bone": "head",
+   "rows": [
+    {
+     "t": 0.0,
+     "verts_inside_head": 0,
+     "of": 450,
+     "min_signed_dist": 0.0118,
+     "max_dist": 0.012
+    },
+    {
+     "t": 0.25,
+     "verts_inside_head": 73,
+     "of": 450,
+     "min_signed_dist": -0.0181,
+     "max_dist": 0.0388
+    },
+    {
+     "t": 0.5,
+     "verts_inside_head": 59,
+     "of": 450,
+     "min_signed_dist": -0.0316,
+     "max_dist": 0.0429
+    },
+    {
+     "t": 0.75,
+     "verts_inside_head": 17,
+     "of": 450,
+     "min_signed_dist": -0.0267,
+     "max_dist": 0.0483
+    },
+    {
+     "t": 1.0,
+     "verts_inside_head": 1,
+     "of": 450,
+     "min_signed_dist": -0.0026,
+     "max_dist": 0.03
+    }
+   ],
+   "max_vertex_travel": 0.5354
+  },
+  "R": {
+   "parent": "Kumo_Rig",
+   "parent_bone": "head",
+   "rows": [
+    {
+     "t": 0.0,
+     "verts_inside_head": 0,
+     "of": 450,
+     "min_signed_dist": 0.0087,
+     "max_dist": 0.012
+    },
+    {
+     "t": 0.25,
+     "verts_inside_head": 131,
+     "of": 450,
+     "min_signed_dist": -0.0397,
+     "max_dist": 0.0389
+    },
+    {
+     "t": 0.5,
+     "verts_inside_head": 121,
+     "of": 450,
+     "min_signed_dist": -0.0595,
+     "max_dist": 0.0445
+    },
+    {
+     "t": 0.75,
+     "verts_inside_head": 89,
+     "of": 450,
+     "min_signed_dist": -0.0303,
+     "max_dist": 0.0412
+    },
+    {
+     "t": 1.0,
+     "verts_inside_head": 1,
+     "of": 450,
+     "min_signed_dist": -0.0047,
+     "max_dist": 0.03
+    }
+   ],
+   "max_vertex_travel": 0.5088
+  }
+ },
+ "eye_region_weights": [
+  [
+   "L",
+   0.965,
+   {
+    "shoulder.L": 0.0
+   }
+  ],
+  [
+   "R",
+   0.965,
+   {}
+  ]
+ ]
+}
