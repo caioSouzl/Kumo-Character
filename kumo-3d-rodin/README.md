@@ -42,3 +42,29 @@
 - **Sem esqueleto e sem expressões.** Para animar, os caminhos são: o rig automático do Rodin (`hyper3d rigging`, gasta créditos, pose de corpo inteiro) ou um rig próprio no Blender. A malha triangulada deforma pior que quads nos olhos e na boca.
 - **A cauda fica atrás do corpo** nas vistas de frente e de costas. Na referência ela aparece ao lado.
 - **Facetas um pouco suavizadas** pela textura em relação à referência.
+
+## Pipeline "estilo Rodin" no Blender: etapas 2–3 (2026-11-10)
+
+`src/quad_retopo_bake.py` reproduz no Blender, sem créditos, o acabamento que o Rodin faz depois da IA:
+
+1. carrega o GLB oficial, coloca na escala do Kumo e solda as costuras;
+2. **remalha em quads** (QuadriFlow, com simetria em X), o equivalente ao modo "Quad" do Rodin;
+3. cria UVs novos e **transfere a textura do Rodin** por bake (Cycles, "Selected to Active");
+4. monta o material toon de cor chapada e o contorno por casca invertida, mais uma variante PBR para exportação.
+
+| | Original Rodin | Quads (`kumo_quad.blend`) |
+|---|---|---|
+| Faces | 33.178 triângulos | **7.396 quads (100%)** |
+| Vértices | 16.591 (soldados) | 7.398 |
+| Silhueta igual ao original (IoU frente / 3/4 / perfil / costas) | — | 0,993 / 0,993 / 0,990 / 0,993 |
+
+Arquivos: `kumo_quad.blend`, `export/kumo_quad.glb` (PBR, sem contorno), `textures/kumo_quad_diffuse.png` (2048²) e `renders/quad-*.png`.
+
+![antes e depois](renders/quad-antes-depois.png)
+
+**Limitações observadas:**
+- um pequeno risco escuro aparece perto de um dos olhos, um artefato do bake na borda do olho;
+- as arestas vivas da crista ficam levemente mais suaves;
+- a malha de quads é uniforme, ainda **sem** anéis concentrados nos olhos e na boca. Esses anéis vêm na etapa de rig e expressões.
+
+Regenerar: `python src/quad_retopo_bake.py --faces 8000 --tex 2048 --res 1200` (de dentro de `kumo-3d-rodin/`).
