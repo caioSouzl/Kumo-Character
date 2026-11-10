@@ -1,0 +1,1514 @@
+{
+ "file": "copy.blend",
+ "object": "Kumo",
+ "read_only": true,
+ "global_": {
+  "vertices": 7398,
+  "edges": 14792,
+  "faces": 7396,
+  "face_sides": {
+   "4": 7396
+  },
+  "quad_pct": 100.0,
+  "degenerate_faces": 0,
+  "zero_length_edges": 0,
+  "non_manifold_edges": 0,
+  "boundary_edges": 0,
+  "loose_vertices": 0,
+  "inconsistent_winding_edges": 0,
+  "signed_volume": 0.676,
+  "normals": "outward",
+  "locally_concave_faces_hint": 1181,
+  "vertex_valence": {
+   "3": 87,
+   "4": 7232,
+   "5": 79
+  },
+  "poles_total": 166,
+  "poles_3": 87,
+  "poles_5": 79,
+  "poles_6plus": 0,
+  "quad_skew_deg": {
+   "mean": 16.29,
+   "over_30": 918,
+   "over_45": 320
+  },
+  "quad_aspect": {
+   "over_3": 74,
+   "over_5": 9
+  },
+  "nonplanar_quads_over_5pct": 721,
+  "dihedral_deg": {
+   "over_60": 366,
+   "over_90": 101,
+   "max": 173.4
+  },
+  "shading": {
+   "smooth_faces": 7396,
+   "flat_faces": 0,
+   "auto_smooth_or_sharp_edges": 0
+  },
+  "bone_influences_per_vertex": {
+   "1": 2232,
+   "2": 2324,
+   "3": 1640,
+   "4": 668,
+   "5": 310,
+   "6": 107,
+   "7": 43,
+   "8": 43,
+   "9": 27,
+   "10": 4
+  }
+ },
+ "regions": {
+  "eye_L": {
+   "vertices": 1204,
+   "faces": 1118,
+   "face_sides": {
+    "4": 1118
+   },
+   "quad_pct": 100.0,
+   "poles_3": 8,
+   "poles_5": 6,
+   "poles_6plus": 0,
+   "skew_mean": 20.4,
+   "skew_over_30": 199,
+   "aspect_over_3": 13,
+   "degenerate": 0,
+   "note": "eye painted in the texture (no lid geometry in the body mesh)",
+   "edge_flow": {
+    "radial_pct": 34.66,
+    "concentric_pct": 21.42,
+    "diagonal_pct": 43.92
+   },
+   "pole_positions": [
+    [
+     -0.158,
+     -0.508,
+     1.604,
+     5
+    ],
+    [
+     0.255,
+     -0.52,
+     1.511,
+     5
+    ],
+    [
+     0.257,
+     -0.524,
+     1.479,
+     5
+    ],
+    [
+     0.241,
+     -0.472,
+     1.472,
+     3
+    ],
+    [
+     0.069,
+     -0.298,
+     0.96,
+     5
+    ],
+    [
+     0.134,
+     -0.734,
+     1.198,
+     3
+    ],
+    [
+     -0.063,
+     -0.631,
+     1.264,
+     5
+    ],
+    [
+     0.042,
+     -0.305,
+     0.956,
+     5
+    ],
+    [
+     0.069,
+     -0.319,
+     0.966,
+     3
+    ],
+    [
+     -0.16,
+     -0.507,
+     1.635,
+     3
+    ],
+    [
+     -0.201,
+     -0.449,
+     1.569,
+     3
+    ],
+    [
+     0.148,
+     -0.515,
+     1.692,
+     3
+    ],
+    [
+     0.272,
+     -0.501,
+     1.515,
+     3
+    ],
+    [
+     -0.081,
+     -0.585,
+     1.289,
+     3
+    ]
+   ],
+   "centre": [
+    0.389,
+    -0.28,
+    1.386
+   ]
+  },
+  "eye_R": {
+   "vertices": 1314,
+   "faces": 1227,
+   "face_sides": {
+    "4": 1227
+   },
+   "quad_pct": 100.0,
+   "poles_3": 12,
+   "poles_5": 9,
+   "poles_6plus": 0,
+   "skew_mean": 18.3,
+   "skew_over_30": 196,
+   "aspect_over_3": 12,
+   "degenerate": 0,
+   "note": "eye painted in the texture (no lid geometry in the body mesh)",
+   "edge_flow": {
+    "radial_pct": 40.03,
+    "concentric_pct": 27.23,
+    "diagonal_pct": 32.74
+   },
+   "pole_positions": [
+    [
+     -0.356,
+     -0.354,
+     1.553,
+     3
+    ],
+    [
+     -0.346,
+     -0.282,
+     1.654,
+     3
+    ],
+    [
+     -0.356,
+     -0.354,
+     1.497,
+     5
+    ],
+    [
+     -0.158,
+     -0.508,
+     1.604,
+     5
+    ],
+    [
+     -0.19,
+     -0.487,
+     1.614,
+     5
+    ],
+    [
+     0.255,
+     -0.52,
+     1.511,
+     5
+    ],
+    [
+     0.257,
+     -0.524,
+     1.479,
+     5
+    ],
+    [
+     0.241,
+     -0.472,
+     1.472,
+     3
+    ],
+    [
+     0.069,
+     -0.298,
+     0.96,
+     5
+    ],
+    [
+     0.134,
+     -0.734,
+     1.198,
+     3
+    ],
+    [
+     -0.063,
+     -0.631,
+     1.264,
+     5
+    ],
+    [
+     -0.38,
+     -0.367,
+     1.377,
+     3
+    ],
+    [
+     -0.16,
+     -0.507,
+     1.635,
+     3
+    ],
+    [
+     -0.201,
+     -0.449,
+     1.569,
+     3
+    ],
+    [
+     0.148,
+     -0.515,
+     1.692,
+     3
+    ],
+    [
+     0.272,
+     -0.501,
+     1.515,
+     3
+    ],
+    [
+     -0.444,
+     -0.324,
+     1.1,
+     3
+    ],
+    [
+     -0.081,
+     -0.585,
+     1.289,
+     3
+    ],
+    [
+     -0.416,
+     -0.338,
+     1.52,
+     5
+    ],
+    [
+     0.042,
+     -0.305,
+     0.956,
+     5
+    ],
+    [
+     0.069,
+     -0.319,
+     0.966,
+     3
+    ]
+   ],
+   "centre": [
+    -0.271,
+    -0.392,
+    1.349
+   ]
+  },
+  "mouth_snout": {
+   "vertices": 152,
+   "faces": 122,
+   "face_sides": {
+    "4": 122
+   },
+   "quad_pct": 100.0,
+   "poles_3": 2,
+   "poles_5": 1,
+   "poles_6plus": 0,
+   "skew_mean": 15.5,
+   "skew_over_30": 6,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "mouth painted in the texture; no mouth opening / lip loops in the mesh",
+   "edge_flow": {
+    "radial_pct": 44.12,
+    "concentric_pct": 14.71,
+    "diagonal_pct": 41.18
+   },
+   "pole_positions": [
+    [
+     -0.081,
+     -0.585,
+     1.289,
+     3
+    ],
+    [
+     0.134,
+     -0.734,
+     1.198,
+     3
+    ],
+    [
+     -0.063,
+     -0.631,
+     1.264,
+     5
+    ]
+   ]
+  },
+  "neck": {
+   "vertices": 522,
+   "faces": 432,
+   "face_sides": {
+    "4": 432
+   },
+   "quad_pct": 100.0,
+   "poles_3": 4,
+   "poles_5": 9,
+   "poles_6plus": 0,
+   "skew_mean": 33.1,
+   "skew_over_30": 207,
+   "aspect_over_3": 22,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 11.22,
+    "around_bone_pct": 34.38,
+    "diagonal_pct": 54.4
+   },
+   "cross_section_edges": 40,
+   "pole_positions": [
+    [
+     0.069,
+     -0.298,
+     0.96,
+     5
+    ],
+    [
+     -0.057,
+     -0.025,
+     0.94,
+     5
+    ],
+    [
+     -0.017,
+     0.08,
+     0.937,
+     5
+    ],
+    [
+     -0.162,
+     -0.125,
+     0.948,
+     5
+    ],
+    [
+     -0.035,
+     -0.001,
+     0.947,
+     5
+    ],
+    [
+     0.168,
+     -0.131,
+     0.942,
+     5
+    ],
+    [
+     -0.027,
+     -0.022,
+     0.936,
+     3
+    ],
+    [
+     -0.034,
+     -0.019,
+     0.935,
+     3
+    ],
+    [
+     -0.132,
+     -0.18,
+     0.962,
+     3
+    ],
+    [
+     0.042,
+     -0.305,
+     0.956,
+     5
+    ],
+    [
+     0.069,
+     -0.319,
+     0.966,
+     3
+    ],
+    [
+     -0.149,
+     -0.208,
+     0.955,
+     5
+    ],
+    [
+     -0.188,
+     -0.205,
+     0.965,
+     5
+    ]
+   ]
+  },
+  "shoulder_L": {
+   "vertices": 67,
+   "faces": 44,
+   "face_sides": {
+    "4": 44
+   },
+   "quad_pct": 100.0,
+   "poles_3": 0,
+   "poles_5": 1,
+   "poles_6plus": 0,
+   "skew_mean": 26.4,
+   "skew_over_30": 14,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 50.0,
+    "around_bone_pct": 28.7,
+    "diagonal_pct": 21.3
+   },
+   "cross_section_edges": 31,
+   "pole_positions": [
+    [
+     0.162,
+     -0.079,
+     0.761,
+     5
+    ]
+   ],
+   "bone_to_surface_dist": 0.029
+  },
+  "elbow_L": {
+   "vertices": 94,
+   "faces": 63,
+   "face_sides": {
+    "4": 63
+   },
+   "quad_pct": 100.0,
+   "poles_3": 1,
+   "poles_5": 6,
+   "poles_6plus": 0,
+   "skew_mean": 16.3,
+   "skew_over_30": 2,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 42.04,
+    "around_bone_pct": 40.13,
+    "diagonal_pct": 17.83
+   },
+   "cross_section_edges": 25,
+   "pole_positions": [
+    [
+     0.38,
+     -0.082,
+     0.53,
+     5
+    ],
+    [
+     0.38,
+     -0.165,
+     0.526,
+     5
+    ],
+    [
+     0.406,
+     -0.08,
+     0.516,
+     5
+    ],
+    [
+     0.429,
+     -0.052,
+     0.494,
+     5
+    ],
+    [
+     0.429,
+     -0.032,
+     0.508,
+     3
+    ],
+    [
+     0.418,
+     -0.03,
+     0.517,
+     5
+    ],
+    [
+     0.365,
+     -0.034,
+     0.564,
+     5
+    ]
+   ],
+   "bone_to_surface_dist": 0.06
+  },
+  "wrist_L": {
+   "vertices": 31,
+   "faces": 19,
+   "face_sides": {
+    "4": 19
+   },
+   "quad_pct": 100.0,
+   "poles_3": 3,
+   "poles_5": 1,
+   "poles_6plus": 0,
+   "skew_mean": 14.6,
+   "skew_over_30": 0,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 20.83,
+    "around_bone_pct": 43.75,
+    "diagonal_pct": 35.42
+   },
+   "cross_section_edges": 21,
+   "pole_positions": [
+    [
+     0.489,
+     -0.094,
+     0.394,
+     3
+    ],
+    [
+     0.472,
+     -0.111,
+     0.409,
+     5
+    ],
+    [
+     0.476,
+     -0.136,
+     0.402,
+     3
+    ],
+    [
+     0.464,
+     -0.027,
+     0.385,
+     3
+    ]
+   ],
+   "bone_to_surface_dist": 0.026
+  },
+  "hip_L": {
+   "vertices": 51,
+   "faces": 34,
+   "face_sides": {
+    "4": 34
+   },
+   "quad_pct": 100.0,
+   "poles_3": 2,
+   "poles_5": 4,
+   "poles_6plus": 0,
+   "skew_mean": 23.6,
+   "skew_over_30": 10,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 38.1,
+    "around_bone_pct": 42.86,
+    "diagonal_pct": 19.05
+   },
+   "cross_section_edges": 12,
+   "pole_positions": [
+    [
+     0.14,
+     -0.023,
+     0.413,
+     5
+    ],
+    [
+     0.048,
+     -0.052,
+     0.322,
+     5
+    ],
+    [
+     0.128,
+     -0.011,
+     0.37,
+     5
+    ],
+    [
+     0.066,
+     -0.03,
+     0.323,
+     5
+    ],
+    [
+     0.132,
+     -0.015,
+     0.393,
+     3
+    ],
+    [
+     0.055,
+     -0.048,
+     0.313,
+     3
+    ]
+   ],
+   "bone_to_surface_dist": 0.031
+  },
+  "knee_L": {
+   "vertices": 66,
+   "faces": 46,
+   "face_sides": {
+    "4": 46
+   },
+   "quad_pct": 100.0,
+   "poles_3": 1,
+   "poles_5": 0,
+   "poles_6plus": 0,
+   "skew_mean": 15.3,
+   "skew_over_30": 2,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 14.68,
+    "around_bone_pct": 35.78,
+    "diagonal_pct": 49.54
+   },
+   "cross_section_edges": 25,
+   "pole_positions": [
+    [
+     0.248,
+     -0.087,
+     0.185,
+     3
+    ]
+   ],
+   "bone_to_surface_dist": 0.066
+  },
+  "ankle_L": {
+   "vertices": 72,
+   "faces": 48,
+   "face_sides": {
+    "4": 48
+   },
+   "quad_pct": 100.0,
+   "poles_3": 2,
+   "poles_5": 2,
+   "poles_6plus": 0,
+   "skew_mean": 25.1,
+   "skew_over_30": 13,
+   "aspect_over_3": 1,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 11.11,
+    "around_bone_pct": 35.9,
+    "diagonal_pct": 52.99
+   },
+   "cross_section_edges": 24,
+   "pole_positions": [
+    [
+     0.248,
+     -0.087,
+     0.185,
+     3
+    ],
+    [
+     0.248,
+     -0.095,
+     0.182,
+     3
+    ],
+    [
+     0.222,
+     -0.131,
+     0.182,
+     5
+    ],
+    [
+     0.248,
+     -0.091,
+     0.194,
+     5
+    ]
+   ],
+   "bone_to_surface_dist": 0.067
+  },
+  "shoulder_R": {
+   "vertices": 37,
+   "faces": 18,
+   "face_sides": {
+    "4": 18
+   },
+   "quad_pct": 100.0,
+   "poles_3": 1,
+   "poles_5": 2,
+   "poles_6plus": 0,
+   "skew_mean": 13.9,
+   "skew_over_30": 1,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 28.0,
+    "around_bone_pct": 34.0,
+    "diagonal_pct": 38.0
+   },
+   "cross_section_edges": 16,
+   "pole_positions": [
+    [
+     -0.201,
+     -0.12,
+     0.717,
+     5
+    ],
+    [
+     -0.216,
+     -0.115,
+     0.7,
+     3
+    ],
+    [
+     -0.174,
+     -0.108,
+     0.741,
+     5
+    ]
+   ],
+   "bone_to_surface_dist": 0.057
+  },
+  "elbow_R": {
+   "vertices": 79,
+   "faces": 58,
+   "face_sides": {
+    "4": 58
+   },
+   "quad_pct": 100.0,
+   "poles_3": 1,
+   "poles_5": 2,
+   "poles_6plus": 0,
+   "skew_mean": 10.0,
+   "skew_over_30": 3,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 41.61,
+    "around_bone_pct": 53.28,
+    "diagonal_pct": 5.11
+   },
+   "cross_section_edges": 19,
+   "pole_positions": [
+    [
+     -0.308,
+     -0.249,
+     0.547,
+     5
+    ],
+    [
+     -0.332,
+     -0.264,
+     0.522,
+     5
+    ],
+    [
+     -0.322,
+     -0.242,
+     0.533,
+     3
+    ]
+   ],
+   "bone_to_surface_dist": 0.059
+  },
+  "wrist_R": {
+   "vertices": 22,
+   "faces": 12,
+   "face_sides": {
+    "4": 12
+   },
+   "quad_pct": 100.0,
+   "poles_3": 2,
+   "poles_5": 0,
+   "poles_6plus": 0,
+   "skew_mean": 18.2,
+   "skew_over_30": 1,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 12.5,
+    "around_bone_pct": 53.12,
+    "diagonal_pct": 34.38
+   },
+   "cross_section_edges": 19,
+   "pole_positions": [
+    [
+     -0.498,
+     -0.3,
+     0.411,
+     3
+    ],
+    [
+     -0.479,
+     -0.204,
+     0.41,
+     3
+    ]
+   ],
+   "bone_to_surface_dist": 0.017
+  },
+  "hip_R": {
+   "vertices": 46,
+   "faces": 29,
+   "face_sides": {
+    "4": 29
+   },
+   "quad_pct": 100.0,
+   "poles_3": 0,
+   "poles_5": 2,
+   "poles_6plus": 0,
+   "skew_mean": 16.1,
+   "skew_over_30": 4,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 42.47,
+    "around_bone_pct": 38.36,
+    "diagonal_pct": 19.18
+   },
+   "cross_section_edges": 15,
+   "pole_positions": [
+    [
+     -0.077,
+     -0.019,
+     0.337,
+     5
+    ],
+    [
+     -0.131,
+     -0.038,
+     0.346,
+     5
+    ]
+   ],
+   "bone_to_surface_dist": 0.023
+  },
+  "knee_R": {
+   "vertices": 62,
+   "faces": 42,
+   "face_sides": {
+    "4": 42
+   },
+   "quad_pct": 100.0,
+   "poles_3": 0,
+   "poles_5": 0,
+   "poles_6plus": 0,
+   "skew_mean": 18.1,
+   "skew_over_30": 0,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 10.78,
+    "around_bone_pct": 22.55,
+    "diagonal_pct": 66.67
+   },
+   "cross_section_edges": 33,
+   "pole_positions": [],
+   "bone_to_surface_dist": 0.064
+  },
+  "ankle_R": {
+   "vertices": 69,
+   "faces": 38,
+   "face_sides": {
+    "4": 38
+   },
+   "quad_pct": 100.0,
+   "poles_3": 1,
+   "poles_5": 3,
+   "poles_6plus": 0,
+   "skew_mean": 16.9,
+   "skew_over_30": 6,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 24.27,
+    "around_bone_pct": 35.92,
+    "diagonal_pct": 39.81
+   },
+   "cross_section_edges": 29,
+   "pole_positions": [
+    [
+     -0.311,
+     -0.186,
+     0.123,
+     5
+    ],
+    [
+     -0.299,
+     -0.202,
+     0.125,
+     3
+    ],
+    [
+     -0.141,
+     -0.213,
+     0.114,
+     5
+    ],
+    [
+     -0.277,
+     -0.165,
+     0.159,
+     5
+    ]
+   ],
+   "bone_to_surface_dist": 0.072
+  },
+  "hand_fingers_L": {
+   "vertices": 27,
+   "faces": 18,
+   "face_sides": {
+    "4": 18
+   },
+   "quad_pct": 100.0,
+   "poles_3": 4,
+   "poles_5": 1,
+   "poles_6plus": 0,
+   "skew_mean": 18.3,
+   "skew_over_30": 0,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 11.36,
+    "around_bone_pct": 45.45,
+    "diagonal_pct": 43.18
+   },
+   "cross_section_edges": 14,
+   "pole_positions": [
+    [
+     0.432,
+     -0.013,
+     0.421,
+     3
+    ],
+    [
+     0.489,
+     -0.094,
+     0.394,
+     3
+    ],
+    [
+     0.476,
+     -0.136,
+     0.402,
+     3
+    ],
+    [
+     0.464,
+     -0.027,
+     0.385,
+     3
+    ],
+    [
+     0.472,
+     -0.111,
+     0.409,
+     5
+    ]
+   ],
+   "separate_digit_tips_in_bottom_slice": 1,
+   "vertices_in_hand_geometry": 27,
+   "vertices_dominated_by_hand_bone": 5,
+   "hand_bone_length": 0.034,
+   "max_separate_digits_in_slices": 6
+  },
+  "hand_fingers_R": {
+   "vertices": 23,
+   "faces": 14,
+   "face_sides": {
+    "4": 14
+   },
+   "quad_pct": 100.0,
+   "poles_3": 3,
+   "poles_5": 0,
+   "poles_6plus": 0,
+   "skew_mean": 19.4,
+   "skew_over_30": 1,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 8.33,
+    "around_bone_pct": 55.56,
+    "diagonal_pct": 36.11
+   },
+   "cross_section_edges": 14,
+   "pole_positions": [
+    [
+     -0.498,
+     -0.3,
+     0.411,
+     3
+    ],
+    [
+     -0.479,
+     -0.204,
+     0.41,
+     3
+    ],
+    [
+     -0.462,
+     -0.166,
+     0.415,
+     3
+    ]
+   ],
+   "separate_digit_tips_in_bottom_slice": 1,
+   "vertices_in_hand_geometry": 23,
+   "vertices_dominated_by_hand_bone": 1,
+   "hand_bone_length": 0.109,
+   "max_separate_digits_in_slices": 5
+  },
+  "foot_toes_L": {
+   "vertices": 177,
+   "faces": 156,
+   "face_sides": {
+    "4": 156
+   },
+   "quad_pct": 100.0,
+   "poles_3": 5,
+   "poles_5": 1,
+   "poles_6plus": 0,
+   "skew_mean": 14.5,
+   "skew_over_30": 13,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 30.42,
+    "around_bone_pct": 33.73,
+    "diagonal_pct": 35.84
+   },
+   "cross_section_edges": 25,
+   "pole_positions": [
+    [
+     0.374,
+     -0.039,
+     0.018,
+     3
+    ],
+    [
+     0.328,
+     -0.184,
+     0.076,
+     3
+    ],
+    [
+     0.28,
+     -0.185,
+     0.022,
+     5
+    ],
+    [
+     0.344,
+     -0.196,
+     0.028,
+     3
+    ],
+    [
+     0.244,
+     -0.226,
+     0.014,
+     3
+    ],
+    [
+     0.106,
+     -0.071,
+     -0.001,
+     3
+    ]
+   ]
+  },
+  "foot_toes_R": {
+   "vertices": 209,
+   "faces": 188,
+   "face_sides": {
+    "4": 188
+   },
+   "quad_pct": 100.0,
+   "poles_3": 6,
+   "poles_5": 3,
+   "poles_6plus": 0,
+   "skew_mean": 16.4,
+   "skew_over_30": 20,
+   "aspect_over_3": 6,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 39.49,
+    "around_bone_pct": 33.16,
+    "diagonal_pct": 27.34
+   },
+   "cross_section_edges": 30,
+   "pole_positions": [
+    [
+     -0.38,
+     -0.252,
+     0.022,
+     3
+    ],
+    [
+     -0.36,
+     -0.244,
+     0.078,
+     3
+    ],
+    [
+     -0.123,
+     -0.326,
+     0.015,
+     3
+    ],
+    [
+     -0.128,
+     -0.332,
+     -0.0,
+     3
+    ],
+    [
+     -0.2,
+     -0.28,
+     0.021,
+     3
+    ],
+    [
+     -0.311,
+     -0.186,
+     0.123,
+     5
+    ],
+    [
+     -0.299,
+     -0.202,
+     0.125,
+     3
+    ],
+    [
+     -0.141,
+     -0.213,
+     0.114,
+     5
+    ],
+    [
+     -0.2,
+     -0.279,
+     0.019,
+     5
+    ]
+   ]
+  },
+  "tail": {
+   "vertices": 1076,
+   "faces": 1059,
+   "face_sides": {
+    "4": 1059
+   },
+   "quad_pct": 100.0,
+   "poles_3": 18,
+   "poles_5": 15,
+   "poles_6plus": 0,
+   "skew_mean": 11.7,
+   "skew_over_30": 80,
+   "aspect_over_3": 0,
+   "degenerate": 0,
+   "note": "",
+   "edge_flow": {
+    "along_bone_pct": 30.79,
+    "around_bone_pct": 40.25,
+    "diagonal_pct": 28.96
+   },
+   "cross_section_edges": 29,
+   "pole_positions": [
+    [
+     0.107,
+     0.719,
+     0.459,
+     3
+    ],
+    [
+     0.108,
+     0.604,
+     0.53,
+     5
+    ],
+    [
+     0.053,
+     0.462,
+     0.584,
+     5
+    ],
+    [
+     0.02,
+     0.507,
+     0.568,
+     3
+    ],
+    [
+     0.004,
+     0.53,
+     0.563,
+     5
+    ],
+    [
+     0.041,
+     0.322,
+     0.662,
+     3
+    ],
+    [
+     0.036,
+     0.484,
+     0.574,
+     3
+    ],
+    [
+     0.086,
+     0.129,
+     0.327,
+     5
+    ],
+    [
+     0.101,
+     0.097,
+     0.328,
+     5
+    ],
+    [
+     0.1,
+     0.108,
+     0.304,
+     3
+    ],
+    [
+     0.012,
+     0.518,
+     0.524,
+     3
+    ],
+    [
+     0.007,
+     0.45,
+     0.498,
+     3
+    ],
+    [
+     0.001,
+     0.465,
+     0.453,
+     5
+    ],
+    [
+     -0.017,
+     0.446,
+     0.272,
+     5
+    ],
+    [
+     -0.047,
+     0.509,
+     0.146,
+     3
+    ],
+    [
+     -0.002,
+     0.584,
+     0.469,
+     5
+    ],
+    [
+     0.083,
+     0.578,
+     0.531,
+     3
+    ],
+    [
+     0.08,
+     0.646,
+     0.671,
+     3
+    ],
+    [
+     0.032,
+     0.527,
+     0.561,
+     5
+    ],
+    [
+     0.099,
+     0.557,
+     0.584,
+     5
+    ],
+    [
+     0.036,
+     0.453,
+     0.735,
+     3
+    ],
+    [
+     0.024,
+     0.464,
+     0.578,
+     5
+    ],
+    [
+     0.058,
+     0.309,
+     0.443,
+     3
+    ],
+    [
+     0.031,
+     0.401,
+     0.536,
+     5
+    ],
+    [
+     0.062,
+     0.409,
+     0.459,
+     5
+    ],
+    [
+     -0.008,
+     0.407,
+     0.45,
+     5
+    ],
+    [
+     0.003,
+     0.382,
+     0.377,
+     3
+    ],
+    [
+     0.026,
+     0.497,
+     0.391,
+     3
+    ],
+    [
+     0.056,
+     0.47,
+     0.453,
+     5
+    ],
+    [
+     0.05,
+     0.438,
+     0.496,
+     3
+    ],
+    [
+     0.009,
+     0.544,
+     0.429,
+     3
+    ],
+    [
+     0.062,
+     0.511,
+     0.522,
+     3
+    ],
+    [
+     -0.006,
+     0.685,
+     0.594,
+     3
+    ]
+   ],
+   "per_segment": [
+    {
+     "bone": "tail_01",
+     "vertices": 141,
+     "diagonal_pct": 17.25
+    },
+    {
+     "bone": "tail_02",
+     "vertices": 85,
+     "diagonal_pct": 16.89
+    },
+    {
+     "bone": "tail_03",
+     "vertices": 92,
+     "diagonal_pct": 0.0
+    },
+    {
+     "bone": "tail_04",
+     "vertices": 82,
+     "diagonal_pct": 15.94
+    },
+    {
+     "bone": "tail_05",
+     "vertices": 97,
+     "diagonal_pct": 35.54
+    },
+    {
+     "bone": "tail_06",
+     "vertices": 94,
+     "diagonal_pct": 24.53
+    },
+    {
+     "bone": "tail_07",
+     "vertices": 98,
+     "diagonal_pct": 26.06
+    },
+    {
+     "bone": "tail_08",
+     "vertices": 104,
+     "diagonal_pct": 32.04
+    },
+    {
+     "bone": "tail_09",
+     "vertices": 133,
+     "diagonal_pct": 65.16
+    },
+    {
+     "bone": "tail_10",
+     "vertices": 150,
+     "diagonal_pct": 24.57
+    }
+   ]
+  }
+ }
+}
