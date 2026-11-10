@@ -1,0 +1,132 @@
+{
+ "frente": {
+  "diferenca_media_regiao_olhos": 4.65,
+  "pixels_regiao_olhos": 64659,
+  "pct_pixels_diferenca_maior_que_24": 4.93,
+  "pct_pixels_diferenca_maior_que_48": 2.11,
+  "diferenca_media_imagem_inteira": 1.222,
+  "centroides_olhos_px": {
+   "antes": [
+    [
+     140.7,
+     290.8
+    ],
+    [
+     466.5,
+     279.4
+    ]
+   ],
+   "depois": [
+    [
+     140.6,
+     290.8
+    ],
+    [
+     466.9,
+     279.4
+    ]
+   ]
+  },
+  "distancia_entre_olhos_px": {
+   "antes": 326.0,
+   "depois": 326.5
+  },
+  "deslocamento_max_centroide_px": 0.4
+ },
+ "34": {
+  "diferenca_media_regiao_olhos": 1.75,
+  "pixels_regiao_olhos": 47455,
+  "pct_pixels_diferenca_maior_que_24": 1.76,
+  "pct_pixels_diferenca_maior_que_48": 0.33,
+  "diferenca_media_imagem_inteira": 0.537,
+  "centroides_olhos_px": {
+   "antes": [
+    [
+     250.7,
+     292.0
+    ]
+   ],
+   "depois": [
+    [
+     251.1,
+     291.8
+    ]
+   ]
+  },
+  "deslocamento_max_centroide_px": 0.45
+ },
+ "perfil_E": {
+  "diferenca_media_regiao_olhos": 4.5,
+  "pixels_regiao_olhos": 31836,
+  "pct_pixels_diferenca_maior_que_24": 3.75,
+  "pct_pixels_diferenca_maior_que_48": 1.97,
+  "diferenca_media_imagem_inteira": 0.652,
+  "centroides_olhos_px": {
+   "antes": [
+    [
+     100.0,
+     400.0
+    ],
+    [
+     400.6,
+     293.6
+    ]
+   ],
+   "depois": [
+    [
+     100.0,
+     400.0
+    ],
+    [
+     401.3,
+     293.1
+    ]
+   ]
+  },
+  "distancia_entre_olhos_px": {
+   "antes": 318.9,
+   "depois": 319.7
+  },
+  "deslocamento_max_centroide_px": 0.86
+ },
+ "perfil_D": {
+  "diferenca_media_regiao_olhos": 3.0,
+  "pixels_regiao_olhos": 52027,
+  "pct_pixels_diferenca_maior_que_24": 2.53,
+  "pct_pixels_diferenca_maior_que_48": 0.93,
+  "diferenca_media_imagem_inteira": 0.674,
+  "centroides_olhos_px": {
+   "antes": [
+    [
+     272.4,
+     284.1
+    ]
+   ],
+   "depois": [
+    [
+     272.1,
+     284.0
+    ]
+   ]
+  },
+  "deslocamento_max_centroide_px": 0.32
+ },
+ "silhueta_corpo": {
+  "frente": {
+   "iou": 0.99979,
+   "pixels_diferentes": 30
+  },
+  "34": {
+   "iou": 0.99985,
+   "pixels_diferentes": 22
+  },
+  "perfil": {
+   "iou": 1.0,
+   "pixels_diferentes": 0
+  },
+  "costas": {
+   "iou": 0.99987,
+   "pixels_diferentes": 19
+  }
+ }
+}
