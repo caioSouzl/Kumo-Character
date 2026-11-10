@@ -40,6 +40,11 @@ from kumo_common import (CREST_KEYS, HEAD_VERTS, PAL, flat_material, hexrgb,  # 
                          iris_material, toon_material)
 
 OUT = os.path.abspath(argv[argv.index("--out") + 1]) if "--out" in argv else os.getcwd()
+if "--head-verts" in argv:          # P3: alternative control vertices (JSON from fit_head_*.py)
+    with open(argv[argv.index("--head-verts") + 1]) as _fh:
+        _hv = json.load(_fh)["head_verts"]
+    HEAD_VERTS.clear()
+    HEAD_VERTS.update({k: tuple(v) for k, v in _hv.items()})
 DO_RENDER = "--render" in argv
 RES = int(argv[argv.index("--res") + 1]) if "--res" in argv else 900
 os.makedirs(OUT, exist_ok=True)
@@ -192,6 +197,9 @@ def boundary_loop(bm, edges):
     start = next(iter(adj))
     loop, prev, cur = [start], None, start
     while True:
+        if len(loop) > len(adj):
+            raise RuntimeError(f"hole border is not a simple loop ({len(adj)} verts, degrees "
+                               f"{sorted(set(len(n) for n in adj.values()))})")
         nxt = [v for v in adj[cur] if v is not prev]
         if not nxt or nxt[0] is start:
             break
@@ -224,7 +232,22 @@ def ordered_ring(bnd_edges, to2d):
 
 
 def cut_hole(bm, inside):
-    faces = [f for f in bm.faces if not f.tag and inside(f)]
+    faces = {f for f in bm.faces if not f.tag and inside(f)}
+    # a hole region that touches itself at a single vertex would leave a figure-8 border;
+    # grow the region over such pinch vertices until every border vertex has degree 2
+    for _ in range(8):
+        deg = {}
+        for f in faces:
+            for e in f.edges:
+                if sum(1 for g in e.link_faces if g in faces) == 1:
+                    for v in e.verts:
+                        deg[v] = deg.get(v, 0) + 1
+        pinch = [v for v, d in deg.items() if d > 2]
+        if not pinch:
+            break
+        for v in pinch:
+            faces |= {g for g in v.link_faces if not g.tag}
+    faces = list(faces)
     region_edges = {e for f in faces for e in f.edges}
     bmesh.ops.delete(bm, geom=faces, context="FACES_ONLY")
     loose_edges = [e for e in region_edges if e.is_valid and not e.link_faces]

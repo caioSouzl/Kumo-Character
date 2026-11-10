@@ -1,0 +1,42 @@
+{
+ "rest": {
+  "flipped_faces": 0,
+  "collapsed_faces": 0,
+  "stretched_faces": 0
+ },
+ "blink-L": {
+  "flipped_faces": 5,
+  "collapsed_faces": 4,
+  "stretched_faces": 17
+ },
+ "blink-R": {
+  "flipped_faces": 9,
+  "collapsed_faces": 5,
+  "stretched_faces": 16
+ },
+ "blink-both": {
+  "flipped_faces": 14,
+  "collapsed_faces": 9,
+  "stretched_faces": 33
+ },
+ "half-blink": {
+  "flipped_faces": 2,
+  "collapsed_faces": 0,
+  "stretched_faces": 7
+ },
+ "jaw-open": {
+  "flipped_faces": 0,
+  "collapsed_faces": 0,
+  "stretched_faces": 11
+ },
+ "jaw-side": {
+  "flipped_faces": 1,
+  "collapsed_faces": 0,
+  "stretched_faces": 7
+ },
+ "eyes-indep": {
+  "flipped_faces": 0,
+  "collapsed_faces": 0,
+  "stretched_faces": 0
+ }
+}
