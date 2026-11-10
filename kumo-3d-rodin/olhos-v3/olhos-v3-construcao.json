@@ -1,0 +1,161 @@
+{
+ "L": {
+  "centro_janela": [
+   0.42892882227897644,
+   -0.30991750955581665,
+   1.4019705057144165
+  ],
+  "eixo_r": [
+   0.5208422541618347,
+   0.8536529541015625,
+   0.0
+  ],
+  "eixo_w": [
+   -0.09654254466295242,
+   0.05890383943915367,
+   0.993584394454956
+  ],
+  "eixo_f": [
+   0.8481761813163757,
+   -0.5175006985664368,
+   0.11309342086315155
+  ],
+  "meia_largura": 0.28007825813256204,
+  "meia_altura": 0.22143874216485523,
+  "raio_globo": 0.35009782266570255,
+  "centro_globo": [
+   0.1319841742515564,
+   -0.12874163687229156,
+   1.3623766899108887
+  ],
+  "ang_fechar_sup_graus": 64.74999999999963,
+  "ang_fechar_inf_graus": -45.499999999999844,
+  "sinal_eixo_osso": -1.0,
+  "pupila_centro": [
+   -0.44941406250000004,
+   -0.05332031249999991
+  ],
+  "pupila_meia": [
+   0.325,
+   0.6119140625
+  ],
+  "pixels_brilho": 2219,
+  "pixels_olho": 121865,
+  "faces_casca": 362
+ },
+ "R": {
+  "centro_janela": [
+   -0.25619450211524963,
+   -0.5116022825241089,
+   1.391662836074829
+  ],
+  "eixo_r": [
+   0.772071123123169,
+   -0.6355361938476562,
+   0.0
+  ],
+  "eixo_w": [
+   0.10550697892904282,
+   0.12817348539829254,
+   0.9861236810684204
+  ],
+  "eixo_f": [
+   -0.6267172694206238,
+   -0.7613576054573059,
+   0.16601254045963287
+  ],
+  "meia_largura": 0.21445296712045095,
+  "meia_altura": 0.22944442624248043,
+  "raio_globo": 0.28680553280310056,
+  "centro_globo": [
+   -0.07644851505756378,
+   -0.2932406961917877,
+   1.3440495729446411
+  ],
+  "ang_fechar_sup_graus": 82.49999999999942,
+  "ang_fechar_inf_graus": -56.499999999999716,
+  "sinal_eixo_osso": -1.0,
+  "pupila_centro": [
+   0.4849609374999999,
+   -0.05332031249999991
+  ],
+  "pupila_meia": [
+   0.32753906250000003,
+   0.609375
+  ],
+  "pixels_brilho": 768,
+  "pixels_olho": 117681,
+  "faces_casca": 329
+ },
+ "objetos_criados": [
+  "Kumo_EyeWindow_L",
+  "Kumo_Eye_L",
+  "Kumo_EyeGaze_L",
+  "Kumo_Iris_L",
+  "Kumo_Pupil_L",
+  "Kumo_Catchlight_L",
+  "Kumo_LidUp_L",
+  "Kumo_LidLow_L",
+  "Kumo_EyeWindow_R",
+  "Kumo_Eye_R",
+  "Kumo_EyeGaze_R",
+  "Kumo_Iris_R",
+  "Kumo_Pupil_R",
+  "Kumo_Catchlight_R",
+  "Kumo_LidUp_R",
+  "Kumo_LidLow_R",
+  "Kumo_Olhos_PeleRef"
+ ],
+ "tom_e_canto": {
+  "L": {
+   "lum_pele_em_volta": 0.4757,
+   "lum_palpebra_v2": 0.4799,
+   "lum_palpebra_v3": 0.4757,
+   "faces_canto_adicionadas": 5
+  },
+  "R": {
+   "lum_pele_em_volta": 0.4303,
+   "lum_palpebra_v2": 0.4308,
+   "lum_palpebra_v3": 0.4303,
+   "faces_canto_adicionadas": 1
+  }
+ },
+ "relevo": {
+  "altura_m": {
+   "up": 0.008,
+   "low": 0.0044
+  },
+  "largura": {
+   "up": 0.03,
+   "low": 0.022
+  }
+ },
+ "contorno_pintado_px": {
+  "L": 7840,
+  "R": 7824
+ },
+ "pontos_empurrados_para_fora": {
+  "casca_L": 1,
+  "casca_L_triangulos_erguidos": 0,
+  "casca_L_vertices_removidos_da_margem": 1,
+  "globo_L_vertices_comprimidos": 3,
+  "Kumo_Iris_L_triangulos_erguidos": 8,
+  "Kumo_Pupil_L_triangulos_erguidos": 9,
+  "Kumo_Catchlight_L_triangulos_erguidos": 13,
+  "Kumo_LidUp_L_triangulos_erguidos": 16,
+  "Kumo_LidLow_L_triangulos_erguidos": 14,
+  "casca_R": 0,
+  "casca_R_triangulos_erguidos": 0,
+  "casca_R_vertices_removidos_da_margem": 0,
+  "globo_R_vertices_comprimidos": 0,
+  "Kumo_Iris_R_triangulos_erguidos": 12,
+  "Kumo_Pupil_R_triangulos_erguidos": 12,
+  "Kumo_Catchlight_R_triangulos_erguidos": 10,
+  "Kumo_LidUp_R_triangulos_erguidos": 5,
+  "Kumo_LidLow_R_triangulos_erguidos": 7
+ },
+ "eixo_alvo_vertical": [
+  "Y",
+  1.0
+ ]
+}
