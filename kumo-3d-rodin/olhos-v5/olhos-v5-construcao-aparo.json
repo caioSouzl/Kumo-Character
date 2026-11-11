@@ -1,0 +1,241 @@
+{
+ "L": {
+  "centro_janela": [
+   0.42892882227897644,
+   -0.30991750955581665,
+   1.4019705057144165
+  ],
+  "eixo_r": [
+   0.5208422541618347,
+   0.8536529541015625,
+   0.0
+  ],
+  "eixo_w": [
+   -0.09654254466295242,
+   0.05890383943915367,
+   0.993584394454956
+  ],
+  "eixo_f": [
+   0.8481761813163757,
+   -0.5175006985664368,
+   0.11309342086315155
+  ],
+  "meia_largura": 0.28007825813256204,
+  "meia_altura": 0.22143874216485523,
+  "raio_globo": 0.35009782266570255,
+  "centro_globo": [
+   0.1319841742515564,
+   -0.12874163687229156,
+   1.3623766899108887
+  ],
+  "ang_fechar_sup_graus": 77.99999999999947,
+  "ang_fechar_inf_graus": -45.499999999999844,
+  "sinal_eixo_osso": -1.0,
+  "pupila_centro": [
+   -0.44941406250000004,
+   -0.05332031249999991
+  ],
+  "pupila_meia": [
+   0.325,
+   0.6119140625
+  ],
+  "pixels_brilho": 2219,
+  "pixels_olho": 121865,
+  "faces_casca": 366
+ },
+ "R": {
+  "centro_janela": [
+   -0.25619450211524963,
+   -0.5116022825241089,
+   1.391662836074829
+  ],
+  "eixo_r": [
+   0.772071123123169,
+   -0.6355361938476562,
+   0.0
+  ],
+  "eixo_w": [
+   0.10550697892904282,
+   0.12817348539829254,
+   0.9861236810684204
+  ],
+  "eixo_f": [
+   -0.6267172694206238,
+   -0.7613576054573059,
+   0.16601254045963287
+  ],
+  "meia_largura": 0.21445296712045095,
+  "meia_altura": 0.22944442624248043,
+  "raio_globo": 0.28680553280310056,
+  "centro_globo": [
+   -0.07644851505756378,
+   -0.2932406961917877,
+   1.3440495729446411
+  ],
+  "ang_fechar_sup_graus": 82.49999999999942,
+  "ang_fechar_inf_graus": -56.499999999999716,
+  "sinal_eixo_osso": -1.0,
+  "pupila_centro": [
+   0.4849609374999999,
+   -0.05332031249999991
+  ],
+  "pupila_meia": [
+   0.32753906250000003,
+   0.609375
+  ],
+  "pixels_brilho": 768,
+  "pixels_olho": 117681,
+  "faces_casca": 329
+ },
+ "objetos_criados": [
+  "Kumo_EyeWindow_L",
+  "Kumo_Eye_L",
+  "Kumo_EyeGaze_L",
+  "Kumo_Iris_L",
+  "Kumo_Pupil_L",
+  "Kumo_Catchlight_L",
+  "Kumo_LidUp_L",
+  "Kumo_LidLow_L",
+  "Kumo_EyeWindow_R",
+  "Kumo_Eye_R",
+  "Kumo_EyeGaze_R",
+  "Kumo_Iris_R",
+  "Kumo_Pupil_R",
+  "Kumo_Catchlight_R",
+  "Kumo_LidUp_R",
+  "Kumo_LidLow_R",
+  "Kumo_Olhos_PeleRef"
+ ],
+ "aparo_dobra": {
+  "Kumo_Eye_L": {
+   "triangulos": 795,
+   "cruzando": 5,
+   "marcados_nesta_camada": 38,
+   "aparados_uniao": 43
+  },
+  "Kumo_Iris_L": {
+   "triangulos": 780,
+   "cruzando": 1,
+   "marcados_nesta_camada": 6,
+   "aparados_uniao": 34
+  },
+  "Kumo_Pupil_L": {
+   "triangulos": 780,
+   "cruzando": 0,
+   "marcados_nesta_camada": 8,
+   "aparados_uniao": 34
+  },
+  "Kumo_Catchlight_L": {
+   "triangulos": 780,
+   "cruzando": 0,
+   "marcados_nesta_camada": 1,
+   "aparados_uniao": 34
+  },
+  "Kumo_LidLow_L": {
+   "triangulos": 780,
+   "cruzando": 0,
+   "marcados_nesta_camada": 4,
+   "aparados_uniao": 34
+  },
+  "Kumo_LidUp_L": {
+   "triangulos": 780,
+   "cruzando": 1,
+   "marcados_nesta_camada": 4,
+   "aparados_uniao": 34
+  },
+  "Kumo_Eye_R": {
+   "triangulos": 658,
+   "cruzando": 2,
+   "marcados_nesta_camada": 2,
+   "aparados_uniao": 2
+  },
+  "Kumo_Iris_R": {
+   "triangulos": 658,
+   "cruzando": 2,
+   "marcados_nesta_camada": 2,
+   "aparados_uniao": 2
+  },
+  "Kumo_Pupil_R": {
+   "triangulos": 658,
+   "cruzando": 2,
+   "marcados_nesta_camada": 2,
+   "aparados_uniao": 2
+  },
+  "Kumo_Catchlight_R": {
+   "triangulos": 658,
+   "cruzando": 2,
+   "marcados_nesta_camada": 2,
+   "aparados_uniao": 2
+  },
+  "Kumo_LidLow_R": {
+   "triangulos": 658,
+   "cruzando": 2,
+   "marcados_nesta_camada": 2,
+   "aparados_uniao": 2
+  },
+  "Kumo_LidUp_R": {
+   "triangulos": 658,
+   "cruzando": 2,
+   "marcados_nesta_camada": 2,
+   "aparados_uniao": 2
+  }
+ },
+ "tom_e_canto": {
+  "L": {
+   "pedaco_px": 32,
+   "pedacos_disponiveis": 164,
+   "lum_pele_em_volta": 0.4751,
+   "lum_palpebra_v4": 0.4751,
+   "detalhe_desvio_pele_em_volta": 0.0138,
+   "detalhe_desvio_palpebra_v3": 0.0004,
+   "detalhe_desvio_palpebra_v4": 0.0021,
+   "pixels_canto_cobertos_ao_fechar": 159,
+   "faces_canto_adicionadas": 9
+  },
+  "R": {
+   "pedaco_px": 32,
+   "pedacos_disponiveis": 124,
+   "lum_pele_em_volta": 0.4303,
+   "lum_palpebra_v4": 0.4303,
+   "detalhe_desvio_pele_em_volta": 0.0076,
+   "detalhe_desvio_palpebra_v3": 0.0003,
+   "detalhe_desvio_palpebra_v4": 0.0011,
+   "pixels_canto_cobertos_ao_fechar": 0,
+   "faces_canto_adicionadas": 1
+  }
+ },
+ "relevo": {
+  "altura_m": {
+   "up": 0.008,
+   "low": 0.0044
+  },
+  "largura": {
+   "up": 0.03,
+   "low": 0.022
+  }
+ },
+ "contorno_pintado_px": {
+  "L": 7840,
+  "R": 7824
+ },
+ "pontos_empurrados_para_fora": {
+  "casca_L_triangulos_refinados_por_nivel": [
+   4,
+   6,
+   8
+  ],
+  "casca_L": 10,
+  "casca_L_triangulos_erguidos": 11,
+  "casca_L_vertices_removidos_da_margem": 2,
+  "globo_L_vertices_comprimidos": 8,
+  "casca_R_triangulos_refinados_por_nivel": [],
+  "casca_R": 0,
+  "casca_R_triangulos_erguidos": 0,
+  "casca_R_vertices_removidos_da_margem": 0,
+  "globo_R_vertices_comprimidos": 0
+ },
+ "eixo_alvo_vertical": [
+  "Y",
+  1.0
+ ]
+}
