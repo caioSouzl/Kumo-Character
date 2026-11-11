@@ -25,3 +25,9 @@
 - Mesmas poses de articulação da auditoria, medidas com o mesmo método.
 - Desempenho medido (milissegundos por atualização).
 - Itens ainda em aberto declarados como tal.
+
+## Autorizações de 2026-11-11 (2ª sessão)
+
+| # | Decisão |
+|---|---|
+| D6 | "Autorizo todas as reclamações": shape key corretiva da mão fechada, solução do contorno em jogo e início do P2 (cabeça, olhos e boca). Trabalho em `maos-corretivas/`. |

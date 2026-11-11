@@ -1,0 +1,62 @@
+{
+ "ossos": 48,
+ "ossos_blend": 48,
+ "nomes_iguais": true,
+ "vertices": 7548,
+ "vertices_blend": 7548,
+ "max_influencias": 4,
+ "sem_peso": 0,
+ "soma_fora_de_1": 0,
+ "escala_armadura": [
+  1.0,
+  1.0,
+  1.0
+ ],
+ "acoes": [
+  "Kumo_Rig.001|Kumo_Rig|Pose_Apresentacao",
+  "Kumo_Rig.001|Kumo_Rig|Teste_Exportacao",
+  "Pose_Apresentacao"
+ ],
+ "acao_ativa": "Kumo_Rig.001|Kumo_Rig|Teste_Exportacao",
+ "quadros": [
+  1,
+  4
+ ],
+ "repouso_dist_casamento_max_mm": 0.0,
+ "deformacao_fbx_vs_blender": {
+  "1": {
+   "medio_mm": 0.0001,
+   "max_mm": 0.0004
+  },
+  "2": {
+   "medio_mm": 0.0001,
+   "max_mm": 0.0004
+  },
+  "3": {
+   "medio_mm": 0.0001,
+   "max_mm": 0.0004
+  },
+  "4": {
+   "medio_mm": 0.0001,
+   "max_mm": 0.0004
+  }
+ },
+ "animacao_fbx_vs_glb": {
+  "1": {
+   "max_mm": 0.0005,
+   "deslocamento_max_vs_quadro1_mm": 0.0
+  },
+  "2": {
+   "max_mm": 0.0007,
+   "deslocamento_max_vs_quadro1_mm": 109.8
+  },
+  "3": {
+   "max_mm": 0.0005,
+   "deslocamento_max_vs_quadro1_mm": 34.1
+  },
+  "4": {
+   "max_mm": 0.0014,
+   "deslocamento_max_vs_quadro1_mm": 356.2
+  }
+ }
+}

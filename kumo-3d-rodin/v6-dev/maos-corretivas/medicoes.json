@@ -1,0 +1,520 @@
+{
+ "margem_mm": 0.4,
+ "polegar": null,
+ "matriz_rig_identidade": true,
+ "matriz_corpo_identidade": true,
+ "angulo_dedo2_fechada_70_graus": 70.0,
+ "resolver_maofechada_L": {
+  "deslocamento_na_pose_max_mm": 2.1,
+  "iteracoes": 2,
+  "historico": [
+   {
+    "normais_invertidas": 0,
+    "pares": 10,
+    "reais": 6,
+    "prof_max_mm": 3.4
+   },
+   {
+    "normais_invertidas": 2,
+    "pares": 0,
+    "reais": 0,
+    "prof_max_mm": 0
+   }
+  ],
+  "vertices_movidos": 82,
+  "deslocamento_max_mm": 2.47
+ },
+ "resolver_maofechada_R": {
+  "deslocamento_na_pose_max_mm": 12.13,
+  "iteracoes": 10,
+  "historico": [
+   {
+    "normais_invertidas": 0,
+    "pares": 10,
+    "reais": 7,
+    "prof_max_mm": 4.13
+   },
+   {
+    "normais_invertidas": 2,
+    "pares": 2,
+    "reais": 2,
+    "prof_max_mm": 1.65
+   },
+   {
+    "normais_invertidas": 1,
+    "pares": 4,
+    "reais": 2,
+    "prof_max_mm": 2.97
+   },
+   {
+    "normais_invertidas": 1,
+    "pares": 7,
+    "reais": 2,
+    "prof_max_mm": 0.73
+   },
+   {
+    "normais_invertidas": 1,
+    "pares": 5,
+    "reais": 2,
+    "prof_max_mm": 1.2
+   },
+   {
+    "normais_invertidas": 2,
+    "pares": 4,
+    "reais": 1,
+    "prof_max_mm": 0.89
+   },
+   {
+    "normais_invertidas": 1,
+    "pares": 2,
+    "reais": 2,
+    "prof_max_mm": 1.85
+   },
+   {
+    "normais_invertidas": 0,
+    "pares": 4,
+    "reais": 3,
+    "prof_max_mm": 1.85
+   },
+   {
+    "normais_invertidas": 1,
+    "pares": 2,
+    "reais": 2,
+    "prof_max_mm": 3.96
+   },
+   {
+    "normais_invertidas": 1,
+    "pares": 0,
+    "reais": 0,
+    "prof_max_mm": 0
+   }
+  ],
+  "vertices_movidos": 86,
+  "deslocamento_max_mm": 13.68
+ },
+ "driver_L": [
+  "smoothstep(0.70, 1.20, (a1+a2+a3)/3)"
+ ],
+ "driver_R": [
+  "smoothstep(0.70, 1.20, (a1+a2+a3)/3)"
+ ],
+ "testes_E": {
+  "repouso": {
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "mao_fechada": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.117,
+   "esticamento_max": 3.005,
+   "keys": {
+    "Corretiva_MaoFechada.L": 1.0
+   }
+  },
+  "mao_aberta": {
+   "pares_novos": 2,
+   "reais": 2,
+   "rasantes": 0,
+   "prof_max_mm": 1.88,
+   "compressao_min": 0.598,
+   "esticamento_max": 1.283,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "dedos_45": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.274,
+   "esticamento_max": 2.322,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.078
+   }
+  },
+  "polegar": {
+   "pares_novos": 2,
+   "reais": 1,
+   "rasantes": 1,
+   "prof_max_mm": 2.62,
+   "compressao_min": 0.446,
+   "esticamento_max": 1.409,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "dedos_alternados": {
+   "pares_novos": 3,
+   "reais": 2,
+   "rasantes": 1,
+   "prof_max_mm": 2.84,
+   "compressao_min": 0.291,
+   "esticamento_max": 2.98,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "palma_curvada_20": {
+   "pares_novos": 5,
+   "reais": 1,
+   "rasantes": 4,
+   "prof_max_mm": 2.87,
+   "compressao_min": 0.669,
+   "esticamento_max": 2.34,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "punho_45": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.225,
+   "esticamento_max": 1.494,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "punho_menos45": {
+   "pares_novos": 2,
+   "reais": 2,
+   "rasantes": 0,
+   "prof_max_mm": 1.45,
+   "compressao_min": 0.489,
+   "esticamento_max": 1.649,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "punho_lateral_30": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.603,
+   "esticamento_max": 1.338,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "punho_lateral_menos30": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.624,
+   "esticamento_max": 1.344,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "cotovelo_90": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.317,
+   "esticamento_max": 1.695,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "cotovelo_100": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.334,
+   "esticamento_max": 1.734,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "cotovelo_90_punho_45_mao_fechada": {
+   "pares_novos": 15,
+   "reais": 13,
+   "rasantes": 2,
+   "prof_max_mm": 4.81,
+   "compressao_min": 0.109,
+   "esticamento_max": 2.939,
+   "keys": {
+    "Corretiva_MaoFechada.L": 1.0
+   }
+  },
+  "fechar_30": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.498,
+   "esticamento_max": 1.93,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "fechar_40": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.341,
+   "esticamento_max": 2.228,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.0
+   }
+  },
+  "fechar_50": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.223,
+   "esticamento_max": 2.505,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.267
+   }
+  },
+  "fechar_60": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.189,
+   "esticamento_max": 2.759,
+   "keys": {
+    "Corretiva_MaoFechada.L": 0.763
+   }
+  },
+  "fechar_70": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.117,
+   "esticamento_max": 3.005,
+   "keys": {
+    "Corretiva_MaoFechada.L": 1.0
+   }
+  }
+ },
+ "testes_D": {
+  "repouso": {
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "mao_fechada": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.237,
+   "esticamento_max": 2.891,
+   "keys": {
+    "Corretiva_MaoFechada.R": 1.0
+   }
+  },
+  "mao_aberta": {
+   "pares_novos": 6,
+   "reais": 6,
+   "rasantes": 0,
+   "prof_max_mm": 1.94,
+   "compressao_min": 0.598,
+   "esticamento_max": 1.283,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "dedos_45": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.271,
+   "esticamento_max": 2.32,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.078
+   }
+  },
+  "polegar": {
+   "pares_novos": 8,
+   "reais": 8,
+   "rasantes": 0,
+   "prof_max_mm": 2.14,
+   "compressao_min": 0.446,
+   "esticamento_max": 1.409,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "dedos_alternados": {
+   "pares_novos": 5,
+   "reais": 2,
+   "rasantes": 3,
+   "prof_max_mm": 2.85,
+   "compressao_min": 0.291,
+   "esticamento_max": 2.98,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "palma_curvada_20": {
+   "pares_novos": 5,
+   "reais": 1,
+   "rasantes": 4,
+   "prof_max_mm": 2.82,
+   "compressao_min": 0.755,
+   "esticamento_max": 2.34,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "punho_45": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.568,
+   "esticamento_max": 1.541,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "punho_menos45": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.405,
+   "esticamento_max": 1.323,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "punho_lateral_30": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.467,
+   "esticamento_max": 1.314,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "punho_lateral_menos30": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.64,
+   "esticamento_max": 1.527,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "cotovelo_90": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.529,
+   "esticamento_max": 1.479,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "cotovelo_100": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.495,
+   "esticamento_max": 1.516,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "cotovelo_90_punho_45_mao_fechada": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.24,
+   "esticamento_max": 2.933,
+   "keys": {
+    "Corretiva_MaoFechada.R": 1.0
+   }
+  },
+  "fechar_30": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.498,
+   "esticamento_max": 1.939,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "fechar_40": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.341,
+   "esticamento_max": 2.24,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.0
+   }
+  },
+  "fechar_50": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.176,
+   "esticamento_max": 2.444,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.267
+   }
+  },
+  "fechar_60": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.198,
+   "esticamento_max": 2.674,
+   "keys": {
+    "Corretiva_MaoFechada.R": 0.763
+   }
+  },
+  "fechar_70": {
+   "pares_novos": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "compressao_min": 0.237,
+   "esticamento_max": 2.891,
+   "keys": {
+    "Corretiva_MaoFechada.R": 1.0
+   }
+  }
+ },
+ "desempenho_ms": 0.4
+}
