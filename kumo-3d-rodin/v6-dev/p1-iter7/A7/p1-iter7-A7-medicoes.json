@@ -1,0 +1,740 @@
+{
+ "parametros": {
+  "janela_cotovelo_umero": 0.11953846153846154,
+  "janela_cotovelo_antebraco": 0.11953846153846154,
+  "janela_punho": 0.11538461538461539,
+  "passo_aneis_articulacao": 0.045,
+  "afinamento_dobra_cotovelo": 0.35,
+  "pivo_dedo": 0.012,
+  "janela_dedo": 0.04630769230769231,
+  "pivo_dedo_palma": 0.02,
+  "janela_junta_dedo": 0.03704615384615385,
+  "curvatura_dedos": 1.1,
+  "polegar": {
+   "lat": 0.75,
+   "baixo": 0.45,
+   "saida": 0.02,
+   "pivo": 0.006,
+   "janela": 0.025,
+   "fecha_para_palma": 1.0
+  },
+  "metacarpo": true,
+  "gradiente_metacarpo": [
+   -0.25,
+   0.85
+  ],
+  "pivo_polegar": 0.006
+ },
+ "estilo_mao": {
+  "nome": "A7",
+  "palm_w": 0.7,
+  "palm_t": 1.8,
+  "cols": [
+   0.34,
+   0.3
+  ],
+  "fd": 0.86,
+  "fl": 0.8,
+  "spread": 0.03,
+  "curl": 1.1,
+  "rect": 0.7,
+  "first_t": 1.35,
+  "tip": [
+   1.0,
+   1.0,
+   0.98,
+   1.0,
+   1.03,
+   0.94,
+   0.64
+  ],
+  "tl": 0.6,
+  "td": 0.95,
+  "ttip": [
+   0.62,
+   0.72,
+   0.86,
+   1.0,
+   1.02,
+   1.0,
+   0.9,
+   0.6
+  ],
+  "tla": 0.5,
+  "tdn": 0.75,
+  "tpn": 0.45,
+  "tface": "medial",
+  "tout": 0.016,
+  "razoes": {
+   "P1_RT": 2.0,
+   "P1_RK": 2.0
+  },
+  "tp": 0.006,
+  "mcg": [
+   -0.25,
+   0.85
+  ],
+  "pl": 1.25,
+  "tring": 2,
+  "tD": [
+   0.06,
+   0.13,
+   0.22,
+   0.36,
+   0.52,
+   0.68,
+   0.84,
+   1.0
+  ],
+  "marca_tubo": true
+ },
+ "escala": {
+  "K_W_m_por_px": 0.00769,
+  "K_H_m_por_px": 0.00554
+ },
+ "medidas_m": {
+  "umero": 0.1607,
+  "antebraco": 0.1552,
+  "raio_braco": 0.0615,
+  "raio_antebraco": 0.0538,
+  "raio_punho": 0.0462,
+  "mao_comprimento": 0.1773,
+  "mao_largura": 0.2154,
+  "palma_comprimento": 0.1247,
+  "dedo_comprimento": 0.0576,
+  "palma_largura": 0.1508,
+  "palma_espessura": 0.0969
+ },
+ "braco_atual": {
+  "vertices": 329,
+  "faces": 316,
+  "umero": 0.226,
+  "antebraco": 0.184
+ },
+ "guia": {
+  "ombro": [
+   0.25,
+   -0.04,
+   0.74
+  ],
+  "cotovelo": [
+   0.315,
+   -0.032,
+   0.593
+  ],
+  "punho": [
+   0.378,
+   -0.054,
+   0.453
+  ]
+ },
+ "raios_articulacoes": {
+  "cotovelo": 0.0569,
+  "punho": 0.0462,
+  "dedo": 0.0232,
+  "polegar": 0.0256
+ },
+ "razao_janela_raio": {
+  "cotovelo": 2.1,
+  "punho": 2.5,
+  "no_do_dedo": 2.0,
+  "junta_do_dedo": 1.6,
+  "polegar": 2.0
+ },
+ "malha_base": {
+  "vertices": 356,
+  "faces": 354
+ },
+ "malha_nova": {
+  "vertices": 1418,
+  "faces": 1416,
+  "quads": 1416,
+  "tris": 0,
+  "ngons": 0
+ },
+ "pesos_novos": {
+  "max_influencias": 4,
+  "sem_peso": 0,
+  "soma_fora_de_1": 0
+ },
+ "ossos_novos": [
+  "DEF-braco.L",
+  "DEF-antebraco.L",
+  "DEF-mao.L",
+  "DEF-metacarpo.L",
+  "DEF-dedo3_1.L",
+  "DEF-dedo3_2.L",
+  "DEF-dedo1_1.L",
+  "DEF-dedo1_2.L",
+  "DEF-dedo2_1.L",
+  "DEF-dedo2_2.L",
+  "DEF-polegar_1.L",
+  "DEF-polegar_2.L"
+ ],
+ "autointersecao_em_repouso": {
+  "atual_regiao_braco": {
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  "novo": {
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  }
+ },
+ "mao_fechamento_por_angulo": [
+  {
+   "angulo": 30,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  {
+   "angulo": 35,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  {
+   "angulo": 40,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  {
+   "angulo": 45,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  {
+   "angulo": 50,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  {
+   "angulo": 55,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  {
+   "angulo": 60,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  {
+   "angulo": 65,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  },
+  {
+   "angulo": 70,
+   "pares": 0,
+   "reais": 0,
+   "rasantes": 0,
+   "prof_max_mm": 0.0,
+   "area_envolvida_cm2": 0.0
+  }
+ ],
+ "testes": {
+  "braco_horizontal": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.57,
+    "compressao_p01": 0.846,
+    "esticamento_max": 1.341
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 1.0,
+    "compressao_p01": 1.0,
+    "esticamento_max": 1.0
+   }
+  },
+  "braco_para_frente_90": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.704,
+    "compressao_p01": 0.833,
+    "esticamento_max": 1.399
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 1.0,
+    "compressao_p01": 1.0,
+    "esticamento_max": 1.0
+   }
+  },
+  "braco_para_tras_40": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.827,
+    "compressao_p01": 0.914,
+    "esticamento_max": 1.492
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 1.0,
+    "compressao_p01": 1.0,
+    "esticamento_max": 1.0
+   }
+  },
+  "braco_torcao_45": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.544,
+    "compressao_p01": 0.84,
+    "esticamento_max": 1.172
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 1.0,
+    "compressao_p01": 1.0,
+    "esticamento_max": 1.0
+   }
+  },
+  "cotovelo_45": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.506,
+    "compressao_p01": 0.627,
+    "esticamento_max": 1.578
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.705,
+    "compressao_p01": 0.838,
+    "esticamento_max": 1.337
+   }
+  },
+  "cotovelo_90": {
+   "atual": {
+    "pares_novos": 6,
+    "reais": 5,
+    "rasantes": 1,
+    "prof_max_mm": 2.98,
+    "area_envolvida_cm2": 11.08,
+    "pares_total": 6,
+    "compressao_min": 0.217,
+    "compressao_p01": 0.338,
+    "esticamento_max": 1.951
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.368,
+    "compressao_p01": 0.733,
+    "esticamento_max": 1.678
+   }
+  },
+  "cotovelo_100": {
+   "atual": {
+    "pares_novos": 34,
+    "reais": 29,
+    "rasantes": 5,
+    "prof_max_mm": 6.53,
+    "area_envolvida_cm2": 69.93,
+    "pares_total": 34,
+    "compressao_min": 0.187,
+    "compressao_p01": 0.308,
+    "esticamento_max": 1.997
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.315,
+    "compressao_p01": 0.676,
+    "esticamento_max": 1.735
+   }
+  },
+  "cotovelo_115": {
+   "atual": {
+    "pares_novos": 50,
+    "reais": 46,
+    "rasantes": 4,
+    "prof_max_mm": 8.63,
+    "area_envolvida_cm2": 120.81,
+    "pares_total": 50,
+    "compressao_min": 0.161,
+    "compressao_p01": 0.366,
+    "esticamento_max": 2.039
+   },
+   "novo": {
+    "pares_novos": 87,
+    "reais": 65,
+    "rasantes": 22,
+    "prof_max_mm": 3.96,
+    "area_envolvida_cm2": 48.5,
+    "pares_total": 87,
+    "compressao_min": 0.279,
+    "compressao_p01": 0.584,
+    "esticamento_max": 1.805
+   }
+  },
+  "cotovelo_130": {
+   "atual": {
+    "pares_novos": 77,
+    "reais": 75,
+    "rasantes": 2,
+    "prof_max_mm": 14.23,
+    "area_envolvida_cm2": 205.06,
+    "pares_total": 77,
+    "compressao_min": 0.194,
+    "compressao_p01": 0.303,
+    "esticamento_max": 2.047
+   },
+   "novo": {
+    "pares_novos": 117,
+    "reais": 89,
+    "rasantes": 28,
+    "prof_max_mm": 6.36,
+    "area_envolvida_cm2": 75.19,
+    "pares_total": 117,
+    "compressao_min": 0.272,
+    "compressao_p01": 0.489,
+    "esticamento_max": 1.853
+   }
+  },
+  "antebraco_torcao_60": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.518,
+    "compressao_p01": 0.656,
+    "esticamento_max": 1.527
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.866,
+    "compressao_p01": 0.876,
+    "esticamento_max": 1.192
+   }
+  },
+  "punho_45": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.617,
+    "compressao_p01": 0.858,
+    "esticamento_max": 1.389
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.576,
+    "compressao_p01": 0.796,
+    "esticamento_max": 1.409
+   }
+  },
+  "punho_menos45": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.491,
+    "compressao_p01": 0.857,
+    "esticamento_max": 1.352
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.576,
+    "compressao_p01": 0.796,
+    "esticamento_max": 1.409
+   }
+  },
+  "punho_lateral_30": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.65,
+    "compressao_p01": 0.894,
+    "esticamento_max": 1.124
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.727,
+    "compressao_p01": 0.865,
+    "esticamento_max": 1.268
+   }
+  },
+  "punho_lateral_menos30": {
+   "atual": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.824,
+    "compressao_p01": 0.912,
+    "esticamento_max": 1.283
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.727,
+    "compressao_p01": 0.865,
+    "esticamento_max": 1.268
+   }
+  },
+  "cotovelo_90_punho_45": {
+   "atual": {
+    "pares_novos": 6,
+    "reais": 5,
+    "rasantes": 1,
+    "prof_max_mm": 2.98,
+    "area_envolvida_cm2": 11.08,
+    "pares_total": 6,
+    "compressao_min": 0.217,
+    "compressao_p01": 0.338,
+    "esticamento_max": 1.951
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.371,
+    "compressao_p01": 0.658,
+    "esticamento_max": 1.678
+   }
+  },
+  "mao_fechada": {
+   "atual": {
+    "nao_suportado": "o rig atual n\u00e3o tem ossos de dedo"
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.159,
+    "compressao_p01": 0.652,
+    "esticamento_max": 3.833
+   }
+  },
+  "mao_aberta_abduzida": {
+   "atual": {
+    "nao_suportado": "o rig atual n\u00e3o tem ossos de dedo"
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.624,
+    "compressao_p01": 0.825,
+    "esticamento_max": 2.135
+   }
+  },
+  "palma_curvada_20": {
+   "atual": {
+    "nao_suportado": "o rig atual n\u00e3o tem ossos de dedo"
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.692,
+    "compressao_p01": 0.864,
+    "esticamento_max": 3.518
+   }
+  },
+  "dedos_flexao_45": {
+   "atual": {
+    "nao_suportado": "o rig atual n\u00e3o tem ossos de dedo"
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.302,
+    "compressao_p01": 0.715,
+    "esticamento_max": 1.729
+   }
+  },
+  "polegar_movimento": {
+   "atual": {
+    "nao_suportado": "o rig atual n\u00e3o tem ossos de dedo"
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.514,
+    "compressao_p01": 0.788,
+    "esticamento_max": 2.902
+   }
+  },
+  "dedos_alternados": {
+   "atual": {
+    "nao_suportado": "o rig atual n\u00e3o tem ossos de dedo"
+   },
+   "novo": {
+    "pares_novos": 0,
+    "reais": 0,
+    "rasantes": 0,
+    "prof_max_mm": 0.0,
+    "area_envolvida_cm2": 0.0,
+    "pares_total": 0,
+    "compressao_min": 0.173,
+    "compressao_p01": 0.833,
+    "esticamento_max": 2.195
+   }
+  }
+ },
+ "proporcoes_vista_frente": {
+  "mao_largura_sobre_antebraco": 1.97,
+  "mao_comprimento_sobre_largura": 1.08,
+  "dedo_comprimento_sobre_espessura": 1.98,
+  "polegar_sobre_dedo": 0.75,
+  "palma_sobre_dedo": 1.36
+ },
+ "proporcoes_referencia": {
+  "mao_largura_sobre_antebraco": 2.0,
+  "mao_comprimento_sobre_largura": 1.14,
+  "dedo_comprimento_sobre_espessura": 1.86,
+  "polegar_sobre_dedo": "~0,7 (estimado, polegar parcialmente oculto)",
+  "palma_sobre_dedo": 1.38
+ },
+ "testes_metodo": "giro do osso em torno de eixo do mundo pela cabe\u00e7a do osso (mesmo m\u00e9todo da auditoria); no modelo atual s\u00f3 os tri\u00e2ngulos da regi\u00e3o do bra\u00e7o (osso dominante upper_arm/forearm/hand .L). \"reais\" = travessia >= 0,5 mm; \"rasantes\" = < 0,5 mm (contato ou ru\u00eddo num\u00e9rico, poss\u00edvel falso positivo)",
+ "testes_limitacoes": "o ombro e a jun\u00e7\u00e3o com o tronco ficam fora do P1, ent\u00e3o poses s\u00f3 do \u00famero (horizontal, frente, tr\u00e1s, tor\u00e7\u00e3o) movem o bra\u00e7o novo como pe\u00e7a r\u00edgida; m\u00e3o fechada/aberta s\u00f3 existem no rig novo; poses est\u00e1ticas",
+ "desempenho_ms_p1_sozinho": 0.114,
+ "desempenho_ms_modelo_atual_inteiro": 0.304
+}
