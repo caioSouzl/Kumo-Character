@@ -1,0 +1,1702 @@
+{
+ "blender": "5.2.3 LTS",
+ "arquivo": "kumo_rigged.blend",
+ "objetos": [
+  {
+   "nome": "Cam_Back",
+   "tipo": "CAMERA",
+   "pai": null,
+   "osso_pai": null,
+   "vertices": null,
+   "faces": null,
+   "modificadores": [],
+   "materiais": null,
+   "oculto_render": false
+  },
+  {
+   "nome": "Cam_Front",
+   "tipo": "CAMERA",
+   "pai": null,
+   "osso_pai": null,
+   "vertices": null,
+   "faces": null,
+   "modificadores": [],
+   "materiais": null,
+   "oculto_render": false
+  },
+  {
+   "nome": "Cam_Side",
+   "tipo": "CAMERA",
+   "pai": null,
+   "osso_pai": null,
+   "vertices": null,
+   "faces": null,
+   "modificadores": [],
+   "materiais": null,
+   "oculto_render": false
+  },
+  {
+   "nome": "Cam_ThreeQuarter",
+   "tipo": "CAMERA",
+   "pai": null,
+   "osso_pai": null,
+   "vertices": null,
+   "faces": null,
+   "modificadores": [],
+   "materiais": null,
+   "oculto_render": false
+  },
+  {
+   "nome": "Kumo",
+   "tipo": "MESH",
+   "pai": "Kumo_Rig",
+   "osso_pai": null,
+   "vertices": 7398,
+   "faces": 7396,
+   "modificadores": [
+    "ARMATURE:Armature",
+    "SOLIDIFY:Outline",
+    "VERTEX_WEIGHT_MIX:OutlineCut",
+    "MASK:OutlineMask"
+   ],
+   "materiais": [
+    "Kumo_Quad_Toon",
+    "Kumo_Outline"
+   ],
+   "oculto_render": false
+  },
+  {
+   "nome": "Kumo_Lid_L",
+   "tipo": "MESH",
+   "pai": "Kumo_Rig",
+   "osso_pai": "head",
+   "vertices": 450,
+   "faces": 384,
+   "modificadores": [],
+   "materiais": [
+    "Kumo_Lid_L",
+    "Kumo_Lash"
+   ],
+   "oculto_render": false
+  },
+  {
+   "nome": "Kumo_Lid_R",
+   "tipo": "MESH",
+   "pai": "Kumo_Rig",
+   "osso_pai": "head",
+   "vertices": 450,
+   "faces": 384,
+   "modificadores": [],
+   "materiais": [
+    "Kumo_Lid_R",
+    "Kumo_Lash"
+   ],
+   "oculto_render": false
+  },
+  {
+   "nome": "Kumo_Rig",
+   "tipo": "ARMATURE",
+   "pai": null,
+   "osso_pai": null,
+   "vertices": null,
+   "faces": null,
+   "modificadores": [],
+   "materiais": null,
+   "oculto_render": false
+  }
+ ],
+ "malha": {
+  "vertices": 7398,
+  "arestas": 14792,
+  "faces": 7396,
+  "triangulos": 0,
+  "quads": 7396,
+  "ngons": 0,
+  "arestas_nao_manifold": 0,
+  "arestas_de_borda": 0,
+  "vertices_soltos": 0,
+  "faces_degeneradas": 0,
+  "arestas_comprimento_zero": 0,
+  "vertices_duplicados": 0,
+  "volume_com_sinal": 0.6759,
+  "normais_para_fora": true,
+  "faces_suaves": 7396,
+  "arestas_vivas": 0,
+  "area_face_mediana": 0.0008237332804128528,
+  "area_face_p05": 0.00048099574632942677,
+  "area_face_p95": 0.0012941384920850396,
+  "aresta_mediana": 0.02945682965219021,
+  "aresta_p05": 0.02122604101896286,
+  "aresta_p95": 0.041013188660144806,
+  "bbox": [
+   [
+    -0.5309,
+    0.542
+   ],
+   [
+    -0.7585,
+    0.7627
+   ],
+   [
+    -0.0039,
+    1.9585
+   ]
+  ],
+  "autointersecao_repouso_pares": 10
+ },
+ "simetria": {
+  "vertices_com_espelho_ate_2mm": 23,
+  "fracao": 0.0031,
+  "desvio_mediano_m": 0.0241,
+  "desvio_p95_m": 0.08096,
+  "desvio_max_m": 0.17493,
+  "metodo": "para cada v\u00e9rtice, dist\u00e2ncia ao v\u00e9rtice mais pr\u00f3ximo do ponto espelhado em X",
+  "limitacao": "mede simetria de posi\u00e7\u00e3o dos v\u00e9rtices, n\u00e3o de topologia"
+ },
+ "uv": {
+  "camadas": [
+   "UVMap"
+  ],
+  "cobertura_do_quadrado": 0.5535,
+  "arestas_de_costura": 2135,
+  "densidade_texel_p05_p50_p95": [
+   0.069,
+   0.089,
+   0.102
+  ],
+  "razao_densidade_p95_p05": 1.48,
+  "imagens": [
+   {
+    "nome": "kumo_quad_diffuse",
+    "tamanho": [
+     2048,
+     2048
+    ],
+    "espaco_cor": "sRGB",
+    "arquivo": "kumo_quad_diffuse.png"
+   },
+   {
+    "nome": "texture_diffuse",
+    "tamanho": [
+     2048,
+     2048
+    ],
+    "espaco_cor": "sRGB",
+    "arquivo": ""
+   },
+   {
+    "nome": "texture_metallic-texture_roughness",
+    "tamanho": [
+     2048,
+     2048
+    ],
+    "espaco_cor": "Non-Color",
+    "arquivo": ""
+   },
+   {
+    "nome": "texture_normal",
+    "tamanho": [
+     2048,
+     2048
+    ],
+    "espaco_cor": "Non-Color",
+    "arquivo": ""
+   }
+  ]
+ },
+ "rig": {
+  "ossos": 30,
+  "ossos_de_deformacao": 29,
+  "ossos_com_restricoes": 0,
+  "ossos_com_forma_de_controle": 0,
+  "tem_ik": false,
+  "lista": [
+   {
+    "nome": "root",
+    "pai": null,
+    "comprimento": 0.25,
+    "deforma": false,
+    "conectado": false,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "hips",
+    "pai": "root",
+    "comprimento": 0.19,
+    "deforma": true,
+    "conectado": false,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "spine",
+    "pai": "hips",
+    "comprimento": 0.17,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "chest",
+    "pai": "spine",
+    "comprimento": 0.16,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "neck",
+    "pai": "chest",
+    "comprimento": 0.1487,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "head",
+    "pai": "neck",
+    "comprimento": 0.87,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "shoulder.L",
+    "pai": "chest",
+    "comprimento": 0.1992,
+    "deforma": true,
+    "conectado": false,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "upper_arm.L",
+    "pai": "shoulder.L",
+    "comprimento": 0.2264,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "forearm.L",
+    "pai": "upper_arm.L",
+    "comprimento": 0.1836,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "hand.L",
+    "pai": "forearm.L",
+    "comprimento": 0.0338,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "shoulder.R",
+    "pai": "chest",
+    "comprimento": 0.1992,
+    "deforma": true,
+    "conectado": false,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "upper_arm.R",
+    "pai": "shoulder.R",
+    "comprimento": 0.2828,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "forearm.R",
+    "pai": "upper_arm.R",
+    "comprimento": 0.185,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "hand.R",
+    "pai": "forearm.R",
+    "comprimento": 0.1092,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "thigh.L",
+    "pai": "hips",
+    "comprimento": 0.1933,
+    "deforma": true,
+    "conectado": false,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "shin.L",
+    "pai": "thigh.L",
+    "comprimento": 0.116,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "foot.L",
+    "pai": "shin.L",
+    "comprimento": 0.1616,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "thigh.R",
+    "pai": "hips",
+    "comprimento": 0.1965,
+    "deforma": true,
+    "conectado": false,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "shin.R",
+    "pai": "thigh.R",
+    "comprimento": 0.122,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "foot.R",
+    "pai": "shin.R",
+    "comprimento": 0.1729,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_01",
+    "pai": "hips",
+    "comprimento": 0.1137,
+    "deforma": true,
+    "conectado": false,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_02",
+    "pai": "tail_01",
+    "comprimento": 0.1275,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_03",
+    "pai": "tail_02",
+    "comprimento": 0.117,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_04",
+    "pai": "tail_03",
+    "comprimento": 0.1079,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_05",
+    "pai": "tail_04",
+    "comprimento": 0.1242,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_06",
+    "pai": "tail_05",
+    "comprimento": 0.1248,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_07",
+    "pai": "tail_06",
+    "comprimento": 0.117,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_08",
+    "pai": "tail_07",
+    "comprimento": 0.1198,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_09",
+    "pai": "tail_08",
+    "comprimento": 0.1561,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   },
+   {
+    "nome": "tail_10",
+    "pai": "tail_09",
+    "comprimento": 0.1283,
+    "deforma": true,
+    "conectado": true,
+    "modo_rotacao": "XYZ",
+    "restricoes": [],
+    "forma_personalizada": false,
+    "travas": [
+     [
+      false,
+      false,
+      false
+     ],
+     [
+      false,
+      false,
+      false
+     ]
+    ]
+   }
+  ],
+  "colecoes_de_ossos": [],
+  "acoes": [
+   "Pose_Apresentacao"
+  ],
+  "shape_keys_corpo": [],
+  "drivers": 0,
+  "influencias_por_vertice": {
+   "max": 10,
+   "media": 2.39,
+   "acima_de_4": 544,
+   "sem_peso": 0
+  },
+  "soma_dos_pesos": {
+   "min": 0.8535,
+   "max": 0.9999,
+   "fora_de_1": 5523
+  },
+  "vertices_por_osso_dominante": {
+   "head": 3680,
+   "spine": 325,
+   "thigh.R": 220,
+   "foot.R": 209,
+   "thigh.L": 207,
+   "forearm.L": 178,
+   "foot.L": 177,
+   "shin.R": 175,
+   "shoulder.L": 164,
+   "shoulder.R": 160,
+   "forearm.R": 159,
+   "upper_arm.R": 158,
+   "tail_10": 150,
+   "upper_arm.L": 146,
+   "shin.L": 144,
+   "tail_01": 141,
+   "tail_09": 133,
+   "hips": 118,
+   "tail_08": 104,
+   "tail_07": 98,
+   "tail_05": 97,
+   "tail_06": 94,
+   "tail_03": 92,
+   "tail_02": 85,
+   "tail_04": 82,
+   "neck": 54,
+   "chest": 42,
+   "hand.L": 5,
+   "hand.R": 1
+  },
+  "ossos_de_deformacao_sem_vertices": [],
+  "preservar_volume": false
+ },
+ "materiais": [
+  {
+   "nome": "Kumo_Lash",
+   "nos": [
+    "OUTPUT_MATERIAL",
+    "EMISSION"
+   ],
+   "usuarios": 2,
+   "emissao_pura": true
+  },
+  {
+   "nome": "Kumo_Lid_L",
+   "nos": [
+    "OUTPUT_MATERIAL",
+    "EMISSION"
+   ],
+   "usuarios": 1,
+   "emissao_pura": true
+  },
+  {
+   "nome": "Kumo_Lid_R",
+   "nos": [
+    "OUTPUT_MATERIAL",
+    "EMISSION"
+   ],
+   "usuarios": 1,
+   "emissao_pura": true
+  },
+  {
+   "nome": "Kumo_Outline",
+   "nos": [
+    "OUTPUT_MATERIAL",
+    "EMISSION",
+    "BSDF_TRANSPARENT",
+    "NEW_GEOMETRY",
+    "MIX_SHADER"
+   ],
+   "usuarios": 1,
+   "emissao_pura": true
+  },
+  {
+   "nome": "Kumo_Quad_Toon",
+   "nos": [
+    "OUTPUT_MATERIAL",
+    "EMISSION",
+    "TEX_IMAGE"
+   ],
+   "usuarios": 1,
+   "emissao_pura": true
+  },
+  {
+   "nome": "model",
+   "nos": [
+    "BSDF_PRINCIPLED",
+    "OUTPUT_MATERIAL",
+    "TEX_IMAGE",
+    "SEPARATE_COLOR",
+    "TEX_IMAGE",
+    "NORMAL_MAP",
+    "TEX_IMAGE"
+   ],
+   "usuarios": 0,
+   "emissao_pura": false
+  }
+ ],
+ "render": {
+  "motor": "CYCLES",
+  "transformacao_de_vista": "Standard",
+  "look": "None",
+  "amostras": 16,
+  "film_transparent": true
+ },
+ "articulacoes": {
+  "resultados": {
+   "cabeca_virar_45": {
+    "passos": [
+     [
+      "head",
+      [
+       0,
+       0,
+       1
+      ],
+      45
+     ]
+    ],
+    "pares_de_autointersecao_novos": 6,
+    "triangulos_envolvidos": 8,
+    "volume_relativo": 0.9894,
+    "aresta_esticamento_p99": 1.126,
+    "aresta_esticamento_max": 1.399,
+    "aresta_compressao_p01": 0.866,
+    "aresta_compressao_min": 0.53
+   },
+   "cabeca_virar_70": {
+    "passos": [
+     [
+      "head",
+      [
+       0,
+       0,
+       1
+      ],
+      70
+     ]
+    ],
+    "pares_de_autointersecao_novos": 9,
+    "triangulos_envolvidos": 12,
+    "volume_relativo": 0.9762,
+    "aresta_esticamento_p99": 1.181,
+    "aresta_esticamento_max": 1.589,
+    "aresta_compressao_p01": 0.798,
+    "aresta_compressao_min": 0.264
+   },
+   "cabeca_baixar_30": {
+    "passos": [
+     [
+      "head",
+      [
+       1,
+       0,
+       0
+      ],
+      -30
+     ]
+    ],
+    "pares_de_autointersecao_novos": 43,
+    "triangulos_envolvidos": 42,
+    "volume_relativo": 0.9979,
+    "aresta_esticamento_p99": 1.073,
+    "aresta_esticamento_max": 1.16,
+    "aresta_compressao_p01": 0.944,
+    "aresta_compressao_min": 0.541
+   },
+   "cabeca_erguer_30": {
+    "passos": [
+     [
+      "head",
+      [
+       1,
+       0,
+       0
+      ],
+      30
+     ]
+    ],
+    "pares_de_autointersecao_novos": 0,
+    "triangulos_envolvidos": 0,
+    "volume_relativo": 0.9983,
+    "aresta_esticamento_p99": 1.077,
+    "aresta_esticamento_max": 1.426,
+    "aresta_compressao_p01": 0.938,
+    "aresta_compressao_min": 0.827
+   },
+   "cabeca_inclinar_25": {
+    "passos": [
+     [
+      "head",
+      [
+       0,
+       1,
+       0
+      ],
+      25
+     ]
+    ],
+    "pares_de_autointersecao_novos": 4,
+    "triangulos_envolvidos": 5,
+    "volume_relativo": 0.9976,
+    "aresta_esticamento_p99": 1.056,
+    "aresta_esticamento_max": 1.287,
+    "aresta_compressao_p01": 0.932,
+    "aresta_compressao_min": 0.588
+   },
+   "pescoco_cabeca_virar_60": {
+    "passos": [
+     [
+      "neck",
+      [
+       0,
+       0,
+       1
+      ],
+      30
+     ],
+     [
+      "head",
+      [
+       0,
+       0,
+       1
+      ],
+      30
+     ]
+    ],
+    "pares_de_autointersecao_novos": 9,
+    "triangulos_envolvidos": 12,
+    "volume_relativo": 0.9927,
+    "aresta_esticamento_p99": 1.288,
+    "aresta_esticamento_max": 1.643,
+    "aresta_compressao_p01": 0.855,
+    "aresta_compressao_min": 0.439
+   },
+   "tronco_curvar_30": {
+    "passos": [
+     [
+      "spine",
+      [
+       1,
+       0,
+       0
+      ],
+      -15
+     ],
+     [
+      "chest",
+      [
+       1,
+       0,
+       0
+      ],
+      -15
+     ]
+    ],
+    "pares_de_autointersecao_novos": 0,
+    "triangulos_envolvidos": 0,
+    "volume_relativo": 1.0074,
+    "aresta_esticamento_p99": 1.213,
+    "aresta_esticamento_max": 1.544,
+    "aresta_compressao_p01": 0.963,
+    "aresta_compressao_min": 0.727
+   },
+   "tronco_torcer_30": {
+    "passos": [
+     [
+      "spine",
+      [
+       0,
+       0,
+       1
+      ],
+      15
+     ],
+     [
+      "chest",
+      [
+       0,
+       0,
+       1
+      ],
+      15
+     ]
+    ],
+    "pares_de_autointersecao_novos": 26,
+    "triangulos_envolvidos": 24,
+    "volume_relativo": 0.9988,
+    "aresta_esticamento_p99": 1.079,
+    "aresta_esticamento_max": 1.349,
+    "aresta_compressao_p01": 0.97,
+    "aresta_compressao_min": 0.721
+   },
+   "braco_E_horizontal": {
+    "passos": [
+     [
+      "upper_arm.L",
+      [
+       0,
+       1,
+       0
+      ],
+      -45
+     ]
+    ],
+    "pares_de_autointersecao_novos": 4,
+    "triangulos_envolvidos": 5,
+    "volume_relativo": 0.9997,
+    "aresta_esticamento_p99": 1.018,
+    "aresta_esticamento_max": 1.391,
+    "aresta_compressao_p01": 0.979,
+    "aresta_compressao_min": 0.57
+   },
+   "braco_E_acima_da_cabeca": {
+    "passos": [
+     [
+      "shoulder.L",
+      [
+       0,
+       1,
+       0
+      ],
+      -20
+     ],
+     [
+      "upper_arm.L",
+      [
+       0,
+       1,
+       0
+      ],
+      -100
+     ]
+    ],
+    "pares_de_autointersecao_novos": 170,
+    "triangulos_envolvidos": 164,
+    "volume_relativo": 0.9995,
+    "aresta_esticamento_p99": 1.081,
+    "aresta_esticamento_max": 1.596,
+    "aresta_compressao_p01": 0.923,
+    "aresta_compressao_min": 0.192
+   },
+   "braco_E_para_frente_90": {
+    "passos": [
+     [
+      "upper_arm.L",
+      [
+       1,
+       0,
+       0
+      ],
+      -90
+     ]
+    ],
+    "pares_de_autointersecao_novos": 22,
+    "triangulos_envolvidos": 19,
+    "volume_relativo": 0.9982,
+    "aresta_esticamento_p99": 1.051,
+    "aresta_esticamento_max": 1.452,
+    "aresta_compressao_p01": 0.94,
+    "aresta_compressao_min": 0.409
+   },
+   "cotovelo_E_90": {
+    "passos": [
+     [
+      "forearm.L",
+      "BEND_FWD",
+      90
+     ]
+    ],
+    "pares_de_autointersecao_novos": 6,
+    "triangulos_envolvidos": 6,
+    "volume_relativo": 0.9984,
+    "aresta_esticamento_p99": 1.008,
+    "aresta_esticamento_max": 1.951,
+    "aresta_compressao_p01": 0.895,
+    "aresta_compressao_min": 0.217
+   },
+   "cotovelo_E_130": {
+    "passos": [
+     [
+      "forearm.L",
+      "BEND_FWD",
+      130
+     ]
+    ],
+    "pares_de_autointersecao_novos": 77,
+    "triangulos_envolvidos": 68,
+    "volume_relativo": 0.9976,
+    "aresta_esticamento_p99": 1.028,
+    "aresta_esticamento_max": 2.047,
+    "aresta_compressao_p01": 0.868,
+    "aresta_compressao_min": 0.194
+   },
+   "punho_E_45": {
+    "passos": [
+     [
+      "hand.L",
+      "BEND_FWD",
+      45
+     ]
+    ],
+    "pares_de_autointersecao_novos": 0,
+    "triangulos_envolvidos": 0,
+    "volume_relativo": 1.0,
+    "aresta_esticamento_p99": 1.0,
+    "aresta_esticamento_max": 1.389,
+    "aresta_compressao_p01": 1.0,
+    "aresta_compressao_min": 0.617
+   },
+   "coxa_E_frente_60": {
+    "passos": [
+     [
+      "thigh.L",
+      [
+       1,
+       0,
+       0
+      ],
+      -60
+     ]
+    ],
+    "pares_de_autointersecao_novos": 1,
+    "triangulos_envolvidos": 2,
+    "volume_relativo": 0.9934,
+    "aresta_esticamento_p99": 1.126,
+    "aresta_esticamento_max": 1.571,
+    "aresta_compressao_p01": 0.845,
+    "aresta_compressao_min": 0.359
+   },
+   "coxa_E_frente_90": {
+    "passos": [
+     [
+      "thigh.L",
+      [
+       1,
+       0,
+       0
+      ],
+      -90
+     ]
+    ],
+    "pares_de_autointersecao_novos": 65,
+    "triangulos_envolvidos": 49,
+    "volume_relativo": 0.9903,
+    "aresta_esticamento_p99": 1.21,
+    "aresta_esticamento_max": 1.784,
+    "aresta_compressao_p01": 0.808,
+    "aresta_compressao_min": 0.053
+   },
+   "coxa_E_abrir_45": {
+    "passos": [
+     [
+      "thigh.L",
+      [
+       0,
+       1,
+       0
+      ],
+      -45
+     ]
+    ],
+    "pares_de_autointersecao_novos": 0,
+    "triangulos_envolvidos": 0,
+    "volume_relativo": 0.9973,
+    "aresta_esticamento_p99": 1.05,
+    "aresta_esticamento_max": 1.694,
+    "aresta_compressao_p01": 0.918,
+    "aresta_compressao_min": 0.591
+   },
+   "joelho_E_90": {
+    "passos": [
+     [
+      "shin.L",
+      [
+       1,
+       0,
+       0
+      ],
+      90
+     ]
+    ],
+    "pares_de_autointersecao_novos": 57,
+    "triangulos_envolvidos": 58,
+    "volume_relativo": 0.9987,
+    "aresta_esticamento_p99": 1.061,
+    "aresta_esticamento_max": 2.147,
+    "aresta_compressao_p01": 0.892,
+    "aresta_compressao_min": 0.107
+   },
+   "joelho_E_120": {
+    "passos": [
+     [
+      "shin.L",
+      [
+       1,
+       0,
+       0
+      ],
+      120
+     ]
+    ],
+    "pares_de_autointersecao_novos": 111,
+    "triangulos_envolvidos": 112,
+    "volume_relativo": 0.9973,
+    "aresta_esticamento_p99": 1.074,
+    "aresta_esticamento_max": 2.269,
+    "aresta_compressao_p01": 0.854,
+    "aresta_compressao_min": 0.221
+   },
+   "joelho_D_90": {
+    "passos": [
+     [
+      "shin.R",
+      [
+       1,
+       0,
+       0
+      ],
+      90
+     ]
+    ],
+    "pares_de_autointersecao_novos": 9,
+    "triangulos_envolvidos": 11,
+    "volume_relativo": 0.9989,
+    "aresta_esticamento_p99": 1.162,
+    "aresta_esticamento_max": 1.953,
+    "aresta_compressao_p01": 0.876,
+    "aresta_compressao_min": 0.246
+   },
+   "tornozelo_E_30": {
+    "passos": [
+     [
+      "foot.L",
+      [
+       1,
+       0,
+       0
+      ],
+      -30
+     ]
+    ],
+    "pares_de_autointersecao_novos": 0,
+    "triangulos_envolvidos": 0,
+    "volume_relativo": 0.9997,
+    "aresta_esticamento_p99": 1.046,
+    "aresta_esticamento_max": 1.27,
+    "aresta_compressao_p01": 0.968,
+    "aresta_compressao_min": 0.57
+   },
+   "cauda_enrolar": {
+    "passos": [
+     [
+      "tail_01",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_02",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_03",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_04",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_05",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_06",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_07",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_08",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_09",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ],
+     [
+      "tail_10",
+      [
+       1,
+       0,
+       0
+      ],
+      18
+     ]
+    ],
+    "pares_de_autointersecao_novos": 315,
+    "triangulos_envolvidos": 315,
+    "volume_relativo": 1.0016,
+    "aresta_esticamento_p99": 1.165,
+    "aresta_esticamento_max": 1.352,
+    "aresta_compressao_p01": 0.885,
+    "aresta_compressao_min": 0.597
+   },
+   "cauda_abanar": {
+    "passos": [
+     [
+      "tail_01",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_02",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_03",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_04",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_05",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_06",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_07",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_08",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_09",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ],
+     [
+      "tail_10",
+      [
+       0,
+       0,
+       1
+      ],
+      12
+     ]
+    ],
+    "pares_de_autointersecao_novos": 0,
+    "triangulos_envolvidos": 0,
+    "volume_relativo": 0.9996,
+    "aresta_esticamento_p99": 1.089,
+    "aresta_esticamento_max": 1.27,
+    "aresta_compressao_p01": 0.933,
+    "aresta_compressao_min": 0.738
+   },
+   "agachar": {
+    "passos": [
+     [
+      "thigh.L",
+      [
+       1,
+       0,
+       0
+      ],
+      -80
+     ],
+     [
+      "shin.L",
+      [
+       1,
+       0,
+       0
+      ],
+      110
+     ],
+     [
+      "thigh.R",
+      [
+       1,
+       0,
+       0
+      ],
+      -80
+     ],
+     [
+      "shin.R",
+      [
+       1,
+       0,
+       0
+      ],
+      110
+     ]
+    ],
+    "pares_de_autointersecao_novos": 58,
+    "triangulos_envolvidos": 60,
+    "volume_relativo": 0.9761,
+    "aresta_esticamento_p99": 1.313,
+    "aresta_esticamento_max": 2.245,
+    "aresta_compressao_p01": 0.608,
+    "aresta_compressao_min": 0.121
+   }
+  },
+  "metodo": "cada osso \u00e9 girado em torno de um eixo do mundo pela cabe\u00e7a do osso; mede-se na malha avaliada (s\u00f3 armadura): pares de tri\u00e2ngulos sem v\u00e9rtice comum que se cruzam e que n\u00e3o se cruzavam em repouso; volume fechado relativo ao repouso; raz\u00e3o de comprimento de cada aresta (pose/repouso)",
+  "limitacoes": "poses isoladas e est\u00e1ticas (sem anima\u00e7\u00e3o cont\u00ednua); autointerse\u00e7\u00e3o conta pares de tri\u00e2ngulos, n\u00e3o profundidade; volume global dilui perdas locais; eixos de dobra aproximados por eixos do mundo"
+ },
+ "desempenho": {
+  "ms_por_atualizacao": 8.82,
+  "metodo": "40 atualiza\u00e7\u00f5es do depsgraph girando a cabe\u00e7a",
+  "limitacao": "mede s\u00f3 a avalia\u00e7\u00e3o da cena em modo background, n\u00e3o a taxa de quadros na viewport"
+ }
+}
