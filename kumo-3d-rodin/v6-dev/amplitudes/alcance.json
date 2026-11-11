@@ -1,0 +1,72 @@
+{
+ "boca/focinho (frente da cabeça, parte baixa)": {
+  "alvo": [
+   0.032,
+   -0.722,
+   1.226
+  ],
+  "dist_ombro": 0.866,
+  "flexao_cotovelo": null,
+  "alcancavel": false
+ },
+ "bochecha esquerda (lateral da cabeça)": {
+  "alvo": [
+   0.523,
+   0.077,
+   1.256
+  ],
+  "dist_ombro": 0.596,
+  "flexao_cotovelo": null,
+  "alcancavel": false
+ },
+ "topo da cabeça": {
+  "alvo": [
+   0.036,
+   -0.154,
+   1.959
+  ],
+  "dist_ombro": 1.242,
+  "flexao_cotovelo": null,
+  "alcancavel": false
+ },
+ "peito (frente do tronco, centro)": {
+  "alvo": [
+   0.009,
+   -0.316,
+   0.712
+  ],
+  "dist_ombro": 0.367,
+  "flexao_cotovelo": 48.9,
+  "alcancavel": true
+ },
+ "barriga (frente, centro)": {
+  "alvo": [
+   -0.024,
+   -0.319,
+   0.579
+  ],
+  "dist_ombro": 0.423,
+  "flexao_cotovelo": null,
+  "alcancavel": false
+ },
+ "quadril esquerdo (lateral)": {
+  "alvo": [
+   0.125,
+   0.027,
+   0.478
+  ],
+  "dist_ombro": 0.298,
+  "flexao_cotovelo": 92.5,
+  "alcancavel": true
+ },
+ "ombro oposto (frente)": {
+  "alvo": [
+   -0.163,
+   -0.242,
+   0.727
+  ],
+  "dist_ombro": 0.46,
+  "flexao_cotovelo": null,
+  "alcancavel": false
+ }
+}
