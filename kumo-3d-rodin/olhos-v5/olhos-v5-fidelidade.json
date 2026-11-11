@@ -1,10 +1,10 @@
 {
  "frente": {
-  "diferenca_media_regiao_olhos": 4.43,
+  "diferenca_media_regiao_olhos": 4.46,
   "pixels_regiao_olhos": 64659,
-  "pct_pixels_diferenca_maior_que_24": 4.7,
-  "pct_pixels_diferenca_maior_que_48": 2.0,
-  "diferenca_media_imagem_inteira": 1.175,
+  "pct_pixels_diferenca_maior_que_24": 4.72,
+  "pct_pixels_diferenca_maior_que_48": 2.01,
+  "diferenca_media_imagem_inteira": 1.179,
   "centroides_olhos_px": {
    "antes": [
     [
@@ -34,11 +34,11 @@
   "deslocamento_max_centroide_px": 0.4
  },
  "34": {
-  "diferenca_media_regiao_olhos": 1.65,
+  "diferenca_media_regiao_olhos": 1.66,
   "pixels_regiao_olhos": 47455,
   "pct_pixels_diferenca_maior_que_24": 1.54,
-  "pct_pixels_diferenca_maior_que_48": 0.33,
-  "diferenca_media_imagem_inteira": 0.521,
+  "pct_pixels_diferenca_maior_que_48": 0.34,
+  "diferenca_media_imagem_inteira": 0.522,
   "centroides_olhos_px": {
    "antes": [
     [
@@ -60,7 +60,7 @@
   "pixels_regiao_olhos": 31836,
   "pct_pixels_diferenca_maior_que_24": 3.48,
   "pct_pixels_diferenca_maior_que_48": 1.84,
-  "diferenca_media_imagem_inteira": 0.632,
+  "diferenca_media_imagem_inteira": 0.633,
   "centroides_olhos_px": {
    "antes": [
     [
@@ -90,11 +90,11 @@
   "deslocamento_max_centroide_px": 0.67
  },
  "perfil_D": {
-  "diferenca_media_regiao_olhos": 2.86,
+  "diferenca_media_regiao_olhos": 2.87,
   "pixels_regiao_olhos": 52027,
-  "pct_pixels_diferenca_maior_que_24": 2.35,
+  "pct_pixels_diferenca_maior_que_24": 2.32,
   "pct_pixels_diferenca_maior_que_48": 0.92,
-  "diferenca_media_imagem_inteira": 0.65,
+  "diferenca_media_imagem_inteira": 0.652,
   "centroides_olhos_px": {
    "antes": [
     [
