@@ -1,0 +1,349 @@
+{
+ "braco_atual": {
+  "vertices": 329,
+  "faces": 316
+ },
+ "linha_central": {
+  "pontos": 41,
+  "comprimento": 0.4299,
+  "t_cotovelo": 0.2076,
+  "t_punho": 0.4266
+ },
+ "raios_aneis": [
+  [
+   0.073,
+   0.058,
+   0.063,
+   0.063,
+   0.064,
+   0.069,
+   0.071,
+   0.082
+  ],
+  [
+   0.073,
+   0.062,
+   0.063,
+   0.062,
+   0.068,
+   0.073,
+   0.077,
+   0.082
+  ],
+  [
+   0.074,
+   0.057,
+   0.06,
+   0.061,
+   0.072,
+   0.072,
+   0.083,
+   0.083
+  ],
+  [
+   0.067,
+   0.063,
+   0.07,
+   0.07,
+   0.073,
+   0.072,
+   0.076,
+   0.08
+  ],
+  [
+   0.081,
+   0.062,
+   0.063,
+   0.066,
+   0.071,
+   0.075,
+   0.081,
+   0.086
+  ],
+  [
+   0.08,
+   0.068,
+   0.07,
+   0.069,
+   0.073,
+   0.069,
+   0.08,
+   0.084
+  ],
+  [
+   0.077,
+   0.06,
+   0.067,
+   0.073,
+   0.081,
+   0.081,
+   0.086,
+   0.083
+  ],
+  [
+   0.08,
+   0.069,
+   0.069,
+   0.075,
+   0.077,
+   0.069,
+   0.081,
+   0.084
+  ],
+  [
+   0.081,
+   0.066,
+   0.076,
+   0.095,
+   0.084,
+   0.073,
+   0.082,
+   0.083
+  ],
+  [
+   0.079,
+   0.056,
+   0.082,
+   0.107,
+   0.09,
+   0.088,
+   0.093,
+   0.092
+  ],
+  [
+   0.097,
+   0.093,
+   0.124,
+   0.129,
+   0.078,
+   0.064,
+   0.078,
+   0.094
+  ],
+  [
+   0.102,
+   0.073,
+   0.113,
+   0.139,
+   0.096,
+   0.088,
+   0.095,
+   0.104
+  ],
+  [
+   0.106,
+   0.089,
+   0.12,
+   0.144,
+   0.107,
+   0.103,
+   0.104,
+   0.101
+  ],
+  [
+   0.104,
+   0.089,
+   0.125,
+   0.146,
+   0.111,
+   0.104,
+   0.1,
+   0.092
+  ],
+  [
+   0.097,
+   0.104,
+   0.06,
+   0.095,
+   0.095,
+   0.066,
+   0.069,
+   0.077
+  ],
+  [
+   0.069,
+   0.061,
+   0.058,
+   0.089,
+   0.104,
+   0.068,
+   0.061,
+   0.062
+  ],
+  [
+   0.084,
+   0.066,
+   0.071,
+   0.093,
+   0.089,
+   0.064,
+   0.074,
+   0.083
+  ],
+  [
+   0.082,
+   0.056,
+   0.054,
+   0.069,
+   0.078,
+   0.05,
+   0.062,
+   0.078
+  ]
+ ],
+ "malha_nova": {
+  "vertices": 1050,
+  "faces": 1048,
+  "quads": 1048,
+  "tris": 0,
+  "ngons": 0,
+  "vertices_ajustados_ao_braco_atual": 0
+ },
+ "pesos_novos": {
+  "max_influencias": 3,
+  "sem_peso": 0,
+  "soma_fora_de_1": 0
+ },
+ "ossos_novos": [
+  "DEF-braco.L",
+  "DEF-antebraco.L",
+  "DEF-mao.L",
+  "DEF-dedo1_1.L",
+  "DEF-dedo1_2.L",
+  "DEF-dedo2_1.L",
+  "DEF-dedo2_2.L",
+  "DEF-dedo3_1.L",
+  "DEF-dedo3_2.L",
+  "DEF-polegar_1.L",
+  "DEF-polegar_2.L"
+ ],
+ "autointersecao_em_repouso": {
+  "atual_regiao_braco": 0,
+  "novo": 36
+ },
+ "testes": {
+  "braco_horizontal": {
+   "atual": {
+    "pares_novos": 0,
+    "pares_total": 0,
+    "compressao_min": 0.57,
+    "compressao_p01": 0.846,
+    "esticamento_max": 1.341
+   },
+   "novo": {
+    "pares_novos": 0,
+    "pares_total": 36,
+    "compressao_min": 1.0,
+    "compressao_p01": 1.0,
+    "esticamento_max": 1.0
+   }
+  },
+  "braco_para_frente_90": {
+   "atual": {
+    "pares_novos": 0,
+    "pares_total": 0,
+    "compressao_min": 0.704,
+    "compressao_p01": 0.833,
+    "esticamento_max": 1.399
+   },
+   "novo": {
+    "pares_novos": 0,
+    "pares_total": 36,
+    "compressao_min": 1.0,
+    "compressao_p01": 1.0,
+    "esticamento_max": 1.0
+   }
+  },
+  "cotovelo_90": {
+   "atual": {
+    "pares_novos": 6,
+    "pares_total": 6,
+    "compressao_min": 0.217,
+    "compressao_p01": 0.338,
+    "esticamento_max": 1.951
+   },
+   "novo": {
+    "pares_novos": 72,
+    "pares_total": 108,
+    "compressao_min": 0.213,
+    "compressao_p01": 0.519,
+    "esticamento_max": 3.303
+   }
+  },
+  "cotovelo_130": {
+   "atual": {
+    "pares_novos": 77,
+    "pares_total": 77,
+    "compressao_min": 0.194,
+    "compressao_p01": 0.303,
+    "esticamento_max": 2.047
+   },
+   "novo": {
+    "pares_novos": 115,
+    "pares_total": 151,
+    "compressao_min": 0.186,
+    "compressao_p01": 0.548,
+    "esticamento_max": 3.765
+   }
+  },
+  "punho_45": {
+   "atual": {
+    "pares_novos": 0,
+    "pares_total": 0,
+    "compressao_min": 0.617,
+    "compressao_p01": 0.858,
+    "esticamento_max": 1.389
+   },
+   "novo": {
+    "pares_novos": 77,
+    "pares_total": 96,
+    "compressao_min": 0.497,
+    "compressao_p01": 0.839,
+    "esticamento_max": 3.236
+   }
+  },
+  "punho_menos45": {
+   "atual": {
+    "pares_novos": 0,
+    "pares_total": 0,
+    "compressao_min": 0.491,
+    "compressao_p01": 0.857,
+    "esticamento_max": 1.352
+   },
+   "novo": {
+    "pares_novos": 17,
+    "pares_total": 31,
+    "compressao_min": 0.358,
+    "compressao_p01": 0.715,
+    "esticamento_max": 4.24
+   }
+  },
+  "mao_fechada": {
+   "atual": {
+    "nao_suportado": "o rig atual n\u00e3o tem ossos de dedo"
+   },
+   "novo": {
+    "pares_novos": 173,
+    "pares_total": 206,
+    "compressao_min": 0.194,
+    "compressao_p01": 0.686,
+    "esticamento_max": 3.871
+   }
+  },
+  "mao_aberta_abduzida": {
+   "atual": {
+    "nao_suportado": "o rig atual n\u00e3o tem ossos de dedo"
+   },
+   "novo": {
+    "pares_novos": 52,
+    "pares_total": 87,
+    "compressao_min": 0.524,
+    "compressao_p01": 0.957,
+    "esticamento_max": 4.318
+   }
+  }
+ },
+ "testes_metodo": "mesmo m\u00e9todo da auditoria (giro do osso em torno de eixo do mundo pela cabe\u00e7a); no modelo atual mede s\u00f3 os tri\u00e2ngulos da regi\u00e3o do bra\u00e7o (v\u00e9rtices com osso dominante upper_arm/forearm/hand .L)",
+ "testes_limitacoes": "ombro e jun\u00e7\u00e3o com o tronco fora do P1; poses est\u00e1ticas; m\u00e3o fechada/aberta s\u00f3 existem no rig novo",
+ "desempenho_ms_por_atualizacao_p1": 0.123
+}
