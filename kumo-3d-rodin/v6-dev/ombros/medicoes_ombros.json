@@ -1,0 +1,383 @@
+{
+ "ombro_z": "0.83",
+ "ombro_automatico_k": 0.45,
+ "ombro_automatico_k_frente": 0.65,
+ "suavizacao_pesos_passos": 30,
+ "suavizacao_peito_passos": 0,
+ "erguer90_L": {
+  "iteracoes": 1,
+  "inicio": [
+   0,
+   0,
+   0
+  ],
+  "melhor": [
+   0,
+   0,
+   0
+  ],
+  "melhor_iteracao": 0
+ },
+ "erguer120_L": {
+  "iteracoes": 1,
+  "inicio": [
+   0,
+   0,
+   0
+  ],
+  "melhor": [
+   0,
+   0,
+   0
+  ],
+  "melhor_iteracao": 0
+ },
+ "erguer150_L": {
+  "iteracoes": 1,
+  "inicio": [
+   0,
+   0,
+   0
+  ],
+  "melhor": [
+   0,
+   0,
+   0
+  ],
+  "melhor_iteracao": 0
+ },
+ "frente90_L": {
+  "iteracoes": 26,
+  "inicio": [
+   39,
+   37,
+   12.3
+  ],
+  "melhor": [
+   45,
+   29,
+   9.7
+  ],
+  "melhor_iteracao": 10
+ },
+ "erguer90_R": {
+  "iteracoes": 5,
+  "inicio": [
+   1,
+   1,
+   1.3
+  ],
+  "melhor": [
+   0,
+   0,
+   0
+  ],
+  "melhor_iteracao": 4
+ },
+ "erguer120_R": {
+  "iteracoes": 56,
+  "inicio": [
+   9,
+   7,
+   1.6
+  ],
+  "melhor": [
+   6,
+   0,
+   0.2
+  ],
+  "melhor_iteracao": 40
+ },
+ "erguer150_R": {
+  "iteracoes": 20,
+  "inicio": [
+   20,
+   18,
+   3.3
+  ],
+  "melhor": [
+   8,
+   4,
+   3.9
+  ],
+  "melhor_iteracao": 4
+ },
+ "frente90_R": {
+  "iteracoes": 16,
+  "inicio": [
+   1,
+   1,
+   7.3
+  ],
+  "melhor": [
+   1,
+   1,
+   7.3
+  ],
+  "melhor_iteracao": 0
+ },
+ "testes_L": {
+  "erguer_45": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_60": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.33,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_75": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.67,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_90": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 1.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_105": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.5,
+    "Ombro_Erguer120": 0.5,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_120": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 1.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_135": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.5,
+    "Ombro_Erguer150": 0.5,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_150": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 1.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "frente_45": {
+   "reais": 16,
+   "prof_max_mm": 4.0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.1
+   }
+  },
+  "frente_60": {
+   "reais": 26,
+   "prof_max_mm": 7.4,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.4
+   }
+  },
+  "frente_75": {
+   "reais": 29,
+   "prof_max_mm": 6.5,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.7
+   }
+  },
+  "frente_90": {
+   "reais": 29,
+   "prof_max_mm": 9.7,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 1.0
+   }
+  },
+  "tras_30": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  }
+ },
+ "testes_R": {
+  "erguer_45": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_60": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.33,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_75": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.67,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_90": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 1.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_105": {
+   "reais": 3,
+   "prof_max_mm": 1.9,
+   "chaves": {
+    "Ombro_Erguer90": 0.5,
+    "Ombro_Erguer120": 0.5,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_120": {
+   "reais": 0,
+   "prof_max_mm": 0.2,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 1.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_135": {
+   "reais": 16,
+   "prof_max_mm": 6.9,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.5,
+    "Ombro_Erguer150": 0.5,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "erguer_150": {
+   "reais": 4,
+   "prof_max_mm": 3.9,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 1.0,
+    "Ombro_Frente90": 0.0
+   }
+  },
+  "frente_45": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.1
+   }
+  },
+  "frente_60": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.4
+   }
+  },
+  "frente_75": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.7
+   }
+  },
+  "frente_90": {
+   "reais": 1,
+   "prof_max_mm": 7.3,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 1.0
+   }
+  },
+  "tras_30": {
+   "reais": 0,
+   "prof_max_mm": 0,
+   "chaves": {
+    "Ombro_Erguer90": 0.0,
+    "Ombro_Erguer120": 0.0,
+    "Ombro_Erguer150": 0.0,
+    "Ombro_Frente90": 0.0
+   }
+  }
+ }
+}
