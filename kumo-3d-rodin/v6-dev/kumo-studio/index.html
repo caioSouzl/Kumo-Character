@@ -79,12 +79,41 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
 .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .kbd { font-family: var(--font-data); font-size: 11px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 5px; color: var(--muted); }
 .status { font-size: 12.5px; color: var(--leaf); min-height: 1.2em; }
+/* controles de precisão: régua + campo numérico + passos */
+.axis { display: grid; grid-template-columns: 64px minmax(0, 1fr) 64px; gap: 6px 8px; align-items: center; }
+.axis label { font-weight: 600; font-size: 13px; }
+.axis input[type=number] { width: 100%; box-sizing: border-box; font-family: var(--font-data); font-variant-numeric: tabular-nums; text-align: right; padding: 6px 6px; }
+.steps { grid-column: 2 / 4; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.steps button { padding: 6px 0; font-family: var(--font-data); font-weight: 500; }
+.joints { display: flex; flex-wrap: wrap; gap: 6px; }
+.joints button { padding: 6px 9px; font-size: 12.5px; }
+button.on, button[aria-pressed="true"] { background: var(--leaf-soft); border-color: var(--leaf); color: var(--leaf); }
+button:disabled { opacity: 0.45; cursor: default; }
+.sub { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (pointer: coarse) {
+  button { min-height: 40px; padding: 9px 13px; }
+  .steps button, .joints button { min-height: 40px; }
+  input[type=range] { height: 32px; }
+  input[type=number], select { min-height: 40px; font-size: 16px; }
+}
 @media (max-width: 820px) {
-  .app { grid-template-columns: 1fr; grid-template-rows: 62vh auto; height: auto; }
-  .panel { border-left: 0; border-top: 1px solid var(--line); }
-  .pane { overflow: visible; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .app { grid-template-columns: 1fr; grid-template-rows: 52vh minmax(0, 1fr); height: 100%; }
+  .panel { border-left: 0; border-top: 1px solid var(--line); min-height: 0; }
+  .pane { overflow: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .tabs { padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); }
   .hands { grid-template-columns: 1fr; }
-  .brand small { display: none; }
+  .brand small, .lbl { display: none; }
+  .hud-top { top: 8px; }
+  .brand { font-size: 18px; }
+  .sel-chip { padding: 5px 10px; font-size: 12px; }
+  .stage { display: flex; flex-direction: column; }
+  #c { flex: 1 1 auto; min-height: 0; height: auto; }
+  .timeline { position: static; margin: 0; border-radius: 0; border-width: 1px 0 0; padding: 6px max(12px, env(safe-area-inset-right, 0px)) 6px max(12px, env(safe-area-inset-left, 0px)); }
+  .tl-row { flex-wrap: nowrap; gap: 6px; }
+  .tl-row button { min-height: 38px; padding: 6px 11px; }
+  .track { flex: 1 1 60px; }
+  .time { min-width: 0; font-size: 11px; }
+  .kbd-hint { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 </style>
@@ -99,9 +128,9 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
     </div>
     <div class="hud timeline" aria-label="Linha do tempo">
       <div class="tl-row">
-        <button id="play" class="primary" aria-label="Tocar">▶ Tocar</button>
-        <button id="addKey" title="Grava a pose atual neste instante">◆ Gravar quadro</button>
-        <button id="delKey" title="Apaga o quadro-chave selecionado">Apagar quadro</button>
+        <button id="play" class="primary" aria-label="Tocar">▶<span class="lbl"> Tocar</span></button>
+        <button id="addKey" title="Grava a pose atual neste instante" aria-label="Gravar quadro">◆<span class="lbl"> Gravar quadro</span></button>
+        <button id="delKey" title="Apaga o quadro-chave selecionado" aria-label="Apagar quadro">✕<span class="lbl"> Apagar quadro</span></button>
         <div class="track">
           <div class="marks" id="marks"></div>
           <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Tempo">
@@ -120,18 +149,34 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
     </div>
 
     <div class="pane" data-pane="pose">
-      <p class="hint">Clique num ponto âmbar sobre o Kumo para escolher a articulação e gire pelos anéis coloridos, ou use os controles abaixo. Arraste o fundo para girar a câmera; a roda do mouse aproxima.</p>
+      <p class="hint">Toque numa articulação aqui embaixo (ou num ponto âmbar sobre o Kumo) e ajuste o ângulo: arraste a régua, digite o número ou use os passos de 1° e 5°. Um dedo gira a câmera, dois dedos aproximam.</p>
+      <div class="row"><button id="undo" disabled>↶ Desfazer</button><button id="redo" disabled>↷ Refazer</button><button id="resetAll">Zerar tudo</button></div>
+      <div class="group">
+        <div class="group-label">Articulação</div>
+        <div class="joints" id="joints"></div>
+        <select id="boneSel" aria-label="Todas as articulações"></select>
+      </div>
+      <div class="group" id="axes">
+        <div class="axis"><label for="rx">Dobrar</label><input type="range" id="rx" min="-180" max="180" step="0.5" value="0"><input type="number" id="nx" min="-180" max="180" step="0.5" value="0" aria-label="Dobrar em graus">
+          <div class="steps"><button data-ax="0" data-d="-5">−5°</button><button data-ax="0" data-d="-1">−1°</button><button data-ax="0" data-d="1">+1°</button><button data-ax="0" data-d="5">+5°</button></div></div>
+        <div class="axis"><label for="ry">Torcer</label><input type="range" id="ry" min="-180" max="180" step="0.5" value="0"><input type="number" id="ny" min="-180" max="180" step="0.5" value="0" aria-label="Torcer em graus">
+          <div class="steps"><button data-ax="1" data-d="-5">−5°</button><button data-ax="1" data-d="-1">−1°</button><button data-ax="1" data-d="1">+1°</button><button data-ax="1" data-d="5">+5°</button></div></div>
+        <div class="axis"><label for="rz">Inclinar</label><input type="range" id="rz" min="-180" max="180" step="0.5" value="0"><input type="number" id="nz" min="-180" max="180" step="0.5" value="0" aria-label="Inclinar em graus">
+          <div class="steps"><button data-ax="2" data-d="-5">−5°</button><button data-ax="2" data-d="-1">−1°</button><button data-ax="2" data-d="1">+1°</button><button data-ax="2" data-d="5">+5°</button></div></div>
+        <div class="row"><button id="resetBone">Zerar esta articulação</button><button id="mirrorBone">Copiar para o outro lado</button></div>
+      </div>
+      <div class="group">
+        <div class="group-label">Puxar mão ou pé</div>
+        <p class="hint">Ligue e arraste uma mão ou um pé no palco: o braço ou a perna acompanha.</p>
+        <div class="row"><button id="ikToggle" aria-pressed="false">✋ Puxar: desligado</button></div>
+      </div>
+      <div class="group">
+        <div class="group-label">Espelhar a pose inteira</div>
+        <div class="sub"><button id="mirLR">Esquerda → direita</button><button id="mirRL">Direita → esquerda</button></div>
+      </div>
       <div class="group">
         <div class="group-label">Poses prontas</div>
         <div class="chips" id="presets"></div>
-      </div>
-      <div class="group">
-        <div class="group-label">Articulação</div>
-        <select id="boneSel" aria-label="Articulação"></select>
-        <div class="slider"><label for="rx">Dobrar</label><input type="range" id="rx" min="-180" max="180" step="1" value="0"><output id="ox">0°</output></div>
-        <div class="slider"><label for="ry">Torcer</label><input type="range" id="ry" min="-180" max="180" step="1" value="0"><output id="oy">0°</output></div>
-        <div class="slider"><label for="rz">Inclinar</label><input type="range" id="rz" min="-180" max="180" step="1" value="0"><output id="oz">0°</output></div>
-        <div class="row"><button id="resetBone">Zerar esta articulação</button><button id="resetAll">Zerar tudo</button></div>
       </div>
       <div class="group">
         <div class="group-label">Cauda</div>
@@ -139,7 +184,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
         <div class="slider"><label for="tailSwing">Abanar</label><input type="range" id="tailSwing" min="-40" max="40" step="1" value="0"><output id="otsw">0°</output></div>
       </div>
       <p class="note">Os olhos aqui são os pintados do modelo oficial. A piscada e o olhar da versão de olhos (v5) funcionam só no Blender por enquanto.</p>
-      <p class="hint"><span class="kbd">Esc</span> solta a articulação · <span class="kbd">Espaço</span> toca ou pausa · <span class="kbd">K</span> grava quadro</p>
+      <p class="hint kbd-hint"><span class="kbd">Esc</span> solta a articulação · <span class="kbd">Espaço</span> toca ou pausa · <span class="kbd">K</span> grava quadro</p>
     </div>
 
     <div class="pane" data-pane="maos" hidden>
@@ -160,6 +205,10 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
       <div class="group">
         <div class="group-label">Quadros-chave</div>
         <div class="chips" id="keyList"></div>
+        <div class="row" id="keyEdit" hidden>
+          <label for="keyT">Tempo do quadro</label><input type="number" id="keyT" min="0" step="0.05" style="width: 90px">
+          <button id="keyMove">Mover</button><button id="keyDup">Duplicar no tempo atual</button>
+        </div>
       </div>
       <p class="status" id="draftStatus"></p>
     </div>
@@ -215,7 +264,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
   const orbit = new THREE.OrbitControls(camera, canvas);
   orbit.target.set(0, 1.0, 0); orbit.enableDamping = true; orbit.minDistance = 0.6; orbit.maxDistance = 12; orbit.update();
   const gizmo = new THREE.TransformControls(camera, canvas);
-  gizmo.setMode('rotate'); gizmo.setSpace('local'); gizmo.setSize(0.75);
+  gizmo.setMode('rotate'); gizmo.setSpace('local'); gizmo.setSize(window.matchMedia('(pointer: coarse)').matches ? 1.15 : 0.75);
   gizmo.addEventListener('dragging-changed', (e) => { orbit.enabled = !e.value; if (!e.value) onPoseEdited(); });
   gizmo.addEventListener('objectChange', () => { syncSliders(); updateMorphs(); });
   scene.add(gizmo);
@@ -226,9 +275,15 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeColors);
   new MutationObserver(themeColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  let mexeuCamera = false;
+  orbit.addEventListener('start', () => { mexeuCamera = true; });
   function resize() {
-    const r = canvas.parentElement.getBoundingClientRect();
+    const r = canvas.getBoundingClientRect();
     renderer.setSize(r.width, r.height, false); camera.aspect = r.width / Math.max(1, r.height); camera.updateProjectionMatrix();
+    if (!mexeuCamera) {   // o Kumo inteiro (cerca de 2,1 de altura) cabe na tela, também em pé no celular
+      const h = 1.25 / Math.tan(camera.fov * DEG / 2), dist = h / Math.min(1, camera.aspect * 1.15);
+      camera.position.copy(orbit.target).add(new THREE.Vector3(0.34, 0.07, 0.94).normalize().multiplyScalar(dist)); orbit.update();
+    }
   }
   new ResizeObserver(resize).observe(canvas.parentElement);
 
@@ -296,7 +351,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
       }
     });
     for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
-    buildDots(); buildUI(); afterPose();
+    buildDots(); buildUI(); afterPose(); histPush();
     $('loading').hidden = true;
     loadDraft();
   }
@@ -325,6 +380,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
   let downAt = null;
   canvas.addEventListener('pointerdown', (e) => { downAt = [e.clientX, e.clientY]; });
   canvas.addEventListener('pointerup', (e) => {
+    if (ik.dragging) return;
     if (!downAt || gizmo.dragging) return;
     if (Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 4) return;   // foi giro de câmera
     const r = canvas.getBoundingClientRect();
@@ -336,12 +392,71 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
       const p = d.position.clone().project(camera);
       const dx = (p.x - ptr.x) * r.width / 2, dy = (p.y - ptr.y) * r.height / 2, dd = Math.hypot(dx, dy);
       if (!d.visible) continue;
-      const lim = isFinger(d.userData.bone) ? 9 : 14;
+      const lim = (isFinger(d.userData.bone) ? 9 : 14) * (e.pointerType === 'touch' ? 2.4 : 1);
       if (dd < lim && dd < bd && p.z < 1) { bd = dd; best = d; }
     }
     if (best) select(best.userData.bone);
     else if (!gizmo.axis) select(null);
   });
+
+  // ---------- espelhar (rig simétrico em nomes e eixos: X do osso espelha igual, Y e Z trocam de sinal)
+  const mirrorName = (n) => n.replace(/\.L$/, '.#').replace(/\.R$/, '.L').replace(/\.#$/, '.R');
+  const mirrorQ = (q) => new THREE.Quaternion(q.x, -q.y, -q.z, q.w);
+  function mirrorAll(from) {
+    for (const n of order) if (n.endsWith('.' + from)) { const o = mirrorName(n); if (bones[o]) setDelta(o, mirrorQ(delta(n))); }
+    for (const n of order) if (!/\.(L|R)$/.test(n)) { const q = delta(n); setDelta(n, new THREE.Quaternion().slerpQuaternions(q, mirrorQ(q), 0.5)); }   // centro: tira a torção/inclinação lateral
+    afterPose();
+  }
+  // ---------- desfazer / refazer
+  const hist = []; let hi = -1;
+  function histPush() {
+    const p = JSON.stringify(pose(), (k, v) => typeof v === 'number' ? Math.round(v * 1e5) / 1e5 : v); if (hi >= 0 && hist[hi] === p) return;
+    hist.splice(hi + 1); hist.push(p); if (hist.length > 80) hist.shift(); hi = hist.length - 1; histButtons();
+  }
+  function histGo(d) { const j = hi + d; if (j < 0 || j >= hist.length) return; hi = j; applyPose(JSON.parse(hist[hi])); histButtons(); }
+  function histButtons() { $('undo').disabled = hi <= 0; $('redo').disabled = hi >= hist.length - 1; }
+  // ---------- puxar mão ou pé (IK de duas articulações, por aproximação sucessiva)
+  const ik = { on: false, dragging: false, end: null, chain: null, plane: new THREE.Plane(), target: new THREE.Vector3() };
+  const CHAINS = { 'hand.L': ['forearm.L', 'upper_arm.L'], 'hand.R': ['forearm.R', 'upper_arm.R'], 'foot.L': ['shin.L', 'thigh.L'], 'foot.R': ['shin.R', 'thigh.R'] };
+  function screenPick(e, names, radius) {
+    const r = canvas.getBoundingClientRect(); let best = null, bd = radius;
+    for (const n of names) {
+      if (!bones[n]) continue; const p = bones[n].getWorldPosition(new THREE.Vector3()).project(camera);
+      const dd = Math.hypot((p.x + 1) / 2 * r.width - (e.clientX - r.left), (1 - p.y) / 2 * r.height - (e.clientY - r.top));
+      if (dd < bd) { bd = dd; best = n; }
+    }
+    return best;
+  }
+  function solveIK() {
+    const endW = new THREE.Vector3(), piv = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), pq = new THREE.Quaternion();
+    for (let it = 0; it < 12; it++) {
+      for (const n of ik.chain) {
+        const bone = bones[n]; bone.updateWorldMatrix(true, true);
+        bones[ik.end].getWorldPosition(endW); bone.getWorldPosition(piv);
+        a.subVectors(endW, piv).normalize(); b.subVectors(ik.target, piv).normalize();
+        if (a.dot(b) > 0.99999) continue;
+        const qw = new THREE.Quaternion().setFromUnitVectors(a, b);
+        bone.parent.getWorldQuaternion(pq);
+        const ql = pq.clone().invert().multiply(qw).multiply(pq);
+        bone.quaternion.premultiply(ql);
+      }
+    }
+    updateMorphs(); syncSliders();
+  }
+  canvas.addEventListener('pointerdown', (e) => {
+    if (!ik.on) return;
+    const n = screenPick(e, Object.keys(CHAINS), e.pointerType === 'touch' ? 44 : 22); if (!n) return;
+    ik.dragging = true; ik.end = n; ik.chain = CHAINS[n]; orbit.enabled = false; canvas.setPointerCapture(e.pointerId);
+    const w = bones[n].getWorldPosition(new THREE.Vector3()); ik.plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), w);
+    e.preventDefault();
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!ik.dragging) return;
+    const r = canvas.getBoundingClientRect(); ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ptr, camera); if (ray.ray.intersectPlane(ik.plane, ik.target)) solveIK();
+  });
+  const ikEnd = () => { if (!ik.dragging) return; ik.dragging = false; orbit.enabled = true; onPoseEdited(); };
+  canvas.addEventListener('pointerup', ikEnd); canvas.addEventListener('pointercancel', ikEnd);
 
   // ---------- interface
   function select(n) {
@@ -352,9 +467,17 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
   }
   function syncSliders() {
     const on = !!selected;
-    for (const k of ['rx', 'ry', 'rz']) $(k).disabled = !on;
+    document.querySelectorAll('#axes input, #axes button').forEach((x) => { x.disabled = !on; });
     const e = on ? eulerOf(selected) : { x: 0, y: 0, z: 0 };
-    [['rx', 'ox', e.x], ['ry', 'oy', e.y], ['rz', 'oz', e.z]].forEach(([s, o, v]) => { $(s).value = Math.round(v / DEG); $(o).textContent = Math.round(v / DEG) + '°'; });
+    [['rx', 'nx', e.x], ['ry', 'ny', e.y], ['rz', 'nz', e.z]].forEach(([s, n, v]) => {
+      const d = Math.round(v / DEG * 2) / 2; $(s).value = d; if (document.activeElement !== $(n)) $(n).value = d;
+    });
+    document.querySelectorAll('#joints button').forEach((b) => b.classList.toggle('on', b.dataset.bone === selected));
+  }
+  function setAxis(ax, deg) {
+    if (!selected) return;
+    const e = eulerOf(selected); const v = [e.x / DEG, e.y / DEG, e.z / DEG];
+    v[ax] = Math.max(-180, Math.min(180, deg)); setEuler(selected, v[0], v[1], v[2]); updateMorphs(); syncSliders();
   }
   function afterPose() { updateMorphs(); syncSliders(); syncHands(); }
 
@@ -370,14 +493,26 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
       sel.appendChild(og);
     }
     sel.onchange = () => select(sel.value || null);
-    for (const [s, axis] of [['rx', 0], ['ry', 1], ['rz', 2]]) {
-      $(s).addEventListener('input', () => {
-        if (!selected) return;
-        const e = eulerOf(selected); const v = [e.x / DEG, e.y / DEG, e.z / DEG]; v[axis] = Number($(s).value);
-        setEuler(selected, v[0], v[1], v[2]); updateMorphs(); syncSliders(); syncHands();
-      });
+    for (const [s, n, axis] of [['rx', 'nx', 0], ['ry', 'ny', 1], ['rz', 'nz', 2]]) {
+      $(s).addEventListener('input', () => setAxis(axis, Number($(s).value)));
       $(s).addEventListener('change', onPoseEdited);
+      $(n).addEventListener('change', () => { const v = Number(String($(n).value).replace(',', '.')); if (!Number.isNaN(v)) { setAxis(axis, v); onPoseEdited(); } });
     }
+    document.querySelectorAll('#axes .steps button').forEach((b) => b.onclick = () => {
+      if (!selected) return; const ax = Number(b.dataset.ax); const e = eulerOf(selected);
+      setAxis(ax, [e.x, e.y, e.z][ax] / DEG + Number(b.dataset.d)); onPoseEdited();
+    });
+    // atalhos das articulações principais (bons para o dedo)
+    const JOINTS = ['head', 'neck', 'chest', 'spine', 'hips', 'upper_arm.L', 'forearm.L', 'hand.L', 'upper_arm.R', 'forearm.R', 'hand.R', 'thigh.L', 'shin.L', 'foot.L', 'thigh.R', 'shin.R', 'foot.R', 'tail_01', 'tail_05'];
+    const jb = $('joints'); jb.innerHTML = '';
+    for (const n of JOINTS.filter((n) => bones[n])) { const b = document.createElement('button'); b.textContent = label(n); b.dataset.bone = n; b.onclick = () => select(selected === n ? null : n); jb.appendChild(b); }
+    $('mirrorBone').onclick = () => { if (selected && /\.(L|R)$/.test(selected)) { const o = mirrorName(selected); if (bones[o]) { setDelta(o, mirrorQ(delta(selected))); afterPose(); onPoseEdited(); } } };
+    $('mirLR').onclick = () => { mirrorAll('L'); onPoseEdited(); };
+    $('mirRL').onclick = () => { mirrorAll('R'); onPoseEdited(); };
+    $('undo').onclick = () => histGo(-1); $('redo').onclick = () => histGo(1);
+    $('ikToggle').onclick = () => { ik.on = !ik.on; $('ikToggle').setAttribute('aria-pressed', String(ik.on)); $('ikToggle').textContent = ik.on ? '✋ Puxar: ligado' : '✋ Puxar: desligado'; if (ik.on) select(null); };
+    $('keyMove').onclick = () => { if (selKey < 0) return; const t = Math.max(0, Math.min(duration, Number(String($('keyT').value).replace(',', '.')) || 0)); keys[selKey].t = Math.round(t * 100) / 100; const k = keys[selKey]; renderKeys(); selKey = keys.indexOf(k); time = k.t; renderKeys(); updateTime(); saveDraft(); };
+    $('keyDup').onclick = () => { if (selKey < 0) return; const p = JSON.parse(JSON.stringify(keys[selKey].pose)); const t = Math.round(time * 100) / 100; const i = keys.findIndex((k) => Math.abs(k.t - t) < 0.01); if (i >= 0) keys[i].pose = p; else keys.push({ t, pose: p }); renderKeys(); saveDraft(); };
     $('resetBone').onclick = () => { if (selected) { bones[selected].quaternion.copy(rest[selected]); afterPose(); onPoseEdited(); } };
     $('resetAll').onclick = () => { resetPose(); tail = { curl: 0, swing: 0 }; $('tailCurl').value = 0; $('tailSwing').value = 0; afterPose(); onPoseEdited(); };
     // cauda
@@ -488,6 +623,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
       b.onclick = () => { selKey = i; time = k.t; playing = false; updatePlay(); applyPose(k.pose); renderKeys(); updateTime(); };
       m.appendChild(b);
     });
+    $('keyEdit').hidden = selKey < 0 || !keys[selKey]; if (!$('keyEdit').hidden) $('keyT').value = keys[selKey].t;
     const list = $('keyList'); list.innerHTML = keys.length ? '' : '<span class="hint">Nenhum quadro ainda.</span>';
     keys.forEach((k, i) => { const b = document.createElement('button'); b.className = 'chip' + (i === selKey ? ' on' : ''); b.textContent = `◆ ${fmt(k.t, 2)} s`; b.onclick = () => m.children[i].click(); list.appendChild(b); });
   }
@@ -500,7 +636,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
   $('addKey').onclick = addKey;
   $('delKey').onclick = () => { if (selKey >= 0) { keys.splice(selKey, 1); selKey = -1; renderKeys(); saveDraft(); } };
   $('clearKeys').onclick = () => { keys.length = 0; selKey = -1; renderKeys(); saveDraft(); };
-  function onPoseEdited() { if (selKey >= 0 && Math.abs(keys[selKey].t - time) < 0.01) { keys[selKey].pose = pose(); saveDraft(); } }
+  function onPoseEdited() { histPush(); if (selKey >= 0 && Math.abs(keys[selKey].t - time) < 0.01) { keys[selKey].pose = pose(); saveDraft(); } }
   const ease = (x) => x * x * (3 - 2 * x);
   function evalAt(t) {
     if (!keys.length) return;
@@ -571,6 +707,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
     requestAnimationFrame(frame);
   }
   resize(); requestAnimationFrame(frame);
-  window.__kumo = { bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots };   // usado pelos testes
+  window.__camera = camera;
+  window.__kumo = { bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots, mirrorAll, setAxis, histGo };   // usado pelos testes
 })();
 </script>

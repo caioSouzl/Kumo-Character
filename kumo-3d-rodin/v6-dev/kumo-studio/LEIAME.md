@@ -16,6 +16,19 @@ python3 -m http.server 8000
 
 Depois, abra http://localhost:8000 no navegador. A página precisa de internet só para baixar a biblioteca 3D (three.js) e as fontes.
 
+## Pensado para o celular (Caio trabalha só no celular)
+
+- O palco fica em cima, com a linha do tempo logo abaixo, e os controles embaixo.
+- Os botões e as réguas são grandes para o dedo.
+- Um dedo gira a câmera; dois dedos aproximam.
+- **Precisão:**
+  - escolha a articulação pelos botões (Cabeça, Braço E, Antebraço D, Coxa E…) ou pela lista completa;
+  - para cada eixo (Dobrar, Torcer, Inclinar), digite o ângulo exato ou use os passos −5°, −1°, +1° e +5°.
+- **Puxar mão ou pé:** ligue e arraste uma mão ou um pé no palco; o braço ou a perna acompanha.
+- **Espelhar:** copia a articulação escolhida para o outro lado, ou a pose inteira da esquerda para a direita (ou ao contrário).
+- **Desfazer e Refazer.**
+- **Quadros-chave:** mova um quadro para outro tempo ou duplique-o no tempo atual.
+
 ## O que dá para fazer
 
 - **Pose:**
