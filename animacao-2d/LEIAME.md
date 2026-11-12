@@ -1,30 +1,53 @@
-# Kumo · animação 2D (5 segundos)
+# Kumo · animação 2D
 
-**Vídeo:** `kumo-animacao-5s.mp4` (1080 × 1350, em pé para o celular, 24 quadros por segundo, 120 quadros). Começa e termina na mesma pose, então dá para repetir em loop.
+## Animação 2 (atual)
+**Vídeo:** `kumo-animacao-2.mp4` (1080 × 1350, 24 quadros por segundo, 5 s, em loop). `comparacao-1-x-2.mp4` mostra a animação antiga e a nova lado a lado, e `kumo-animacao-2-quadros.png` mostra 12 quadros.
 
-**Arte:** é a ilustração original da referência, sem redesenho. Usei a vista de frente recortada em `character-model-sheet/assets/view-front.png`. A única coisa desenhada por cima é a pálpebra na piscada, com o verde da pele em volta do olho e a linha de contorno escura da arte.
+O roteiro é o mesmo da animação 1: o Kumo olha para um lado, depois para o outro, volta e dá um pulinho. O tempo agora segue a pesquisa (`../estudos-animacao/02-TEMPO.md`):
+- **Piscadas:** a normal fecha em 2 quadros, fica 1 fechada e abre em 3. Há uma longa (3, 2, 4) quando ele muda de ideia e uma rápida na queda. Ele pisca em toda virada de cabeça.
+- **Olhar:** os olhos se mexem sozinhos, em olhadas de 3 quadros, 2 quadros antes da cabeça. A cabeça passa um pouco do ponto e assenta.
+- **Respiração:** inspira mais devagar do que expira, e os braços acompanham com 3 quadros de atraso.
+- **Pulo:**
+  - prepara em 6 quadros e desce os braços;
+  - estica ao sair do chão e abre os braços, com arrasto;
+  - fica 14 quadros no ar;
+  - achata no máximo 2 quadros depois de tocar o chão e dá um pequeno quique;
+  - cabeça e cauda reagem com atraso.
+- **Enquadramento:** o Kumo cabe inteiro na tela. A animação 1 cortava a cabeça no alto do pulo.
 
-## O que acontece
+## Camadas (`camadas/`)
+A arte é a vista de frente da folha de modelo (`character-model-sheet/assets/view-front.png`), recortada da referência, **sem redesenho**. Ela foi separada em peças:
+- `corpo` (com a cauda);
+- `braco_E` e `braco_D`;
+- `cabeca`;
+- `iris_E` e `iris_D` (pupila, brilho e anel laranja, que se movem dentro do olho).
 
-| Tempo | Movimento |
-|---|---|
-| 0–5 s | Respiração leve e cauda balançando |
-| 0,35 s | Piscada |
-| 0,7–1,4 s | Inclina a cabeça para um lado, curioso |
-| 1,9–2,6 s | Inclina para o outro lado |
-| 2,15 s | Piscada |
-| 2,9–3,3 s | A cabeça volta ao centro |
-| 3,3–4,55 s | Pulinho feliz: agacha, sobe esticado, cai e amortece (squash & stretch), com a sombra encolhendo no ar |
-| 4,35 s | Piscada na aterrissagem |
+O que fica escondido atrás de cada peça foi preenchido, para aparecer quando ela se mexe: o tronco atrás dos braços e a parte branca do olho atrás da íris. Montadas paradas, as camadas refazem a arte **pixel a pixel** (diferença zero, conferida pelo próprio script).
 
-## Como foi feito
+Consertos na arte, todos invisíveis sobre o fundo branco da folha:
+- **Brilho da pupila direita:** o recorte da folha tinha tirado esse brilho como se fosse fundo, deixando um furo; aqui ele volta a ser branco.
+- **Halo branco:** o halo branco das bordas, sobra do fundo branco, foi tirado.
+- **Véu de pixels quase invisíveis em volta do recorte:** foi tirado, porque deixava riscos quando uma peça saía do lugar.
 
-Técnica de recorte (cutout), em `src/animar.py`:
-- a cabeça é uma peça separada, que gira pelo pescoço;
-- a cauda gira em torno da base, com mais movimento na ponta;
-- o corpo inteiro respira e pula, apoiado nos pés.
+As pálpebras são desenhadas com as cores e o traço da folha de expressões aprovada.
 
-Para refazer: `python3 src/animar.py <pasta>` gera os quadros. Depois:
-`ffmpeg -framerate 24 -i <pasta>/quadros/q%04d.png -c:v libx264 -pix_fmt yuv420p -crf 18 kumo-animacao-5s.mp4`
+## Ferramentas (`src/`)
+- `camadas.py <saída>`: gera as camadas a partir da arte e confere a montagem.
+- `rig2d.py`: monta uma pose a partir das camadas (giros de cabeça, braços e cauda; olhar; piscar de cada olho; achatar e esticar; altura).
+- `planilha.py`: a planilha de tempo. Cria canais com chaves e curvas, desenha a planilha e **confere as regras de tempo**: piscadas, piscar ao virar a cabeça, olhos antes da cabeça, duração das olhadas, preparação, achatamento na queda e loop.
+- `animar_v2.py <camadas> <saída>`: faz a animação 2. Com `--so-planilha`, só confere o tempo e desenha a planilha. Ao gerar os quadros, também confere se o Kumo cabe na tela.
+- `animar.py`: a animação 1, guardada como histórico.
 
-`kumo-animacao-quadros.png` mostra 10 quadros do vídeo, para conferir.
+Para refazer:
+1. `python3 src/camadas.py camadas`
+2. `python3 src/animar_v2.py camadas <pasta>`
+3. `ffmpeg -framerate 24 -i <pasta>/quadros/q%04d.png -c:v libx264 -pix_fmt yuv420p -crf 18 kumo-animacao-2.mp4`
+
+**Pontos fracos conhecidos:**
+- Com o braço bem aberto, aparecem pequenos riscos escuros perto dos ombros e das mãos: sobras do contorno original, que era um desenho só.
+- Na curva da cauda aparecem pontinhos claros quando ela balança.
+
+São pequenos no tamanho do vídeo, mas existem.
+
+## Animação 1
+`kumo-animacao-5s.mp4` e `kumo-animacao-quadros.png`, feita com `src/animar.py`. A cabeça e a cauda se mexem sobre a arte inteira, e a pálpebra é desenhada por cima.

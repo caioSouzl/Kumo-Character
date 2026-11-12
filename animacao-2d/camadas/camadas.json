@@ -1,0 +1,55 @@
+{
+ "arte": "character-model-sheet/assets/view-front.png",
+ "tamanho": [
+  615,
+  888
+ ],
+ "ordem": [
+  "corpo",
+  "braco_E",
+  "braco_D",
+  "cabeca",
+  "iris_E",
+  "iris_D"
+ ],
+ "pivos": {
+  "cabeca": [
+   237.0,
+   468.0
+  ],
+  "braco_E": [
+   160.0,
+   485.0
+  ],
+  "braco_D": [
+   310.0,
+   485.0
+  ],
+  "cauda": [
+   395.0,
+   770.0
+  ],
+  "olhos": {
+   "E": {
+    "c": [
+     110.0,
+     315.0
+    ],
+    "r": [
+     61.0,
+     89.0
+    ]
+   },
+   "D": {
+    "c": [
+     392.0,
+     314.0
+    ],
+    "r": [
+     68.0,
+     91.0
+    ]
+   }
+  }
+ }
+}
