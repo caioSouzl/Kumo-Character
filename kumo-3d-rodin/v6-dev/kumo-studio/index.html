@@ -1,0 +1,576 @@
+<title>Estúdio do Kumo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: palco 3D à esquerda (tela cheia), painel de controles à direita; no celular o painel desce para baixo do palco. */
+:root {
+  --bg: #eef1e8;          /* papel claro com viés verde */
+  --stage: #dfe6d6;
+  --panel: #f8faf4;
+  --ink: #1d2a20;
+  --muted: #5d6b5f;
+  --line: #cfd8c8;
+  --leaf: #1b5e3b;        /* verde escuro da paleta do Kumo */
+  --leaf-soft: #d7e8d9;
+  --amber: #f4b642;       /* âmbar dos olhos */
+  --bark: #5b3a2e;        /* marrom do contorno */
+  --font-display: "Fredoka", "Nunito Sans", system-ui, sans-serif;
+  --font-body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121813; --stage: #1a231c; --panel: #161e18; --ink: #e6ede4; --muted: #9aab9c;
+    --line: #2c3a2f; --leaf: #6cc58e; --leaf-soft: #22382a; --amber: #f4b642; --bark: #c9937d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121813; --stage: #1a231c; --panel: #161e18; --ink: #e6ede4; --muted: #9aab9c;
+  --line: #2c3a2f; --leaf: #6cc58e; --leaf-soft: #22382a; --amber: #f4b642; --bark: #c9937d; color-scheme: dark;
+}
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; height: 100%; }
+.stage { position: relative; background: var(--stage); min-height: 0; overflow: hidden; }
+#c { display: block; width: 100%; height: 100%; touch-action: none; }
+.hud { position: absolute; display: flex; gap: 8px; align-items: center; }
+.hud-top { top: 12px; left: max(16px, env(safe-area-inset-left, 0px)); right: 16px; justify-content: space-between; pointer-events: none; }
+.brand { font-family: var(--font-display); font-weight: 600; font-size: 22px; color: var(--leaf); letter-spacing: 0.2px; }
+.brand small { font-family: var(--font-body); font-weight: 600; font-size: 12px; color: var(--muted); margin-left: 8px; letter-spacing: 0.4px; }
+.sel-chip { pointer-events: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: 13px; }
+.sel-chip span { color: var(--muted); font-weight: 600; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-size: 18px; color: var(--muted); background: var(--stage); }
+.timeline { left: max(16px, env(safe-area-inset-left, 0px)); right: 16px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; flex-direction: column; align-items: stretch; gap: 8px; }
+.tl-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.track { position: relative; flex: 1 1 200px; height: 30px; min-width: 0; }
+.track input[type=range] { position: absolute; inset: 0; width: 100%; margin: 0; }
+.marks { position: absolute; left: 8px; right: 8px; top: -6px; height: 0; pointer-events: none; }
+.mark { position: absolute; top: 0; width: 12px; height: 12px; margin-left: -6px; transform: rotate(45deg); background: var(--amber); border: 2px solid var(--bark); pointer-events: auto; cursor: pointer; padding: 0; border-radius: 2px; }
+.mark.on { background: var(--bark); }
+.time { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); min-width: 92px; text-align: right; }
+.panel { background: var(--panel); border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+.tabs { display: flex; gap: 4px; padding: 10px 12px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.tab { font: 700 13px var(--font-body); padding: 8px 12px; border: 0; background: transparent; color: var(--muted); border-bottom: 3px solid transparent; cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--leaf); border-bottom-color: var(--leaf); }
+.pane { padding: 14px 16px 24px; overflow: auto; display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 16px; margin: 0; color: var(--ink); text-wrap: balance; }
+.hint { color: var(--muted); font-size: 13px; line-height: 1.45; margin: 0; max-width: 60ch; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.group-label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: 700 13px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px; cursor: pointer; }
+button:hover { border-color: var(--leaf); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+button.primary { background: var(--leaf); border-color: var(--leaf); color: var(--panel); }
+button.chip.on { background: var(--leaf-soft); border-color: var(--leaf); color: var(--leaf); }
+.slider { display: grid; grid-template-columns: 74px minmax(0, 1fr) 46px; gap: 8px; align-items: center; }
+.slider label { font-weight: 600; font-size: 13px; }
+.slider output { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); text-align: right; }
+input[type=range] { accent-color: var(--leaf); width: 100%; }
+select, textarea, input[type=number] { font: 13px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 7px 9px; }
+select { width: 100%; }
+textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-size: 11px; resize: vertical; box-sizing: border-box; }
+.hands { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.hand { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.hand .slider { grid-template-columns: 58px minmax(0, 1fr) 38px; }
+.note { border-left: 3px solid var(--amber); padding: 6px 10px; background: var(--bg); color: var(--muted); font-size: 12.5px; line-height: 1.45; border-radius: 0 8px 8px 0; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.kbd { font-family: var(--font-data); font-size: 11px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 5px; color: var(--muted); }
+.status { font-size: 12.5px; color: var(--leaf); min-height: 1.2em; }
+@media (max-width: 820px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 62vh auto; height: auto; }
+  .panel { border-left: 0; border-top: 1px solid var(--line); }
+  .pane { overflow: visible; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .hands { grid-template-columns: 1fr; }
+  .brand small { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="app">
+  <section class="stage" aria-label="Palco 3D">
+    <canvas id="c"></canvas>
+    <div class="loading" id="loading">Carregando o Kumo…</div>
+    <div class="hud hud-top">
+      <div class="brand">Kumo <small>pose e animação</small></div>
+      <div class="sel-chip" id="selChip"><span>Articulação:</span> nenhuma</div>
+    </div>
+    <div class="hud timeline" aria-label="Linha do tempo">
+      <div class="tl-row">
+        <button id="play" class="primary" aria-label="Tocar">▶ Tocar</button>
+        <button id="addKey" title="Grava a pose atual neste instante">◆ Gravar quadro</button>
+        <button id="delKey" title="Apaga o quadro-chave selecionado">Apagar quadro</button>
+        <div class="track">
+          <div class="marks" id="marks"></div>
+          <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Tempo">
+        </div>
+        <div class="time" id="time">0,00 / 2,00 s</div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-tab="pose">Pose</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="maos">Mãos e dedos</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="anim">Animação</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="arq">Blender</button>
+    </div>
+
+    <div class="pane" data-pane="pose">
+      <p class="hint">Clique num ponto âmbar sobre o Kumo para escolher a articulação e gire pelos anéis coloridos, ou use os controles abaixo. Arraste o fundo para girar a câmera; a roda do mouse aproxima.</p>
+      <div class="group">
+        <div class="group-label">Poses prontas</div>
+        <div class="chips" id="presets"></div>
+      </div>
+      <div class="group">
+        <div class="group-label">Articulação</div>
+        <select id="boneSel" aria-label="Articulação"></select>
+        <div class="slider"><label for="rx">Dobrar</label><input type="range" id="rx" min="-180" max="180" step="1" value="0"><output id="ox">0°</output></div>
+        <div class="slider"><label for="ry">Torcer</label><input type="range" id="ry" min="-180" max="180" step="1" value="0"><output id="oy">0°</output></div>
+        <div class="slider"><label for="rz">Inclinar</label><input type="range" id="rz" min="-180" max="180" step="1" value="0"><output id="oz">0°</output></div>
+        <div class="row"><button id="resetBone">Zerar esta articulação</button><button id="resetAll">Zerar tudo</button></div>
+      </div>
+      <div class="group">
+        <div class="group-label">Cauda</div>
+        <div class="slider"><label for="tailCurl">Enrolar</label><input type="range" id="tailCurl" min="-60" max="60" step="1" value="0"><output id="otail">0°</output></div>
+        <div class="slider"><label for="tailSwing">Abanar</label><input type="range" id="tailSwing" min="-40" max="40" step="1" value="0"><output id="otsw">0°</output></div>
+      </div>
+      <p class="note">Os olhos aqui são os pintados do modelo oficial. A piscada e o olhar da versão de olhos (v5) funcionam só no Blender por enquanto.</p>
+      <p class="hint"><span class="kbd">Esc</span> solta a articulação · <span class="kbd">Espaço</span> toca ou pausa · <span class="kbd">K</span> grava quadro</p>
+    </div>
+
+    <div class="pane" data-pane="maos" hidden>
+      <p class="hint">Cada mão tem 3 dedos e polegar. A correção da mão fechada liga sozinha quando os dedos passam de 40°, igual no Blender.</p>
+      <div class="hands" id="hands"></div>
+    </div>
+
+    <div class="pane" data-pane="anim" hidden>
+      <p class="hint">Faça uma pose, escolha o instante na linha do tempo e clique em <b>Gravar quadro</b>. O Kumo passa de um quadro-chave ao outro com suavidade.</p>
+      <div class="group">
+        <div class="slider"><label for="dur">Duração</label><input type="range" id="dur" min="0.5" max="10" step="0.1" value="2"><output id="odur">2,0 s</output></div>
+        <div class="row"><label><input type="checkbox" id="loop" checked> Repetir</label><button id="clearKeys">Apagar todos os quadros</button></div>
+      </div>
+      <div class="group">
+        <div class="group-label">Exemplos</div>
+        <div class="chips" id="anims"></div>
+      </div>
+      <div class="group">
+        <div class="group-label">Quadros-chave</div>
+        <div class="chips" id="keyList"></div>
+      </div>
+      <p class="status" id="draftStatus"></p>
+    </div>
+
+    <div class="pane" data-pane="arq" hidden>
+      <p class="hint">Copie a pose ou a animação e aplique no Blender com o script <code>aplicar_no_blender.py</code> desta pasta. Os ossos têm os mesmos nomes e eixos do rig do Blender.</p>
+      <div class="row">
+        <button id="copyPose" class="primary">Copiar pose</button>
+        <button id="copyAnim">Copiar animação</button>
+        <button id="loadJson">Carregar do texto</button>
+      </div>
+      <textarea id="json" aria-label="Pose ou animação em JSON" spellcheck="false" placeholder="O JSON aparece aqui. Para carregar, cole um JSON e clique em Carregar do texto."></textarea>
+      <p class="status" id="ioStatus"></p>
+    </div>
+  </aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/TransformControls.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n, d = 0) => n.toFixed(d).replace('.', ',');
+  const DEG = Math.PI / 180;
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+  // ---------- nomes amigáveis (nomes originais do rig do Blender)
+  const LABEL = {
+    'root': 'Raiz', 'hips': 'Quadril', 'spine': 'Coluna', 'chest': 'Peito', 'neck': 'Pescoço', 'head': 'Cabeça',
+    'shoulder': 'Ombro', 'upper_arm': 'Braço', 'forearm': 'Antebraço', 'hand': 'Mão', 'metacarpo': 'Palma',
+    'thigh': 'Coxa', 'shin': 'Canela', 'foot': 'Pé',
+    'dedo1_1': 'Dedo 1 (base)', 'dedo1_2': 'Dedo 1 (ponta)', 'dedo2_1': 'Dedo 2 (base)', 'dedo2_2': 'Dedo 2 (ponta)',
+    'dedo3_1': 'Dedo 3 (base)', 'dedo3_2': 'Dedo 3 (ponta)', 'polegar_1': 'Polegar (base)', 'polegar_2': 'Polegar (ponta)'
+  };
+  const label = (n) => {
+    const m = n.match(/^(.*)\.(L|R)$/);
+    if (m) return (LABEL[m[1]] || m[1]) + (m[2] === 'L' ? ' E' : ' D');
+    const t = n.match(/^tail_(\d+)$/); if (t) return 'Cauda ' + Number(t[1]);
+    return LABEL[n] || n;
+  };
+  const isFinger = (n) => /^(dedo|polegar|metacarpo)/.test(n);
+
+  // ---------- cena
+  const canvas = $('c');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 50);
+  camera.position.set(1.6, 1.35, 4.4);
+  const orbit = new THREE.OrbitControls(camera, canvas);
+  orbit.target.set(0, 1.0, 0); orbit.enableDamping = true; orbit.minDistance = 0.6; orbit.maxDistance = 12; orbit.update();
+  const gizmo = new THREE.TransformControls(camera, canvas);
+  gizmo.setMode('rotate'); gizmo.setSpace('local'); gizmo.setSize(0.75);
+  gizmo.addEventListener('dragging-changed', (e) => { orbit.enabled = !e.value; if (!e.value) onPoseEdited(); });
+  gizmo.addEventListener('objectChange', () => { syncSliders(); updateMorphs(); });
+  scene.add(gizmo);
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(1.1, 64), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.08 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = 0.001; scene.add(floor);
+  function themeColors() { scene.background = new THREE.Color(css('--stage') || '#dfe6d6'); }
+  themeColors();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeColors);
+  new MutationObserver(themeColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  function resize() {
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height, false); camera.aspect = r.width / Math.max(1, r.height); camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(canvas.parentElement);
+
+  // ---------- estado
+  const bones = {};          // nome original -> THREE.Bone
+  const rest = {};           // nome original -> quaternion de repouso
+  const order = [];          // nomes na ordem do rig
+  let meshes = [], dots = [], selected = null;
+  const keys = [];           // {t, pose}
+  let duration = 2, time = 0, playing = false, selKey = -1;
+
+  const delta = (n) => rest[n].clone().invert().multiply(bones[n].quaternion);
+  function setDelta(n, q) { bones[n].quaternion.copy(rest[n]).multiply(q); }
+  function eulerOf(n) { return new THREE.Euler().setFromQuaternion(delta(n), 'XYZ'); }
+  function setEuler(n, x, y, z) { setDelta(n, new THREE.Quaternion().setFromEuler(new THREE.Euler(x * DEG, y * DEG, z * DEG, 'XYZ'))); }
+  function addLocal(n, axis, deg) {   // gira em torno de um eixo local do osso, somando à pose atual
+    const ax = axis === 'X' ? new THREE.Vector3(1, 0, 0) : axis === 'Y' ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 0, 1);
+    setDelta(n, delta(n).multiply(new THREE.Quaternion().setFromAxisAngle(ax, deg * DEG)));
+  }
+  function rotWorld(n, axis, deg) {   // gira em torno de um eixo do mundo (como nos testes do Blender)
+    const b = bones[n]; b.updateWorldMatrix(true, false);
+    const pq = new THREE.Quaternion(); b.parent.getWorldQuaternion(pq);
+    const a = axis.clone().normalize().applyQuaternion(pq.clone().invert());
+    b.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(a, deg * DEG));
+  }
+  const pose = () => { const p = {}; for (const n of order) { const q = delta(n); p[n] = [q.w, q.x, q.y, q.z]; } return p; };
+  function applyPose(p) { for (const n of order) { const v = p[n]; setDelta(n, v ? new THREE.Quaternion(v[1], v[2], v[3], v[0]) : new THREE.Quaternion()); } afterPose(); }
+  function resetPose() { for (const n of order) bones[n].quaternion.copy(rest[n]); }
+
+  // ---------- correção da mão fechada (mesmo driver do Blender: smoothstep(0,70; 1,20; média do dobrar dos 3 dedos))
+  const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  function updateMorphs() {
+    for (const sd of ['L', 'R']) {
+      const ns = [1, 2, 3].map((k) => `dedo${k}_1.${sd}`).filter((n) => bones[n]);
+      if (!ns.length) continue;
+      const avg = ns.reduce((s, n) => s + eulerOf(n).x, 0) / ns.length;
+      const w = sstep(0.70, 1.20, avg);
+      for (const m of meshes) { const i = m.morphTargetDictionary && m.morphTargetDictionary[`Corretiva_MaoFechada.${sd}`]; if (i !== undefined) m.morphTargetInfluences[i] = w; }
+    }
+  }
+
+  // ---------- carregar o modelo
+  // o modelo é o GLB; no claude.ai ele vai publicado como kumo.wasm (mesmo conteúdo binário), então tenta os dois nomes
+  const FONTES = ['kumo.glb', 'kumo.wasm'];
+  function carregar(i) {
+    new THREE.GLTFLoader().load(FONTES[i], montar,
+      (e) => { if (e.total) $('loading').textContent = `Carregando o Kumo… ${Math.round(e.loaded / e.total * 100)}%`; },
+      () => { if (i + 1 < FONTES.length) carregar(i + 1); else $('loading').textContent = 'Não consegui abrir o modelo. No computador, abra a página por um servidor local (veja o LEIAME).'; });
+  }
+  carregar(0);
+  function montar(gltf) {
+    const root = gltf.scene; scene.add(root);
+    const assoc = gltf.parser.associations;
+    root.traverse((o) => {
+      if (o.isBone) {
+        const a = assoc.get(o); const orig = a && a.nodes !== undefined ? gltf.parser.json.nodes[a.nodes].name : o.name;
+        bones[orig] = o; rest[orig] = o.quaternion.clone(); order.push(orig);
+      }
+      if (o.isMesh) {
+        meshes.push(o); o.frustumCulled = false;
+        const m = o.material, name = m.name || '';
+        // emissão pura, como no Blender (sem luz)
+        if (/Contorno/.test(name)) o.material = new THREE.MeshBasicMaterial({ color: m.emissive ? m.emissive.clone() : 0x2b1810, side: THREE.FrontSide });
+        else o.material = new THREE.MeshBasicMaterial({ map: m.emissiveMap || m.map, side: m.side });
+      }
+    });
+    for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
+    buildDots(); buildUI(); afterPose();
+    $('loading').hidden = true;
+    loadDraft();
+  }
+
+  // ---------- pontos clicáveis nas articulações
+  const dotGeo = new THREE.SphereGeometry(1, 16, 12);
+  function buildDots() {
+    for (const n of order) {
+      if (n === 'root') continue;
+      const mat = new THREE.MeshBasicMaterial({ color: 0xf4b642, depthTest: false, transparent: true, opacity: 0.95 });
+      const d = new THREE.Mesh(dotGeo, mat); d.renderOrder = 10; d.userData.bone = n;
+      d.scale.setScalar(isFinger(n) ? 0.010 : /^tail_/.test(n) ? 0.014 : 0.020); scene.add(d); dots.push(d);
+    }
+  }
+  const tmp = new THREE.Vector3();
+  function updateDots() {
+    const lado = selected && /\.(L|R)$/.test(selected) && /^(hand|forearm|dedo|polegar|metacarpo)/.test(selected) ? selected.slice(-1) : null;
+    for (const d of dots) {
+      const n = d.userData.bone;
+      d.visible = !isFinger(n) || lado === n.slice(-1);      // pontos dos dedos aparecem quando a mão daquele lado está escolhida
+      bones[n].getWorldPosition(tmp); d.position.copy(tmp);
+      d.material.color.set(d.userData.bone === selected ? 0x5b3a2e : 0xf4b642);
+    }
+  }
+  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+  let downAt = null;
+  canvas.addEventListener('pointerdown', (e) => { downAt = [e.clientX, e.clientY]; });
+  canvas.addEventListener('pointerup', (e) => {
+    if (!downAt || gizmo.dragging) return;
+    if (Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 4) return;   // foi giro de câmera
+    const r = canvas.getBoundingClientRect();
+    ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ptr, camera);
+    // pontos pequenos: escolhe o mais próximo do raio na tela
+    let best = null, bd = 1e9;
+    for (const d of dots) {
+      const p = d.position.clone().project(camera);
+      const dx = (p.x - ptr.x) * r.width / 2, dy = (p.y - ptr.y) * r.height / 2, dd = Math.hypot(dx, dy);
+      if (!d.visible) continue;
+      const lim = isFinger(d.userData.bone) ? 9 : 14;
+      if (dd < lim && dd < bd && p.z < 1) { bd = dd; best = d; }
+    }
+    if (best) select(best.userData.bone);
+    else if (!gizmo.axis) select(null);
+  });
+
+  // ---------- interface
+  function select(n) {
+    selected = n;
+    if (n) { gizmo.attach(bones[n]); $('boneSel').value = n; } else gizmo.detach();
+    $('selChip').innerHTML = `<span>Articulação:</span> ${n ? label(n) : 'nenhuma'}`;
+    syncSliders();
+  }
+  function syncSliders() {
+    const on = !!selected;
+    for (const k of ['rx', 'ry', 'rz']) $(k).disabled = !on;
+    const e = on ? eulerOf(selected) : { x: 0, y: 0, z: 0 };
+    [['rx', 'ox', e.x], ['ry', 'oy', e.y], ['rz', 'oz', e.z]].forEach(([s, o, v]) => { $(s).value = Math.round(v / DEG); $(o).textContent = Math.round(v / DEG) + '°'; });
+  }
+  function afterPose() { updateMorphs(); syncSliders(); syncHands(); }
+
+  function buildUI() {
+    const sel = $('boneSel');
+    const groups = [['Corpo', (n) => /^(root|hips|spine|chest|neck|head)$/.test(n)], ['Braço esquerdo', (n) => /^(shoulder|upper_arm|forearm|hand)\.L$/.test(n)],
+      ['Braço direito', (n) => /^(shoulder|upper_arm|forearm|hand)\.R$/.test(n)], ['Mão esquerda', (n) => isFinger(n) && n.endsWith('.L')],
+      ['Mão direita', (n) => isFinger(n) && n.endsWith('.R')], ['Pernas', (n) => /^(thigh|shin|foot)\./.test(n)], ['Cauda', (n) => /^tail_/.test(n)]];
+    sel.innerHTML = '<option value="">Escolha uma articulação…</option>';
+    for (const [g, f] of groups) {
+      const og = document.createElement('optgroup'); og.label = g;
+      for (const n of order.filter(f)) { const o = document.createElement('option'); o.value = n; o.textContent = label(n); og.appendChild(o); }
+      sel.appendChild(og);
+    }
+    sel.onchange = () => select(sel.value || null);
+    for (const [s, axis] of [['rx', 0], ['ry', 1], ['rz', 2]]) {
+      $(s).addEventListener('input', () => {
+        if (!selected) return;
+        const e = eulerOf(selected); const v = [e.x / DEG, e.y / DEG, e.z / DEG]; v[axis] = Number($(s).value);
+        setEuler(selected, v[0], v[1], v[2]); updateMorphs(); syncSliders(); syncHands();
+      });
+      $(s).addEventListener('change', onPoseEdited);
+    }
+    $('resetBone').onclick = () => { if (selected) { bones[selected].quaternion.copy(rest[selected]); afterPose(); onPoseEdited(); } };
+    $('resetAll').onclick = () => { resetPose(); tail = { curl: 0, swing: 0 }; $('tailCurl').value = 0; $('tailSwing').value = 0; afterPose(); onPoseEdited(); };
+    // cauda
+    const tailBones = order.filter((n) => /^tail_/.test(n));
+    let tail = { curl: 0, swing: 0 };
+    const applyTail = () => {
+      for (const n of tailBones) setEuler(n, tail.curl, 0, tail.swing);
+      $('otail').textContent = tail.curl + '°'; $('otsw').textContent = tail.swing + '°'; afterPose();
+    };
+    $('tailCurl').oninput = () => { tail.curl = Number($('tailCurl').value); applyTail(); };
+    $('tailSwing').oninput = () => { tail.swing = Number($('tailSwing').value); applyTail(); };
+    $('tailCurl').onchange = $('tailSwing').onchange = onPoseEdited;
+    buildHands(); buildPresets(); buildAnims();
+  }
+
+  // mãos: valores guardados por mão e reaplicados juntos
+  const HAND = { L: { fechar: 0, d1: 0, d2: 0, d3: 0, pol: 0, abrir: 0 }, R: { fechar: 0, d1: 0, d2: 0, d3: 0, pol: 0, abrir: 0 } };
+  function applyHand(sd) {
+    const h = HAND[sd], has = (n) => bones[n];
+    for (const n of order.filter((n) => isFinger(n) && n.endsWith('.' + sd))) bones[n].quaternion.copy(rest[n]);
+    const curl = (k) => Math.min(95, h.fechar * 0.7 + h['d' + k]) - h.abrir * 10;
+    if (has(`metacarpo.${sd}`)) addLocal(`metacarpo.${sd}`, 'X', h.fechar * 0.2);
+    for (const k of [1, 2, 3]) for (const j of [1, 2]) if (has(`dedo${k}_${j}.${sd}`)) addLocal(`dedo${k}_${j}.${sd}`, 'X', curl(k));
+    if (has(`dedo1_1.${sd}`)) addLocal(`dedo1_1.${sd}`, 'Z', h.abrir * 15);
+    if (has(`dedo3_1.${sd}`)) addLocal(`dedo3_1.${sd}`, 'Z', -h.abrir * 15);
+    if (has(`polegar_1.${sd}`)) { addLocal(`polegar_1.${sd}`, 'Z', h.abrir * 20); addLocal(`polegar_1.${sd}`, 'X', h.pol * 0.8 - h.abrir * 10); }
+    if (has(`polegar_2.${sd}`)) addLocal(`polegar_2.${sd}`, 'X', h.pol - h.abrir * 10);
+    updateMorphs(); syncSliders();
+  }
+  const HSL = [['fechar', 'Fechar', 0, 100, '%'], ['d1', 'Dedo 1', -20, 95, '°'], ['d2', 'Dedo 2', -20, 95, '°'], ['d3', 'Dedo 3', -20, 95, '°'], ['pol', 'Polegar', -20, 60, '°'], ['abrir', 'Abrir', 0, 1, '']];
+  function buildHands() {
+    const box = $('hands'); box.innerHTML = '';
+    for (const sd of ['L', 'R']) {
+      const col = document.createElement('div'); col.className = 'hand';
+      col.innerHTML = `<h2>Mão ${sd === 'L' ? 'esquerda' : 'direita'}</h2>`;
+      for (const [k, lab, mn, mx, un] of HSL) {
+        const id = `h${sd}${k}`, row = document.createElement('div'); row.className = 'slider';
+        row.innerHTML = `<label for="${id}">${lab}</label><input type="range" id="${id}" min="${mn}" max="${mx}" step="${k === 'abrir' ? 0.05 : 1}" value="0"><output id="o${id}">0${un}</output>`;
+        col.appendChild(row);
+        setTimeout(() => {
+          $(id).oninput = () => { HAND[sd][k] = Number($(id).value); $('o' + id).textContent = (k === 'abrir' ? Math.round(HAND[sd][k] * 100) + '%' : HAND[sd][k] + un); applyHand(sd); };
+          $(id).onchange = onPoseEdited;
+        });
+      }
+      const chips = document.createElement('div'); chips.className = 'chips';
+      for (const [t, v] of [['Aberta', { fechar: 0, abrir: 1, pol: 0 }], ['Relaxada', { fechar: 30, abrir: 0, pol: 10 }], ['Fechada', { fechar: 100, abrir: 0, pol: 0 }], ['Apontar', { fechar: 100, d1: -70, abrir: 0, pol: 30 }]]) {
+        const b = document.createElement('button'); b.className = 'chip'; b.textContent = t;
+        b.onclick = () => { Object.assign(HAND[sd], { fechar: 0, d1: 0, d2: 0, d3: 0, pol: 0, abrir: 0 }, v); syncHandSliders(sd); applyHand(sd); onPoseEdited(); };
+        chips.appendChild(b);
+      }
+      col.appendChild(chips); box.appendChild(col);
+    }
+  }
+  function syncHandSliders(sd) {
+    for (const [k, , , , un] of HSL) { const id = `h${sd}${k}`; if (!$(id)) continue; $(id).value = HAND[sd][k]; $('o' + id).textContent = (k === 'abrir' ? Math.round(HAND[sd][k] * 100) + '%' : HAND[sd][k] + un); }
+  }
+  function syncHands() {}   // os controles de mão guardam a intenção; a pose real está nos ossos
+
+  // poses prontas (giros em torno de eixos do mundo: frente do Kumo = +Z, cima = +Y)
+  const W = { X: new THREE.Vector3(1, 0, 0), Y: new THREE.Vector3(0, 1, 0), Z: new THREE.Vector3(0, 0, 1) };
+  function handPreset(sd, v) { Object.assign(HAND[sd], { fechar: 0, d1: 0, d2: 0, d3: 0, pol: 0, abrir: 0 }, v); syncHandSliders(sd); applyHand(sd); }
+  const PRESETS = {
+    'Repouso': () => { resetPose(); handPreset('L', {}); handPreset('R', {}); },
+    'Acenar': () => { resetPose(); rotWorld('upper_arm.R', W.Z, -95); rotWorld('forearm.R', W.Z, -45); handPreset('R', { abrir: 1 }); rotWorld('head', W.Z, -8); },
+    'Comemorar': () => { resetPose(); rotWorld('upper_arm.L', W.Z, 120); rotWorld('upper_arm.R', W.Z, -120); handPreset('L', { fechar: 100 }); handPreset('R', { fechar: 100 }); rotWorld('head', W.X, -12); },
+    'Apontar': () => { resetPose(); rotWorld('upper_arm.R', W.X, -80); handPreset('R', { fechar: 100, d1: -70, pol: 30 }); rotWorld('head', W.Y, -10); },
+    'Mãos fechadas': () => { handPreset('L', { fechar: 100 }); handPreset('R', { fechar: 100 }); },
+    'Mãos abertas': () => { handPreset('L', { abrir: 1 }); handPreset('R', { abrir: 1 }); }
+  };
+  function buildPresets() {
+    const box = $('presets'); box.innerHTML = '';
+    for (const [n, f] of Object.entries(PRESETS)) {
+      const b = document.createElement('button'); b.className = 'chip'; b.textContent = n;
+      b.onclick = () => { f(); afterPose(); onPoseEdited(); }; box.appendChild(b);
+    }
+  }
+  // animações de exemplo (viram quadros-chave editáveis)
+  const ANIMS = {
+    'Acenar': { d: 2, ks: [[0, () => { PRESETS['Acenar'](); rotWorld('forearm.R', W.Z, 20); }], [0.5, () => { PRESETS['Acenar'](); rotWorld('forearm.R', W.Z, -20); }], [1, () => { PRESETS['Acenar'](); rotWorld('forearm.R', W.Z, 20); }], [1.5, () => { PRESETS['Acenar'](); rotWorld('forearm.R', W.Z, -20); }], [2, () => { PRESETS['Acenar'](); rotWorld('forearm.R', W.Z, 20); }]] },
+    'Abrir e fechar as mãos': { d: 2, ks: [[0, () => PRESETS['Repouso']()], [1, () => { PRESETS['Repouso'](); PRESETS['Mãos fechadas'](); }], [2, () => PRESETS['Repouso']()]] },
+    'Abanar a cauda': { d: 1.6, ks: [[0, () => { resetPose(); tailSet(0, 25); }], [0.8, () => { resetPose(); tailSet(0, -25); }], [1.6, () => { resetPose(); tailSet(0, 25); }]] }
+  };
+  function tailSet(c, s) { for (const n of order.filter((n) => /^tail_/.test(n))) setEuler(n, c, 0, s); }
+  function buildAnims() {
+    const box = $('anims'); box.innerHTML = '';
+    for (const [n, a] of Object.entries(ANIMS)) {
+      const b = document.createElement('button'); b.className = 'chip'; b.textContent = n;
+      b.onclick = () => {
+        keys.length = 0; setDuration(a.d);
+        for (const [t, f] of a.ks) { f(); keys.push({ t, pose: pose() }); }
+        PRESETS['Repouso'](); time = 0; renderKeys(); evalAt(0); playing = true; updatePlay(); saveDraft();
+      };
+      box.appendChild(b);
+    }
+  }
+
+  // ---------- linha do tempo
+  function setDuration(d) { duration = d; $('dur').value = d; $('odur').textContent = fmt(d, 1) + ' s'; renderKeys(); updateTime(); }
+  $('dur').oninput = () => { const d = Number($('dur').value); for (const k of keys) k.t = Math.min(k.t, d); setDuration(d); saveDraft(); };
+  function updateTime() { $('time').textContent = `${fmt(time, 2)} / ${fmt(duration, 2)} s`; if (!$('scrub').matches(':active')) $('scrub').value = Math.round(time / duration * 1000); }
+  $('scrub').oninput = () => { playing = false; updatePlay(); time = Number($('scrub').value) / 1000 * duration; if (keys.length) evalAt(time); updateTime(); };
+  function renderKeys() {
+    keys.sort((a, b) => a.t - b.t);
+    const m = $('marks'); m.innerHTML = '';
+    keys.forEach((k, i) => {
+      const b = document.createElement('button'); b.className = 'mark' + (i === selKey ? ' on' : '');
+      b.style.left = (k.t / duration * 100) + '%'; b.title = `Quadro em ${fmt(k.t, 2)} s`; b.setAttribute('aria-label', b.title);
+      b.onclick = () => { selKey = i; time = k.t; playing = false; updatePlay(); applyPose(k.pose); renderKeys(); updateTime(); };
+      m.appendChild(b);
+    });
+    const list = $('keyList'); list.innerHTML = keys.length ? '' : '<span class="hint">Nenhum quadro ainda.</span>';
+    keys.forEach((k, i) => { const b = document.createElement('button'); b.className = 'chip' + (i === selKey ? ' on' : ''); b.textContent = `◆ ${fmt(k.t, 2)} s`; b.onclick = () => m.children[i].click(); list.appendChild(b); });
+  }
+  function addKey() {
+    const t = Math.round(time * 100) / 100, p = pose();
+    const i = keys.findIndex((k) => Math.abs(k.t - t) < 0.01);
+    if (i >= 0) keys[i].pose = p; else keys.push({ t, pose: p });
+    renderKeys(); selKey = keys.findIndex((k) => Math.abs(k.t - t) < 0.01); renderKeys(); saveDraft();
+  }
+  $('addKey').onclick = addKey;
+  $('delKey').onclick = () => { if (selKey >= 0) { keys.splice(selKey, 1); selKey = -1; renderKeys(); saveDraft(); } };
+  $('clearKeys').onclick = () => { keys.length = 0; selKey = -1; renderKeys(); saveDraft(); };
+  function onPoseEdited() { if (selKey >= 0 && Math.abs(keys[selKey].t - time) < 0.01) { keys[selKey].pose = pose(); saveDraft(); } }
+  const ease = (x) => x * x * (3 - 2 * x);
+  function evalAt(t) {
+    if (!keys.length) return;
+    if (keys.length === 1 || t <= keys[0].t) { applyPose(keys[0].pose); return; }
+    const last = keys[keys.length - 1]; if (t >= last.t) { applyPose(last.pose); return; }
+    let i = 0; while (keys[i + 1].t < t) i++;
+    const a = keys[i], b = keys[i + 1], u = ease((t - a.t) / Math.max(1e-6, b.t - a.t));
+    const qa = new THREE.Quaternion(), qb = new THREE.Quaternion();
+    for (const n of order) {
+      const va = a.pose[n] || [1, 0, 0, 0], vb = b.pose[n] || [1, 0, 0, 0];
+      qa.set(va[1], va[2], va[3], va[0]); qb.set(vb[1], vb[2], vb[3], vb[0]);
+      setDelta(n, qa.clone().slerp(qb, u));
+    }
+    afterPose();
+  }
+  function updatePlay() { $('play').textContent = playing ? '❚❚ Pausar' : '▶ Tocar'; $('play').setAttribute('aria-label', playing ? 'Pausar' : 'Tocar'); }
+  $('play').onclick = () => { if (!keys.length) { flash('ioStatus', ''); $('draftStatus').textContent = 'Grave pelo menos dois quadros para tocar.'; return; } playing = !playing; if (playing && time >= duration) time = 0; updatePlay(); };
+
+  // ---------- rascunho neste navegador
+  function saveDraft() { try { localStorage.setItem('kumo-estudio-rascunho', JSON.stringify({ duration, keys })); $('draftStatus').textContent = keys.length ? 'Rascunho salvo neste navegador.' : ''; } catch (e) { /* sem armazenamento: segue sem rascunho */ } }
+  function loadDraft() {
+    try { const d = JSON.parse(localStorage.getItem('kumo-estudio-rascunho') || 'null'); if (d && d.keys && d.keys.length) { keys.push(...d.keys); setDuration(d.duration || 2); renderKeys(); $('draftStatus').textContent = 'Rascunho anterior carregado.'; } } catch (e) { /* ignora */ }
+  }
+
+  // ---------- Blender (JSON)
+  function flash(id, msg) { $(id).textContent = msg; }
+  async function copy(text, what) {
+    $('json').value = text;
+    try { await navigator.clipboard.writeText(text); flash('ioStatus', `${what} copiada. Cole no script do Blender.`); }
+    catch (e) { $('json').focus(); $('json').select(); flash('ioStatus', `${what} está no campo abaixo, já selecionada: use Ctrl+C.`); }
+  }
+  $('copyPose').onclick = () => copy(JSON.stringify({ formato: 'kumo-pose-v1', rotacao: 'quaternion wxyz, relativa ao repouso do osso', ossos: pose() }), 'Pose');
+  $('copyAnim').onclick = () => {
+    if (!keys.length) { flash('ioStatus', 'Ainda não há quadros-chave para copiar.'); return; }
+    copy(JSON.stringify({ formato: 'kumo-anim-v1', rotacao: 'quaternion wxyz, relativa ao repouso do osso', duracao: duration, quadros: keys.map((k) => ({ t: k.t, ossos: k.pose })) }), 'Animação');
+  };
+  $('loadJson').onclick = () => {
+    try {
+      const d = JSON.parse($('json').value);
+      if (d.formato === 'kumo-pose-v1') { applyPose(d.ossos); flash('ioStatus', 'Pose carregada.'); }
+      else if (d.formato === 'kumo-anim-v1') { keys.length = 0; keys.push(...d.quadros.map((q) => ({ t: q.t, pose: q.ossos }))); setDuration(d.duracao || 2); time = 0; evalAt(0); renderKeys(); saveDraft(); flash('ioStatus', `Animação carregada: ${keys.length} quadros.`); }
+      else flash('ioStatus', 'Formato não reconhecido. Use um JSON copiado desta página.');
+    } catch (e) { flash('ioStatus', 'O texto não é um JSON válido.'); }
+  };
+
+  // ---------- abas e teclado
+  document.querySelectorAll('.tab').forEach((t) => t.onclick = () => {
+    document.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+    document.querySelectorAll('.pane').forEach((p) => p.hidden = p.dataset.pane !== t.dataset.tab);
+  });
+  window.addEventListener('keydown', (e) => {
+    if (/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && e.key !== 'Escape') return;
+    if (e.key === 'Escape') select(null);
+    if (e.key === ' ') { e.preventDefault(); $('play').click(); }
+    if (e.key === 'k' || e.key === 'K') addKey();
+  });
+
+  // ---------- laço
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (playing && keys.length > 1) {
+      time += dt;
+      if (time > duration) { if ($('loop').checked) time %= duration; else { time = duration; playing = false; updatePlay(); } }
+      evalAt(time); updateTime();
+    }
+    orbit.update(); updateDots(); renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  resize(); requestAnimationFrame(frame);
+  window.__kumo = { bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots };   // usado pelos testes
+})();
+</script>
