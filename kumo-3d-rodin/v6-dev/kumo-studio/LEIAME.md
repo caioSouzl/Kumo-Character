@@ -51,3 +51,10 @@ Depois, abra http://localhost:8000 no navegador. A página precisa de internet s
 
 - O carregamento e as poses prontas foram testados sem erros no navegador.
 - A pose "Acenar + mãos fechadas" foi copiada da página e aplicada no `kumo_v6_maos_jogo.blend` com o script, e o resultado é igual.
+
+## Novidades (12/11)
+- **Kumo completo:** olhos de jogo, mãos e ombros novos. O modelo é `kumo.glb`, uma versão leve feita por `exportar_glb_estudio.py`: sem normais, porque a página não usa luz, e sem animações gravadas.
+- **Olhos:** réguas para piscar cada olho e para olhar para os lados e para cima/baixo, mais os atalhos "Olhos abertos", "Piscar os dois" e "Olhar para frente". Na pose copiada, os olhos vão em `__pos` (posição dos ossos `controle_olhos` e `controle_olhar`), e `aplicar_no_blender.py` aplica isso.
+- **Correções da pele:** a página usa os mesmos 68 drivers do `.blend` (mão fechada, ombros, piscar, olhar). Em três poses copiadas da página e aplicadas no Blender, os pesos bateram com diferença abaixo de 0,000001.
+- **Ombro automático:** vem ligado. Ao erguer o braço, o ombro acompanha, pela mesma regra da ferramenta `ombros/ferramentas/ombro_automatico.py`. Dá para desligar na aba Pose.
+- Use o `.blend` `ombros/kumo_v6_ombros.blend` para aplicar poses e animações no Blender.

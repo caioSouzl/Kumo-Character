@@ -1,6 +1,6 @@
 """Aplica no Blender uma pose ou animação copiada do Estúdio do Kumo (página kumo-studio/index.html).
 
-Como usar no Blender (com o .blend do Kumo aberto, ex.: maos-corretivas/kumo_v6_maos_jogo.blend):
+Como usar no Blender (com o .blend do Kumo aberto: ombros/kumo_v6_ombros.blend):
   1. Na página, clique em "Copiar pose" ou "Copiar animação".
   2. Cole o texto num arquivo .json (ou num bloco de texto do Blender chamado "kumo.json").
   3. Abra este script no Text Editor do Blender, ajuste ARQUIVO abaixo (ou deixe vazio para usar o bloco "kumo.json") e clique em Run Script.
@@ -8,7 +8,8 @@ Linha de comando: blender kumo.blend --python aplicar_no_blender.py -- pose.json
 
 Os ossos da página têm os mesmos nomes e os mesmos eixos locais do rig do Blender (conferido no GLB),
 então cada rotação é aplicada direto em pose_bone.rotation_quaternion. A animação vira a ação "Estudio_Kumo".
-A correção da mão fechada liga sozinha pelos drivers do próprio .blend.
+As correções (mão fechada, ombros) e os olhos (piscar, olhar) ligam sozinhos pelos drivers do próprio .blend.
+A página já grava o ombro automático nas chaves do ombro.
 """
 import bpy, json, sys, os
 
@@ -26,7 +27,13 @@ def ler():
 
 def aplicar(rig, ossos, quadro=None):
     faltam = []
+    for nome, xy in (ossos.get('__pos') or {}).items():     # olhos: posição dos ossos de controle
+        pb = rig.pose.bones.get(nome)
+        if not pb: faltam.append(nome); continue
+        pb.location = (xy[0], xy[1], 0.0)
+        if quadro is not None: pb.keyframe_insert('location', frame=quadro)
     for nome, q in ossos.items():
+        if nome == '__pos': continue
         pb = rig.pose.bones.get(nome)
         if not pb: faltam.append(nome); continue
         pb.rotation_mode = 'QUATERNION'; pb.rotation_quaternion = q

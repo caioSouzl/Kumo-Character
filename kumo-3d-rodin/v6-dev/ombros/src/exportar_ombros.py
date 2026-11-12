@@ -20,6 +20,8 @@ img = bpy.data.images.get('kumo_quad_diffuse')
 if img: img.filepath = '/home/user/Kumo-Character/kumo-3d-rodin/textures/kumo_quad_diffuse.png'; img.reload()
 rig = bpy.data.objects['Kumo_Rig']; body = bpy.data.objects['Kumo']; pb = rig.pose.bones; hull = bpy.data.objects.get('Kumo_Contorno')
 if rig.animation_data: rig.animation_data.action = None
+for a_ in [a_ for a_ in bpy.data.actions if a_.name.startswith('Teste_Exportacao')]: bpy.data.actions.remove(a_)
+for b_ in pb: b_.rotation_quaternion = (1, 0, 0, 0); b_.rotation_euler = (0, 0, 0); b_.location = (0, 0, 0)   # a última pose da ação fica nos ossos
 sem_extras(body); REP = {'repouso_dif_max_mm': round(float(np.abs(pos(body) - REST0).max()) * 1000, 4)}
 def reset():
     for b in pb: b.rotation_quaternion = (1, 0, 0, 0); b.rotation_euler = (0, 0, 0); b.location = (0, 0, 0)

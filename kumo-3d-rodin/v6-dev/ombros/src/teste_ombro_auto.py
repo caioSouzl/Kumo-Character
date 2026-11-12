@@ -21,3 +21,9 @@ for sd, tipo, a in (('L', 'erguer', 120), ('R', 'frente', 90), ('L', 'erguer', 6
     reset(); s = max(0, a - 30) * k; rotw(f'shoulder.{sd}', ax, s); rotw(f'upper_arm.{sd}', ax, a - s); ref = pos()
     reset(); rotw(f'upper_arm.{sd}', ax, a); oa.aplicar_quadro(rig, sd); got = pos()
     print('TA', sd, tipo, a, 'dif_max_mm', round(float(np.abs(got - ref).max()) * 1000, 4))
+    # com o peito inclinado, o resultado tem de ser o mesmo giro levado junto com o peito
+    reset(); rotw('chest', Vector((0, 1, 0)), 25); s = max(0, a - 30) * k
+    C = pb['chest'].matrix.to_3x3() @ rig.data.bones['chest'].matrix_local.to_3x3().inverted(); axc = C @ ax
+    rotw(f'shoulder.{sd}', axc, s); rotw(f'upper_arm.{sd}', axc, a - s); ref = pos()
+    reset(); rotw('chest', Vector((0, 1, 0)), 25); rotw(f'upper_arm.{sd}', axc, a); oa.aplicar_quadro(rig, sd); got = pos()
+    print('TA', sd, tipo, a, 'peito inclinado dif_max_mm', round(float(np.abs(got - ref).max()) * 1000, 4))

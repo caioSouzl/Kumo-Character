@@ -1,7 +1,7 @@
 """Ombro automático do Kumo (rode dentro do Blender, com o Kumo_Rig na cena).
 
 Você anima só o braço (upper_arm). Este script passa uma parte do giro para o ombro, como num corpo de verdade:
-acima de 30°, o ombro leva 45% de erguer o braço e 65% de levá-lo à frente. A direção final do braço não muda.
+acima de 30° (medidos em relação ao peito), o ombro leva 45% de erguer o braço e 65% de levá-lo à frente. A direção final do braço não muda.
 Grava as chaves do ombro na ação ativa, então a exportação (GLB/FBX) já sai pronta para o jogo.
 
   Blender > Scripting > abrir este arquivo > Run Script            (todos os quadros com chave no braço)
@@ -17,19 +17,24 @@ def eixos(rig, sd):
 def parte_ombro(a, k):
     return math.copysign(max(0.0, abs(a) - LIMIAR) * k, a)
 def aplicar_quadro(rig, sd):
-    pb = rig.pose.bones; ob, ab = pb[f'shoulder.{sd}'], pb[f'upper_arm.{sd}']
+    """Mede o giro do braço em relação ao peito (assim inclinar o corpo não move o ombro) e reparte."""
+    pb = rig.pose.bones; ob, ab = pb[f'shoulder.{sd}'], pb[f'upper_arm.{sd}']; pai = ob.parent
+    braco = ab.matrix.copy()                                   # pose atual do braço (espaço da armadura)
     ob.matrix_basis = Matrix.Identity(4); bpy.context.view_layer.update()
-    rest = (rig.matrix_world @ rig.data.bones[f'upper_arm.{sd}'].matrix_local).to_3x3()
-    atual = (rig.matrix_world @ ab.matrix).to_3x3()
-    q = (atual @ rest.inverted()).to_quaternion()             # giro total do braço no mundo
+    P = pai.matrix.to_3x3(); P0 = pai.bone.matrix_local.to_3x3()
+    cur = P.inverted() @ braco.to_3x3(); rst = P0.inverted() @ ab.bone.matrix_local.to_3x3()
+    q = (cur @ rst.inverted()).to_quaternion()                 # giro do braço no referencial do peito
     if q.w < 0: q = -q
     ang = 2 * math.atan2(Vector(q[1:]).length, q.w); v = Vector(q[1:]).normalized() * ang if ang > 1e-9 else Vector()
-    e, f, de, df = eixos(rig, sd); a_e, a_f = math.degrees(v.dot(de)), math.degrees(v.dot(df))
-    s = Matrix.Rotation(math.radians(parte_ombro(a_e, K_ERGUER)), 3, e) @ Matrix.Rotation(math.radians(parte_ombro(a_f, K_FRENTE)), 3, f)
-    braco_mundo = (rig.matrix_world @ ab.matrix).copy()
-    h = (rig.matrix_world @ ob.matrix).to_translation(); M = (rig.matrix_world @ ob.matrix)
-    ob.matrix = rig.matrix_world.inverted() @ (Matrix.Translation(h) @ s.to_4x4() @ Matrix.Translation(-h) @ M); bpy.context.view_layer.update()
-    ab.matrix = rig.matrix_world.inverted() @ braco_mundo; bpy.context.view_layer.update()   # o braço fica onde estava
+    e, f, de, df = eixos(rig, sd)
+    para_peito = P0.inverted() @ rig.matrix_world.to_3x3().inverted()
+    e, f, de, df = (para_peito @ x for x in (e, f, de, df))     # (os duais seguem válidos: a mudança é uma rotação)
+    a_e, a_f = math.degrees(v.dot(de)), math.degrees(v.dot(df))
+    S = Matrix.Rotation(math.radians(parte_ombro(a_e, K_ERGUER)), 3, e) @ Matrix.Rotation(math.radians(parte_ombro(a_f, K_FRENTE)), 3, f)
+    Sa = (P @ S @ P.inverted()).to_4x4()                       # o mesmo giro, no espaço da armadura
+    M = ob.matrix.copy(); h = M.to_translation()
+    ob.matrix = Matrix.Translation(h) @ Sa @ Matrix.Translation(-h) @ M; bpy.context.view_layer.update()
+    ab.matrix = braco; bpy.context.view_layer.update()         # o braço fica onde estava
 def rodar(rig=None, quadros=None):
     rig = rig or bpy.data.objects['Kumo_Rig']; sc = bpy.context.scene; act = rig.animation_data.action if rig.animation_data else None
     if quadros is None:

@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Estúdio do Kumo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -183,7 +184,18 @@ button:disabled { opacity: 0.45; cursor: default; }
         <div class="slider"><label for="tailCurl">Enrolar</label><input type="range" id="tailCurl" min="-60" max="60" step="1" value="0"><output id="otail">0°</output></div>
         <div class="slider"><label for="tailSwing">Abanar</label><input type="range" id="tailSwing" min="-40" max="40" step="1" value="0"><output id="otsw">0°</output></div>
       </div>
-      <p class="note">Os olhos aqui são os pintados do modelo oficial. A piscada e o olhar da versão de olhos (v5) funcionam só no Blender por enquanto.</p>
+      <div class="group">
+        <div class="group-label">Olhos</div>
+        <div class="slider"><label for="pisE">Piscar esquerdo</label><input type="range" id="pisE" min="0" max="1" step="0.01" value="0"><output id="opisE">0%</output></div>
+        <div class="slider"><label for="pisD">Piscar direito</label><input type="range" id="pisD" min="0" max="1" step="0.01" value="0"><output id="opisD">0%</output></div>
+        <div class="slider"><label for="olhX">Olhar ← →</label><input type="range" id="olhX" min="-1" max="1" step="0.01" value="0"><output id="oolhX">0</output></div>
+        <div class="slider"><label for="olhY">Olhar ↓ ↑</label><input type="range" id="olhY" min="-1" max="1" step="0.01" value="0"><output id="oolhY">0</output></div>
+        <div class="chips"><button class="chip" id="olhAbrir">Olhos abertos</button><button class="chip" id="olhPiscar">Piscar os dois</button><button class="chip" id="olhCentro">Olhar para frente</button></div>
+      </div>
+      <div class="group">
+        <div class="group-label">Ombro automático</div>
+        <label class="row"><input type="checkbox" id="ombroAuto" checked> Ligado: ao erguer o braço, o ombro acompanha (como no Blender e no jogo)</label>
+      </div>
       <p class="hint kbd-hint"><span class="kbd">Esc</span> solta a articulação · <span class="kbd">Espaço</span> toca ou pausa · <span class="kbd">K</span> grava quadro</p>
     </div>
 
@@ -214,7 +226,7 @@ button:disabled { opacity: 0.45; cursor: default; }
     </div>
 
     <div class="pane" data-pane="arq" hidden>
-      <p class="hint">Copie a pose ou a animação e aplique no Blender com o script <code>aplicar_no_blender.py</code> desta pasta. Os ossos têm os mesmos nomes e eixos do rig do Blender.</p>
+      <p class="hint">Copie a pose ou a animação e aplique no Blender com o script <code>aplicar_no_blender.py</code> desta pasta. Os ossos têm os mesmos nomes e eixos do rig do Blender; os olhos vão junto (posição dos ossos de controle).</p>
       <div class="row">
         <button id="copyPose" class="primary">Copiar pose</button>
         <button id="copyAnim">Copiar animação</button>
@@ -265,7 +277,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   orbit.target.set(0, 1.0, 0); orbit.enableDamping = true; orbit.minDistance = 0.6; orbit.maxDistance = 12; orbit.update();
   const gizmo = new THREE.TransformControls(camera, canvas);
   gizmo.setMode('rotate'); gizmo.setSpace('local'); gizmo.setSize(window.matchMedia('(pointer: coarse)').matches ? 1.15 : 0.75);
-  gizmo.addEventListener('dragging-changed', (e) => { orbit.enabled = !e.value; if (!e.value) onPoseEdited(); });
+  gizmo.addEventListener('dragging-changed', (e) => { orbit.enabled = !e.value; if (!e.value) { afterPose(); onPoseEdited(); } });   // o ombro automático entra ao soltar
   gizmo.addEventListener('objectChange', () => { syncSliders(); updateMorphs(); });
   scene.add(gizmo);
   const floor = new THREE.Mesh(new THREE.CircleGeometry(1.1, 64), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.08 }));
@@ -309,19 +321,70 @@ button:disabled { opacity: 0.45; cursor: default; }
     const a = axis.clone().normalize().applyQuaternion(pq.clone().invert());
     b.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(a, deg * DEG));
   }
-  const pose = () => { const p = {}; for (const n of order) { const q = delta(n); p[n] = [q.w, q.x, q.y, q.z]; } return p; };
-  function applyPose(p) { for (const n of order) { const v = p[n]; setDelta(n, v ? new THREE.Quaternion(v[1], v[2], v[3], v[0]) : new THREE.Quaternion()); } afterPose(); }
-  function resetPose() { for (const n of order) bones[n].quaternion.copy(rest[n]); }
+  const CTRL = ['controle_olhos', 'controle_olhar'];   // ossos de controle dos olhos: valem pela POSIÇÃO (x, y), não pela rotação
+  const ctrlGet = (n) => bones[n] ? [bones[n].position.x - restPos[n].x, bones[n].position.y - restPos[n].y] : [0, 0];
+  const ctrlSet = (n, v) => { if (bones[n]) bones[n].position.set(restPos[n].x + (v ? v[0] : 0), restPos[n].y + (v ? v[1] : 0), restPos[n].z); };
+  const pose = () => { const p = {}; for (const n of order) { const q = delta(n); p[n] = [q.w, q.x, q.y, q.z]; } p.__pos = {}; for (const n of CTRL) p.__pos[n] = ctrlGet(n); return p; };
+  function applyPose(p) { for (const n of order) { const v = p[n]; setDelta(n, v ? new THREE.Quaternion(v[1], v[2], v[3], v[0]) : new THREE.Quaternion()); } for (const n of CTRL) ctrlSet(n, p.__pos && p.__pos[n]); afterPose(); }
+  function resetPose() { for (const n of order) bones[n].quaternion.copy(rest[n]); for (const n of CTRL) ctrlSet(n, null); }
 
-  // ---------- correção da mão fechada (mesmo driver do Blender: smoothstep(0,70; 1,20; média do dobrar dos 3 dedos))
+  // ---------- correções da pele (os MESMOS drivers do .blend: mão fechada, ombros, piscar, olhar)
+  // cada driver lê a rotação ou a posição local de um osso e devolve o peso de uma shape key
+  const DRIVERS = [{"o":"Kumo","k":"Corretiva_MaoFechada.L","e":"smoothstep(0.70, 1.20, (a1+a2+a3)/3)","v":[["a1","dedo1_1.L","ROT_X","XYZ"],["a2","dedo2_1.L","ROT_X","XYZ"],["a3","dedo3_1.L","ROT_X","XYZ"]]},{"o":"Kumo","k":"Corretiva_MaoFechada.R","e":"smoothstep(0.70, 1.20, (a1+a2+a3)/3)","v":[["a1","dedo1_1.R","ROT_X","XYZ"],["a2","dedo2_1.R","ROT_X","XYZ"],["a3","dedo3_1.R","ROT_X","XYZ"]]},{"o":"Kumo","k":"Ombro_Erguer90.L","e":"max(0.0, min(((2*atan2(x*0.22993+y*0.00000+z*1.02105, w)*57.29578)-38.25)/(63.0-38.25), (79.5-(2*atan2(x*0.22993+y*0.00000+z*1.02105, w)*57.29578))/(79.5-63.0), 1.0))","v":[["w","upper_arm.L","ROT_W","QUATERNION"],["x","upper_arm.L","ROT_X","QUATERNION"],["y","upper_arm.L","ROT_Y","QUATERNION"],["z","upper_arm.L","ROT_Z","QUATERNION"]]},{"o":"Kumo","k":"Ombro_Erguer120.L","e":"max(0.0, min(((2*atan2(x*0.22993+y*0.00000+z*1.02105, w)*57.29578)-63.0)/(79.5-63.0), (96.0-(2*atan2(x*0.22993+y*0.00000+z*1.02105, w)*57.29578))/(96.0-79.5), 1.0))","v":[["w","upper_arm.L","ROT_W","QUATERNION"],["x","upper_arm.L","ROT_X","QUATERNION"],["y","upper_arm.L","ROT_Y","QUATERNION"],["z","upper_arm.L","ROT_Z","QUATERNION"]]},{"o":"Kumo","k":"Ombro_Erguer150.L","e":"max(0.0, min(((2*atan2(x*0.22993+y*0.00000+z*1.02105, w)*57.29578)-79.5)/(96.0-79.5), 1.0, 1.0))","v":[["w","upper_arm.L","ROT_W","QUATERNION"],["x","upper_arm.L","ROT_X","QUATERNION"],["y","upper_arm.L","ROT_Y","QUATERNION"],["z","upper_arm.L","ROT_Z","QUATERNION"]]},{"o":"Kumo","k":"Ombro_Frente90.L","e":"max(0.0, min(((2*atan2(x*0.90771+y*-0.00000+z*-0.52104, w)*57.29578)-33.5)/(51.0-33.5), 1.0, 1.0))","v":[["w","upper_arm.L","ROT_W","QUATERNION"],["x","upper_arm.L","ROT_X","QUATERNION"],["y","upper_arm.L","ROT_Y","QUATERNION"],["z","upper_arm.L","ROT_Z","QUATERNION"]]},{"o":"Kumo","k":"Ombro_Erguer90.R","e":"max(0.0, min(((2*atan2(x*0.29013+y*-0.00000+z*-1.38668, w)*57.29578)-38.25)/(63.0-38.25), (79.5-(2*atan2(x*0.29013+y*-0.00000+z*-1.38668, w)*57.29578))/(79.5-63.0), 1.0))","v":[["w","upper_arm.R","ROT_W","QUATERNION"],["x","upper_arm.R","ROT_X","QUATERNION"],["y","upper_arm.R","ROT_Y","QUATERNION"],["z","upper_arm.R","ROT_Z","QUATERNION"]]},{"o":"Kumo","k":"Ombro_Erguer120.R","e":"max(0.0, min(((2*atan2(x*0.29013+y*-0.00000+z*-1.38668, w)*57.29578)-63.0)/(79.5-63.0), (96.0-(2*atan2(x*0.29013+y*-0.00000+z*-1.38668, w)*57.29578))/(96.0-79.5), 1.0))","v":[["w","upper_arm.R","ROT_W","QUATERNION"],["x","upper_arm.R","ROT_X","QUATERNION"],["y","upper_arm.R","ROT_Y","QUATERNION"],["z","upper_arm.R","ROT_Z","QUATERNION"]]},{"o":"Kumo","k":"Ombro_Erguer150.R","e":"max(0.0, min(((2*atan2(x*0.29013+y*-0.00000+z*-1.38668, w)*57.29578)-79.5)/(96.0-79.5), 1.0, 1.0))","v":[["w","upper_arm.R","ROT_W","QUATERNION"],["x","upper_arm.R","ROT_X","QUATERNION"],["y","upper_arm.R","ROT_Y","QUATERNION"],["z","upper_arm.R","ROT_Z","QUATERNION"]]},{"o":"Kumo","k":"Ombro_Frente90.R","e":"max(0.0, min(((2*atan2(x*0.77329+y*0.00000+z*1.18705, w)*57.29578)-33.5)/(51.0-33.5), 1.0, 1.0))","v":[["w","upper_arm.R","ROT_W","QUATERNION"],["x","upper_arm.R","ROT_X","QUATERNION"],["y","upper_arm.R","ROT_Y","QUATERNION"],["z","upper_arm.R","ROT_Z","QUATERNION"]]},{"o":"Kumo_Contorno","k":"Corretiva_MaoFechada.L","e":"smoothstep(0.70, 1.20, (a1+a2+a3)/3)","v":[["a1","dedo1_1.L","ROT_X","XYZ"],["a2","dedo2_1.L","ROT_X","XYZ"],["a3","dedo3_1.L","ROT_X","XYZ"],["a1_001","dedo1_1.L","ROT_X","XYZ"],["a2_001","dedo2_1.L","ROT_X","XYZ"],["a3_001","dedo3_1.L","ROT_X","XYZ"]]},{"o":"Kumo_Contorno","k":"Corretiva_MaoFechada.R","e":"smoothstep(0.70, 1.20, (a1+a2+a3)/3)","v":[["a1","dedo1_1.R","ROT_X","XYZ"],["a2","dedo2_1.R","ROT_X","XYZ"],["a3","dedo3_1.R","ROT_X","XYZ"],["a1_001","dedo1_1.R","ROT_X","XYZ"],["a2_001","dedo2_1.R","ROT_X","XYZ"],["a3_001","dedo3_1.R","ROT_X","XYZ"]]},{"o":"KumoJogo_Catchlight.L","k":"Olhar_dir","e":"max(0.0, x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Catchlight.L","k":"Olhar_esq","e":"max(0.0, -x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Catchlight.L","k":"Olhar_cima","e":"max(0.0, y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Catchlight.L","k":"Olhar_baixo","e":"max(0.0, -y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Catchlight.R","k":"Olhar_dir","e":"max(0.0, x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Catchlight.R","k":"Olhar_esq","e":"max(0.0, -x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Catchlight.R","k":"Olhar_cima","e":"max(0.0, y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Catchlight.R","k":"Olhar_baixo","e":"max(0.0, -y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Iris.L","k":"Olhar_dir","e":"max(0.0, x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Iris.L","k":"Olhar_esq","e":"max(0.0, -x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Iris.L","k":"Olhar_cima","e":"max(0.0, y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Iris.L","k":"Olhar_baixo","e":"max(0.0, -y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Iris.R","k":"Olhar_dir","e":"max(0.0, x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Iris.R","k":"Olhar_esq","e":"max(0.0, -x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Iris.R","k":"Olhar_cima","e":"max(0.0, y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Iris.R","k":"Olhar_baixo","e":"max(0.0, -y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_inf.L","k":"Piscar_25","e":"max(0.0, min((p-0.0)/(0.25-0.0), (0.5-p)/(0.5-0.25), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_inf.L","k":"Piscar_50","e":"max(0.0, min((p-0.25)/(0.5-0.25), (0.75-p)/(0.75-0.5), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_inf.L","k":"Piscar_75","e":"max(0.0, min((p-0.5)/(0.75-0.5), (1.0-p)/(1.0-0.75), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_inf.L","k":"Piscar_100","e":"max(0.0, min((p-0.75)/(1.0-0.75), 1.0, 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_inf.R","k":"Piscar_25","e":"max(0.0, min((p-0.0)/(0.25-0.0), (0.5-p)/(0.5-0.25), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_inf.R","k":"Piscar_50","e":"max(0.0, min((p-0.25)/(0.5-0.25), (0.75-p)/(0.75-0.5), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_inf.R","k":"Piscar_75","e":"max(0.0, min((p-0.5)/(0.75-0.5), (1.0-p)/(1.0-0.75), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_inf.R","k":"Piscar_100","e":"max(0.0, min((p-0.75)/(1.0-0.75), 1.0, 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_inf_borda.L","k":"Piscar_25","e":"max(0.0, min((p-0.0)/(0.25-0.0), (0.5-p)/(0.5-0.25), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_inf_borda.L","k":"Piscar_50","e":"max(0.0, min((p-0.25)/(0.5-0.25), (0.75-p)/(0.75-0.5), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_inf_borda.L","k":"Piscar_75","e":"max(0.0, min((p-0.5)/(0.75-0.5), (1.0-p)/(1.0-0.75), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_inf_borda.L","k":"Piscar_100","e":"max(0.0, min((p-0.75)/(1.0-0.75), 1.0, 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_inf_borda.R","k":"Piscar_25","e":"max(0.0, min((p-0.0)/(0.25-0.0), (0.5-p)/(0.5-0.25), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_inf_borda.R","k":"Piscar_50","e":"max(0.0, min((p-0.25)/(0.5-0.25), (0.75-p)/(0.75-0.5), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_inf_borda.R","k":"Piscar_75","e":"max(0.0, min((p-0.5)/(0.75-0.5), (1.0-p)/(1.0-0.75), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_inf_borda.R","k":"Piscar_100","e":"max(0.0, min((p-0.75)/(1.0-0.75), 1.0, 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_sup.L","k":"Piscar_25","e":"max(0.0, min((p-0.0)/(0.25-0.0), (0.5-p)/(0.5-0.25), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_sup.L","k":"Piscar_50","e":"max(0.0, min((p-0.25)/(0.5-0.25), (0.75-p)/(0.75-0.5), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_sup.L","k":"Piscar_75","e":"max(0.0, min((p-0.5)/(0.75-0.5), (1.0-p)/(1.0-0.75), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_sup.L","k":"Piscar_100","e":"max(0.0, min((p-0.75)/(1.0-0.75), 1.0, 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_sup.R","k":"Piscar_25","e":"max(0.0, min((p-0.0)/(0.25-0.0), (0.5-p)/(0.5-0.25), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_sup.R","k":"Piscar_50","e":"max(0.0, min((p-0.25)/(0.5-0.25), (0.75-p)/(0.75-0.5), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_sup.R","k":"Piscar_75","e":"max(0.0, min((p-0.5)/(0.75-0.5), (1.0-p)/(1.0-0.75), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_sup.R","k":"Piscar_100","e":"max(0.0, min((p-0.75)/(1.0-0.75), 1.0, 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_sup_borda.L","k":"Piscar_25","e":"max(0.0, min((p-0.0)/(0.25-0.0), (0.5-p)/(0.5-0.25), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_sup_borda.L","k":"Piscar_50","e":"max(0.0, min((p-0.25)/(0.5-0.25), (0.75-p)/(0.75-0.5), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_sup_borda.L","k":"Piscar_75","e":"max(0.0, min((p-0.5)/(0.75-0.5), (1.0-p)/(1.0-0.75), 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_sup_borda.L","k":"Piscar_100","e":"max(0.0, min((p-0.75)/(1.0-0.75), 1.0, 1.0))","v":[["p","controle_olhos","LOC_X","AUTO"]]},{"o":"KumoJogo_Palpebra_sup_borda.R","k":"Piscar_25","e":"max(0.0, min((p-0.0)/(0.25-0.0), (0.5-p)/(0.5-0.25), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_sup_borda.R","k":"Piscar_50","e":"max(0.0, min((p-0.25)/(0.5-0.25), (0.75-p)/(0.75-0.5), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_sup_borda.R","k":"Piscar_75","e":"max(0.0, min((p-0.5)/(0.75-0.5), (1.0-p)/(1.0-0.75), 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Palpebra_sup_borda.R","k":"Piscar_100","e":"max(0.0, min((p-0.75)/(1.0-0.75), 1.0, 1.0))","v":[["p","controle_olhos","LOC_Y","AUTO"]]},{"o":"KumoJogo_Pupil.L","k":"Olhar_dir","e":"max(0.0, x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Pupil.L","k":"Olhar_esq","e":"max(0.0, -x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Pupil.L","k":"Olhar_cima","e":"max(0.0, y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Pupil.L","k":"Olhar_baixo","e":"max(0.0, -y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Pupil.R","k":"Olhar_dir","e":"max(0.0, x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Pupil.R","k":"Olhar_esq","e":"max(0.0, -x)","v":[["x","controle_olhar","LOC_X","AUTO"]]},{"o":"KumoJogo_Pupil.R","k":"Olhar_cima","e":"max(0.0, y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]},{"o":"KumoJogo_Pupil.R","k":"Olhar_baixo","e":"max(0.0, -y)","v":[["y","controle_olhar","LOC_Y","AUTO"]]}];
   const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const restPos = {};
+  for (const d of DRIVERS) d.f = new Function('max', 'min', 'atan2', 'smoothstep', 'abs', ...d.v.map((v) => v[0]), 'return (' + d.e + ');');
+  const morphAlvos = {};      // nome do objeto no Blender -> malhas (o GLB parte uma malha por material)
+  function lerVar([, osso, canal, modo]) {
+    const b = bones[osso]; if (!b) return 0;
+    if (canal.startsWith('LOC_')) { const k = canal[4].toLowerCase(); return b.position[k] - restPos[osso][k]; }
+    if (modo === 'QUATERNION') { const q = delta(osso), sg = q.w < 0 ? -1 : 1; return sg * { W: q.w, X: q.x, Y: q.y, Z: q.z }[canal[4]]; }   // q e −q são o mesmo giro; o Blender usa w ≥ 0
+    return eulerOf(osso)[canal[4].toLowerCase()];
+  }
   function updateMorphs() {
+    for (const d of DRIVERS) {
+      const ms = morphAlvos[d.o]; if (!ms) continue;
+      let w = d.f(Math.max, Math.min, Math.atan2, sstep, Math.abs, ...d.v.map(lerVar));
+      if (!Number.isFinite(w)) w = 0;
+      for (const m of ms) { const i = m.morphTargetDictionary[d.k]; if (i !== undefined) m.morphTargetInfluences[i] = w; }
+    }
+  }
+
+  // ---------- ombro automático (mesma regra da ferramenta do Blender: acima de 30°, o ombro leva 45% de erguer e 65% de ir à frente)
+  const OMBRO = { on: true, kE: 0.45, kF: 0.65, lim: 30, eixos: {} };
+  function prepararOmbro() {
     for (const sd of ['L', 'R']) {
-      const ns = [1, 2, 3].map((k) => `dedo${k}_1.${sd}`).filter((n) => bones[n]);
-      if (!ns.length) continue;
-      const avg = ns.reduce((s, n) => s + eulerOf(n).x, 0) / ns.length;
-      const w = sstep(0.70, 1.20, avg);
-      for (const m of meshes) { const i = m.morphTargetDictionary && m.morphTargetDictionary[`Corretiva_MaoFechada.${sd}`]; if (i !== undefined) m.morphTargetInfluences[i] = w; }
+      const ua = bones['upper_arm.' + sd], fa = bones['forearm.' + sd], ob = bones['shoulder.' + sd]; if (!ua || !fa || !ob) continue;
+      const ch = ob.parent;
+      const h = ua.getWorldPosition(new THREE.Vector3()), t = fa.getWorldPosition(new THREE.Vector3()), d = t.sub(h).normalize();
+      const e = d.clone().cross(new THREE.Vector3(0, 1, 0)).normalize(), f = d.clone().cross(new THREE.Vector3(0, 0, 1)).normalize();
+      const n = e.clone().cross(f).normalize(), M = new THREE.Matrix3().set(e.x, e.y, e.z, f.x, f.y, f.z, n.x, n.y, n.z).invert();
+      const me = M.elements, de = new THREE.Vector3(me[0], me[1], me[2]), df = new THREE.Vector3(me[3], me[4], me[5]);   // colunas da inversa = vetores duais
+      const cq = ch.getWorldQuaternion(new THREE.Quaternion()).invert();   // referencial do peito em repouso
+      const qa = ua.getWorldQuaternion(new THREE.Quaternion());
+      OMBRO.eixos[sd] = { e: e.applyQuaternion(cq), f: f.applyQuaternion(cq), de: de.applyQuaternion(cq), df: df.applyQuaternion(cq), braco0: cq.clone().multiply(qa) };
+    }
+  }
+  const parteOmbro = (a, k) => Math.sign(a) * Math.max(0, Math.abs(a) - OMBRO.lim) * k;
+  function ombroAuto() {
+    if (!OMBRO.on) return;
+    for (const sd of ['L', 'R']) {
+      const E = OMBRO.eixos[sd]; if (!E) continue;
+      const ob = bones['shoulder.' + sd], ab = bones['upper_arm.' + sd], ch = ob.parent;
+      ch.updateWorldMatrix(true, true);
+      const braco = ab.getWorldQuaternion(new THREE.Quaternion());
+      const chq = ch.getWorldQuaternion(new THREE.Quaternion());
+      const q = chq.clone().invert().multiply(braco).multiply(E.braco0.clone().invert());   // giro do braço no referencial do peito
+      if (q.w < 0) { q.x = -q.x; q.y = -q.y; q.z = -q.z; q.w = -q.w; }
+      const v = new THREE.Vector3(q.x, q.y, q.z), sn = v.length(), ang = 2 * Math.atan2(sn, q.w);
+      if (sn > 1e-9) v.multiplyScalar(ang / sn); else v.set(0, 0, 0);
+      const aE = v.dot(E.de) / DEG, aF = v.dot(E.df) / DEG;
+      const Sq = new THREE.Quaternion().setFromAxisAngle(E.e, parteOmbro(aE, OMBRO.kE) * DEG).multiply(new THREE.Quaternion().setFromAxisAngle(E.f, parteOmbro(aF, OMBRO.kF) * DEG));
+      ob.quaternion.copy(Sq).multiply(rest['shoulder.' + sd]);     // o ombro é filho do peito: o giro vai à esquerda do repouso
+      ob.updateWorldMatrix(false, false);
+      const obq = ob.getWorldQuaternion(new THREE.Quaternion());
+      ab.quaternion.copy(obq.invert().multiply(braco));             // o braço continua apontando para o mesmo lugar
+      ab.updateWorldMatrix(false, true);
     }
   }
 
@@ -340,17 +403,24 @@ button:disabled { opacity: 0.45; cursor: default; }
     root.traverse((o) => {
       if (o.isBone) {
         const a = assoc.get(o); const orig = a && a.nodes !== undefined ? gltf.parser.json.nodes[a.nodes].name : o.name;
-        bones[orig] = o; rest[orig] = o.quaternion.clone(); order.push(orig);
+        bones[orig] = o; rest[orig] = o.quaternion.clone(); restPos[orig] = o.position.clone(); order.push(orig);
       }
       if (o.isMesh) {
         meshes.push(o); o.frustumCulled = false;
         const m = o.material, name = m.name || '';
         // emissão pura, como no Blender (sem luz)
         if (/Contorno/.test(name)) o.material = new THREE.MeshBasicMaterial({ color: m.emissive ? m.emissive.clone() : 0x2b1810, side: THREE.FrontSide });
-        else o.material = new THREE.MeshBasicMaterial({ map: m.emissiveMap || m.map, side: m.side });
+        else o.material = new THREE.MeshBasicMaterial({ map: m.emissiveMap || m.map, side: m.side, transparent: m.transparent, alphaTest: m.alphaTest, depthWrite: m.depthWrite });
+        // nome do objeto do Blender (o GLB põe cada material num pedaço): sobe até achar um nó com nome conhecido
+        let nomeObj = null, nmo = '';
+        for (let q = o; q; q = q.parent) { const a = assoc.get(q); const nm = a && a.nodes !== undefined ? gltf.parser.json.nodes[a.nodes].name : null; if (nm && !nomeObj && DRIVERS.some((d) => d.o === nm)) nomeObj = nm; if (nm && !nmo && /^Kumo/.test(nm)) nmo = nm; }
+        if (nomeObj && o.morphTargetDictionary) (morphAlvos[nomeObj] = morphAlvos[nomeObj] || []).push(o);
+        // camadas do olho: desenhar na ordem certa (base, íris, pupila, brilho, moldura, pálpebras)
+        for (const [k, r] of [['OlhoBase', 1], ['Iris', 2], ['Pupil', 3], ['Catchlight', 4], ['Moldura', 5], ['Palpebra', 6]]) if (nmo.includes(k)) o.renderOrder = r + (/borda/.test(nmo) ? 0.5 : 0);
       }
     });
     for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
+    scene.updateMatrixWorld(true); prepararOmbro();
     buildDots(); buildUI(); afterPose(); histPush();
     $('loading').hidden = true;
     loadDraft();
@@ -360,7 +430,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   const dotGeo = new THREE.SphereGeometry(1, 16, 12);
   function buildDots() {
     for (const n of order) {
-      if (n === 'root') continue;
+      if (n === 'root' || /^controle_/.test(n)) continue;
       const mat = new THREE.MeshBasicMaterial({ color: 0xf4b642, depthTest: false, transparent: true, opacity: 0.95 });
       const d = new THREE.Mesh(dotGeo, mat); d.renderOrder = 10; d.userData.bone = n;
       d.scale.setScalar(isFinger(n) ? 0.010 : /^tail_/.test(n) ? 0.014 : 0.020); scene.add(d); dots.push(d);
@@ -441,7 +511,7 @@ button:disabled { opacity: 0.45; cursor: default; }
         bone.quaternion.premultiply(ql);
       }
     }
-    updateMorphs(); syncSliders();
+    ombroAuto(); updateMorphs(); syncSliders();
   }
   canvas.addEventListener('pointerdown', (e) => {
     if (!ik.on) return;
@@ -477,9 +547,9 @@ button:disabled { opacity: 0.45; cursor: default; }
   function setAxis(ax, deg) {
     if (!selected) return;
     const e = eulerOf(selected); const v = [e.x / DEG, e.y / DEG, e.z / DEG];
-    v[ax] = Math.max(-180, Math.min(180, deg)); setEuler(selected, v[0], v[1], v[2]); updateMorphs(); syncSliders();
+    v[ax] = Math.max(-180, Math.min(180, deg)); setEuler(selected, v[0], v[1], v[2]); ombroAuto(); updateMorphs(); syncSliders();
   }
-  function afterPose() { updateMorphs(); syncSliders(); syncHands(); }
+  function afterPose() { ombroAuto(); updateMorphs(); syncSliders(); syncHands(); syncOlhos(); }
 
   function buildUI() {
     const sel = $('boneSel');
@@ -525,7 +595,29 @@ button:disabled { opacity: 0.45; cursor: default; }
     $('tailCurl').oninput = () => { tail.curl = Number($('tailCurl').value); applyTail(); };
     $('tailSwing').oninput = () => { tail.swing = Number($('tailSwing').value); applyTail(); };
     $('tailCurl').onchange = $('tailSwing').onchange = onPoseEdited;
+    // olhos (controle_olhos: x = piscar esquerdo, y = piscar direito; controle_olhar: x = direita/esquerda, y = cima/baixo)
+    const OLH = [['pisE', 'controle_olhos', 0], ['pisD', 'controle_olhos', 1], ['olhX', 'controle_olhar', 0], ['olhY', 'controle_olhar', 1]];
+    for (const [id, n, k] of OLH) {
+      $(id).oninput = () => { const v = ctrlGet(n); v[k] = Number($(id).value); ctrlSet(n, v); afterPose(); };
+      $(id).onchange = onPoseEdited;
+    }
+    const olhos = (pe, pd, x, y) => { ctrlSet('controle_olhos', [pe, pd]); ctrlSet('controle_olhar', [x, y]); afterPose(); onPoseEdited(); };
+    $('olhAbrir').onclick = () => { const g = ctrlGet('controle_olhar'); olhos(0, 0, g[0], g[1]); };
+    $('olhPiscar').onclick = () => { const g = ctrlGet('controle_olhar'); olhos(1, 1, g[0], g[1]); };
+    $('olhCentro').onclick = () => { const p = ctrlGet('controle_olhos'); olhos(p[0], p[1], 0, 0); };
+    $('ombroAuto').onchange = () => {
+      OMBRO.on = $('ombroAuto').checked;
+      if (!OMBRO.on) for (const sd of ['L', 'R']) { const ob = bones['shoulder.' + sd], ab = bones['upper_arm.' + sd]; if (!ob) continue; const w = ab.getWorldQuaternion(new THREE.Quaternion()); ob.quaternion.copy(rest['shoulder.' + sd]); ob.updateWorldMatrix(true, false); ab.quaternion.copy(ob.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(w)); }
+      afterPose(); onPoseEdited();
+    };
     buildHands(); buildPresets(); buildAnims();
+  }
+  function syncOlhos() {
+    if (!$('pisE') || !bones.controle_olhos) return;
+    const [pe, pd] = ctrlGet('controle_olhos'), [x, y] = ctrlGet('controle_olhar');
+    for (const [id, v, pct] of [['pisE', pe, 1], ['pisD', pd, 1], ['olhX', x, 0], ['olhY', y, 0]]) {
+      if (document.activeElement !== $(id)) $(id).value = v; $('o' + id).textContent = pct ? Math.round(v * 100) + '%' : fmt(v, 2);
+    }
   }
 
   // mãos: valores guardados por mão e reaplicados juntos
@@ -650,6 +742,7 @@ button:disabled { opacity: 0.45; cursor: default; }
       qa.set(va[1], va[2], va[3], va[0]); qb.set(vb[1], vb[2], vb[3], vb[0]);
       setDelta(n, qa.clone().slerp(qb, u));
     }
+    for (const n of CTRL) { const pa = (a.pose.__pos || {})[n] || [0, 0], pb_ = (b.pose.__pos || {})[n] || [0, 0]; ctrlSet(n, [pa[0] + (pb_[0] - pa[0]) * u, pa[1] + (pb_[1] - pa[1]) * u]); }
     afterPose();
   }
   function updatePlay() { $('play').textContent = playing ? '❚❚ Pausar' : '▶ Tocar'; $('play').setAttribute('aria-label', playing ? 'Pausar' : 'Tocar'); }
@@ -708,6 +801,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   }
   resize(); requestAnimationFrame(frame);
   window.__camera = camera;
-  window.__kumo = { bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots, mirrorAll, setAxis, histGo };   // usado pelos testes
+  window.__kumo = { bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots, mirrorAll, setAxis, histGo, applyPoseExt: (p) => applyPose(p),
+    morphs: () => { const o = {}; for (const [ob, ms] of Object.entries(morphAlvos)) for (const [k, i] of Object.entries(ms[0].morphTargetDictionary)) o[ob + '|' + k] = ms[0].morphTargetInfluences[i]; return o; } };   // usado pelos testes
 })();
 </script>

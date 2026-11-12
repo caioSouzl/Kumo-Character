@@ -34,3 +34,12 @@ Tabela completa (de 45° a 150°, e para trás): `medicoes_ombros.json`.
   - `medir_ombros.py`, `pesos_ombro.py`, `onde.py`: medições.
   - `corrigir_ombros.py`: pipeline, configurado pelas variáveis `OMBRO_Z=0.83 OMBRO_K=0.45 OMBRO_KF=0.65 OMBRO_SUAVE=30`.
   - `exportar_ombros.py`, `fotos_ombros.py`, `teste_ombro_auto.py`.
+
+## Correção: transparência dos olhos no GLB (12/11)
+As camadas dos olhos usavam Emission + Transparent misturados. O Blender renderiza isso certo, mas o exportador glTF perdia a transparência, e as camadas saíam **opacas** no GLB. A conferência anterior media só a forma dos olhos, por isso o problema passou.
+
+`src/materiais_olhos.py` troca os materiais por Principled: base preta, emissão igual à textura, alpha igual ao alpha da textura.
+- No Blender, as fotos antes e depois da troca são idênticas pixel a pixel (aberto, meio piscar, fechado, olhando).
+- No GLB, as 18 camadas agora saem com `alphaMode: BLEND`.
+
+Os arquivos `kumo_v6_ombros.blend`, `kumo_v6_jogo.glb` e `kumo_v6_jogo.fbx` desta pasta já trazem a correção e são os atuais. Os arquivos de `olhos-jogo/` ainda têm o problema e ficam como histórico.

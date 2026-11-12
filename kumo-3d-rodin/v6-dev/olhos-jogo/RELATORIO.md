@@ -44,3 +44,5 @@ A v5 desenha o olho com camadas finas sobre a pele: Geometry Nodes prendem as ca
 - `comparacao-v5-x-jogo.png` e `comparacao/`: v5 contra a conversão, estado por estado.
 - `texturas/`, `medicoes_conversao.json` e `medicoes_integracao.json`.
 - `src/olhos_jogo.py` (conversão + comparação), `src/integrar.py` (junta ao Kumo com mãos + exporta + reimporta) e `src/fotos_final.py`.
+
+> **Atualização (12/11):** os GLB/FBX desta pasta exportam as camadas dos olhos sem transparência. Use os arquivos de `../ombros/`, que já trazem a correção (veja o RELATORIO de lá).
