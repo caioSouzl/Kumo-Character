@@ -31,3 +31,4 @@
 | # | Decisão |
 |---|---|
 | D6 | "Autorizo todas as reclamações": shape key corretiva da mão fechada, solução do contorno em jogo e início do P2 (cabeça, olhos e boca). Trabalho em `maos-corretivas/`. |
+| D7 | (2026-11-12) "P2 ficou uma aberração, delete isso e tento com a versão fiel ao projeto": a tentativa com a cabeça F1.2 foi apagada; o P2 segue em `p2-fiel/`, sobre a cabeça atual do Kumo. |
