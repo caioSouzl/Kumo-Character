@@ -32,3 +32,4 @@
 |---|---|
 | D6 | "Autorizo todas as reclamações": shape key corretiva da mão fechada, solução do contorno em jogo e início do P2 (cabeça, olhos e boca). Trabalho em `maos-corretivas/`. |
 | D7 | (2026-11-12) "P2 ficou uma aberração, delete isso e tento com a versão fiel ao projeto": a tentativa com a cabeça F1.2 foi apagada; o P2 segue em `p2-fiel/`, sobre a cabeça atual do Kumo. |
+| D8 | (2026-11-12) **Regra permanente do Caio: "Não quero mais mudanças na aparência do Kumo… o Kumo deve manter a aparência."** O P2 fiel (olhos novos) foi reprovado no visual. Daqui em diante, só entram mudanças que não alterem a aparência (pesos, rig, ossos, exportação, testes). Qualquer coisa que mude forma, cor, olhos, boca ou mãos precisa de pedido explícito. |
