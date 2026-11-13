@@ -43,3 +43,19 @@ As camadas dos olhos usavam Emission + Transparent misturados. O Blender renderi
 - No GLB, as 18 camadas agora saem com `alphaMode: BLEND`.
 
 Os arquivos `kumo_v6_ombros.blend`, `kumo_v6_jogo.glb` e `kumo_v6_jogo.fbx` desta pasta já trazem a correção e são os atuais. Os arquivos de `olhos-jogo/` ainda têm o problema e ficam como histórico.
+
+## Correção: buracos na pupila com o olhar no meio do caminho (13/11)
+Com o olhar entre 0 e 100% (por exemplo, 35% para cima), apareciam buracos pretos e riscos dourados na pupila. Em 0 e em 100% ficava perfeito, e por isso a conferência anterior, que usava só esses valores, não pegou o defeito.
+
+**Causa:** as camadas do olho (íris, pupila, brilho) deslizam sobre a superfície do olho. A mistura de shape keys anda em linha reta, cortando por dentro da curva, e as camadas afundavam até 20–40 mm no meio do caminho.
+
+**Correção** (`src/olhar_intermedio.py`):
+- cada olhar ganhou chaves intermediárias em 25%, 50% e 75%, feitas misturando as posições e colando cada ponto de volta na casca do olho, na altura que ele tinha;
+- uma chave `_ergue` levanta as camadas no meio de cada trecho;
+- os drivers passam de uma chave para a outra.
+
+Em 0 e 100% nada muda. Fotos em `fotos-olhar/` (antes: 0, 20, 35, 60 e 85% para cima).
+
+**Ainda sobram** pontinhos dourados mínimos no olho direito em 35–60%.
+
+GLB e FBX foram reexportados; reimportados, batem com o Blender em até 0,055 mm. O GLB passou de 19 para 33 MB, porque são 96 shape keys a mais.

@@ -1,0 +1,22 @@
+{
+ "front": {
+  "silhueta_iou": 0.609,
+  "cor_dif": 53.0,
+  "imagem": "ang000.png"
+ },
+ "three-quarter": {
+  "silhueta_iou": 0.779,
+  "cor_dif": 43.6,
+  "imagem": "ang045.png"
+ },
+ "side": {
+  "silhueta_iou": 0.851,
+  "cor_dif": 34.2,
+  "imagem": "ang270.png"
+ },
+ "back": {
+  "silhueta_iou": 0.841,
+  "cor_dif": 22.0,
+  "imagem": "ang180.png"
+ }
+}
