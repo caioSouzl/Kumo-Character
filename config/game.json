@@ -1,0 +1,26 @@
+{
+  "shift_duration_sec": 300,
+  "break_duration_sec": 20,
+  "event_min_interval_sec": 3.0,
+
+  "kumo_walk_speed": 430,
+  "take_order_sec": 1.2,
+  "prep_sec_per_pizza": 2.6,
+  "bake_sec_per_batch": 3.5,
+  "deliver_sec": 0.8,
+
+  "price_per_pizza": 10,
+  "max_pizzas_per_order": 3,
+  "max_line": 4,
+  "spawn_interval_sec": [8, 14],
+  "customer_walk_speed": 260,
+  "patience_while_cooking_mult": 0.5,
+
+  "customers": [
+    { "kind": "normal",    "weight": 3, "patience_sec": 90, "colors": ["#5b8def", "#47b881", "#9b6bd6", "#e8a33d"] },
+    { "kind": "impatient", "weight": 1, "patience_sec": 50, "colors": ["#e0544b"] }
+  ],
+
+  "live_connector": { "enabled": false, "url": "ws://127.0.0.1:21213" },
+  "simulator": { "visible_on_start": true }
+}

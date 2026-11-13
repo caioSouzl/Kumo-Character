@@ -1,0 +1,41 @@
+{
+  "_comment": "Cada presente aponta para um evento. tiktok_names = nomes que o conector da live envia (sem diferenciar maiusculas). Troque nomes e valores aqui, sem mexer no codigo.",
+  "gifts": {
+    "rose": {
+      "label": "Rosa",
+      "tiktok_names": ["Rose"],
+      "category": "tip",
+      "event": "tip",
+      "tip_per_gift": 1,
+      "groupable": true,
+      "blocking": false
+    },
+    "heart_me": {
+      "label": "Heart Me",
+      "tiktok_names": ["Heart Me"],
+      "category": "help",
+      "event": "speed_boost",
+      "multiplier": 1.7,
+      "duration_sec": 12,
+      "blocking": false
+    },
+    "capybara": {
+      "label": "Capivara",
+      "tiktok_names": ["Capybara"],
+      "category": "sabotage",
+      "event": "capybara_raid",
+      "panic_sec": 2.5,
+      "eat_sec": 2.0,
+      "blocking": true,
+      "max_block_sec": 25
+    },
+    "doughnut": {
+      "label": "Rosquinha (exemplo)",
+      "tiktok_names": ["Doughnut"],
+      "category": "sabotage",
+      "event": "impatience",
+      "patience_loss_sec": 15,
+      "blocking": false
+    }
+  }
+}
