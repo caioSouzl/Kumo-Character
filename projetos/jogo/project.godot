@@ -1,0 +1,32 @@
+; Engine configuration file.
+; Godot 4.x
+
+config_version=5
+
+[application]
+
+config/name="Kumo Pizzaria"
+config/description="Jogo de pizzaria para lives interativas: os presentes da live ajudam ou sabotam o Kumo."
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.4", "Mobile")
+
+[autoload]
+
+GameConfig="*res://scripts/autoload/game_config.gd"
+EventQueue="*res://scripts/autoload/event_queue.gd"
+LiveConnector="*res://scripts/autoload/live_connector.gd"
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+window/size/window_width_override=540
+window/size/window_height_override=960
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+window/handheld/orientation=1
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
