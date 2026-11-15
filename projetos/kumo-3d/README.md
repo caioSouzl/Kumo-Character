@@ -2,6 +2,7 @@
 
 - **Modelo oficial (Rodin, rig, olhos, mãos, ombros):** `../../kumo-3d-rodin/`
   - Arquivos oficiais: não alterar (hashes em `../../kumo-3d-rodin/auditoria/`)
+  - Boca, mandíbula e língua (versão atual do Kumo de jogo): `../../kumo-3d-rodin/v6-dev/boca/`
   - Ombros e olhos: `../../kumo-3d-rodin/v6-dev/ombros/`
   - Estúdio do celular (pose e animação no navegador): `../../kumo-3d-rodin/v6-dev/kumo-studio/`
 - **Testes de desenho (versão desenho do 3D):** `../../testes-desenho/`
