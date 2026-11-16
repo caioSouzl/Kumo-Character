@@ -418,8 +418,9 @@ button:disabled { opacity: 0.45; cursor: default; }
         let nomeObj = null, nmo = '';
         for (let q = o; q; q = q.parent) { const a = assoc.get(q); const nm = a && a.nodes !== undefined ? gltf.parser.json.nodes[a.nodes].name : null; if (nm && !nomeObj && DRIVERS.some((d) => d.o === nm)) nomeObj = nm; if (nm && !nmo && /^Kumo/.test(nm)) nmo = nm; }
         if (nomeObj && o.morphTargetDictionary) (morphAlvos[nomeObj] = morphAlvos[nomeObj] || []).push(o);
+        if (nmo === 'KumoJogo_OlhoBase.L' || nmo === 'KumoJogo_OlhoBase.R') eyeGlobo[nmo.slice(-1)] = o;
         // camadas do olho: desenhar na ordem certa (base, íris, pupila, brilho, moldura, pálpebras)
-        for (const [k, r] of [['OlhoBase', 1], ['Iris', 2], ['Pupil', 3], ['Catchlight', 4], ['Moldura', 5], ['Palpebra', 6]]) if (nmo.includes(k)) o.renderOrder = r + (/borda/.test(nmo) ? 0.5 : 0);
+        for (const [k, r] of [['OlhoBase', 1], ['Iris', 2], ['Pupil', 3], ['Catchlight', 4], ['Moldura', 5], ['Palpebra', 6]]) if (nmo.includes(k)) { o.renderOrder = r + (/borda/.test(nmo) ? 0.5 : 0); o.material.polygonOffset = true; o.material.polygonOffsetFactor = -4 * o.renderOrder; o.material.polygonOffsetUnits = -4 * o.renderOrder; o.material.depthWrite = false; }
       }
     });
     for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
@@ -431,7 +432,7 @@ button:disabled { opacity: 0.45; cursor: default; }
 
   // ---------- losangos do olhar: um sobre cada olho; arrastar move o olhar (controle_olhar)
   // o centro de cada olho é o centro da malha do globo (KumoJogo_OlhoBase.L/R), no sistema de coordenadas do GLB
-  const EYE_C = { L: new THREE.Vector3(0.387, 1.386, 0.309), R: new THREE.Vector3(-0.237, 1.376, 0.488) };   // (Blender → glTF, Y para cima)
+  const eyeGlobo = {};                            // malha do globo de cada olho, achada ao montar o modelo
   const EYE_R = 0.46;                             // raio de referência (em metros) para o alcance total do olhar
   const gazeH = {};
   function buildGaze() {
@@ -457,12 +458,14 @@ button:disabled { opacity: 0.45; cursor: default; }
     ctrlSet('controle_olhar', [gx, gy]); afterPose();
   }
   function gazeCentro(side) {
-    const r = canvas.getBoundingClientRect(); const p = EYE_C[side].clone(); const q = p.clone().project(camera);
+    const g = eyeGlobo[side]; if (!g) return null;
+    const box = new THREE.Box3().setFromObject(g); const ctr = box.getCenter(new THREE.Vector3()); const size = box.getSize(new THREE.Vector3());
+    const r = canvas.getBoundingClientRect(); const q = ctr.clone().project(camera);
     if (q.z > 1) return null;
     const x = (q.x + 1) / 2 * r.width, y = (1 - q.y) / 2 * r.height;
-    const edge = EYE_C[side].clone().add(new THREE.Vector3(EYE_R * 0.5, 0, 0)).project(camera);
+    const edge = ctr.clone().add(new THREE.Vector3(size.x / 2, 0, 0)).project(camera);
     const rr = Math.abs((edge.x - q.x) / 2 * r.width) || 40;
-    return { x, y, r: rr * 1.2 };
+    return { x, y, r: rr };
   }
   function updateGaze() {
     if (!bones.controle_olhar) return;
