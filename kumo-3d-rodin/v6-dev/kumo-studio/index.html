@@ -420,7 +420,9 @@ button:disabled { opacity: 0.45; cursor: default; }
         if (nomeObj && o.morphTargetDictionary) (morphAlvos[nomeObj] = morphAlvos[nomeObj] || []).push(o);
         if (nmo === 'KumoJogo_OlhoBase.L' || nmo === 'KumoJogo_OlhoBase.R') eyeGlobo[nmo.slice(-1)] = o;
         // camadas do olho: desenhar na ordem certa (base, íris, pupila, brilho, moldura, pálpebras)
-        for (const [k, r] of [['OlhoBase', 1], ['Iris', 2], ['Pupil', 3], ['Catchlight', 4], ['Moldura', 5], ['Palpebra', 6]]) if (nmo.includes(k)) { o.renderOrder = r + (/borda/.test(nmo) ? 0.5 : 0); o.material.polygonOffset = true; o.material.polygonOffsetFactor = -4 * o.renderOrder; o.material.polygonOffsetUnits = -4 * o.renderOrder; o.material.depthWrite = false; }
+        // o branco (OlhoBase) tem relevo: se escrever profundidade, esconde a íris e a pupila que estão por baixo dele.
+        // Por isso ele não escreve profundidade, e cada camada do olho é desenhada na ordem certa, por cima da anterior.
+        for (const [k, r] of [['OlhoBase', 1], ['Iris', 2], ['Pupil', 3], ['Catchlight', 4], ['Moldura', 5], ['Palpebra', 6]]) if (nmo.includes(k)) { o.renderOrder = r + (/borda/.test(nmo) ? 0.5 : 0); o.material.polygonOffset = true; o.material.polygonOffsetFactor = -4 * o.renderOrder; o.material.polygonOffsetUnits = -4 * o.renderOrder; o.material.depthWrite = false; o.material.transparent = true; }
       }
     });
     for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
