@@ -34,6 +34,9 @@ html, body { height: 100%; }
 [hidden] { display: none !important; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; }
 .app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; height: 100%; }
+.gaze-h { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; transform: rotate(45deg); background: var(--amber, #f4b642); border: 2px solid var(--ink, #3a2a1e); border-radius: 4px; cursor: grab; touch-action: none; pointer-events: auto; opacity: .9; }
+.gaze-h.on { background: #fff; }
+.gaze-h:active { cursor: grabbing; }
 .stage { position: relative; background: var(--stage); min-height: 0; overflow: hidden; }
 #c { display: block; width: 100%; height: 100%; touch-action: none; }
 .hud { position: absolute; display: flex; gap: 8px; align-items: center; }
@@ -421,9 +424,59 @@ button:disabled { opacity: 0.45; cursor: default; }
     });
     for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
     scene.updateMatrixWorld(true); prepararOmbro();
-    buildDots(); buildUI(); afterPose(); histPush();
+    buildDots(); buildUI(); buildGaze(); afterPose(); histPush();
     $('loading').hidden = true;
     loadDraft();
+  }
+
+  // ---------- losangos do olhar: um sobre cada olho; arrastar move o olhar (controle_olhar)
+  // o centro de cada olho é o centro da malha do globo (KumoJogo_OlhoBase.L/R), no sistema de coordenadas do GLB
+  const EYE_C = { L: new THREE.Vector3(0.387, 1.386, 0.309), R: new THREE.Vector3(-0.237, 1.376, 0.488) };   // (Blender → glTF, Y para cima)
+  const EYE_R = 0.46;                             // raio de referência (em metros) para o alcance total do olhar
+  const gazeH = {};
+  function buildGaze() {
+    const host = canvas.parentElement; host.style.position = host.style.position || 'relative';
+    for (const side of ['L', 'R']) {
+      const d = document.createElement('div'); d.className = 'gaze-h'; d.title = 'Arraste para olhar'; d.setAttribute('role', 'slider'); d.setAttribute('aria-label', 'Olhar ' + (side === 'L' ? 'esquerdo' : 'direito'));
+      host.appendChild(d); gazeH[side] = d;
+      let drag = null;
+      d.addEventListener('pointerdown', (e) => { drag = e.pointerId; d.setPointerCapture(e.pointerId); d.classList.add('on'); e.preventDefault(); e.stopPropagation(); });
+      d.addEventListener('pointermove', (e) => { if (drag !== e.pointerId) return; moveGaze(side, e); });
+      const up = (e) => { if (drag !== e.pointerId) return; drag = null; d.classList.remove('on'); onPoseEdited(); };
+      d.addEventListener('pointerup', up); d.addEventListener('pointercancel', up);
+    }
+    const ajusta = () => { updateGaze(); requestAnimationFrame(ajusta); };
+    requestAnimationFrame(ajusta);
+  }
+  function moveGaze(side, e) {
+    // a posição do ponteiro vira olhar: o losango anda no plano da tela; 1 = raio de referência (olhar no máximo)
+    const r = canvas.getBoundingClientRect(); const c = gazeCentro(side); if (!c) return;
+    const dx = (e.clientX - r.left) - c.x, dy = (e.clientY - r.top) - c.y;
+    const R = Math.max(40, c.r);
+    const gx = Math.max(-1, Math.min(1, dx / R)), gy = Math.max(-1, Math.min(1, -dy / R));
+    ctrlSet('controle_olhar', [gx, gy]); afterPose();
+  }
+  function gazeCentro(side) {
+    const r = canvas.getBoundingClientRect(); const p = EYE_C[side].clone(); const q = p.clone().project(camera);
+    if (q.z > 1) return null;
+    const x = (q.x + 1) / 2 * r.width, y = (1 - q.y) / 2 * r.height;
+    const edge = EYE_C[side].clone().add(new THREE.Vector3(EYE_R * 0.5, 0, 0)).project(camera);
+    const rr = Math.abs((edge.x - q.x) / 2 * r.width) || 40;
+    return { x, y, r: rr * 1.2 };
+  }
+  function updateGaze() {
+    if (!bones.controle_olhar) return;
+    const r = canvas.getBoundingClientRect(); const host = canvas.parentElement;
+    const hr = host.getBoundingClientRect();
+    for (const side of ['L', 'R']) {
+      const c = gazeCentro(side); const d = gazeH[side]; if (!d) continue;
+      if (!c) { d.style.display = 'none'; continue; }
+      d.style.display = '';
+      const [gx, gy] = ctrlGet('controle_olhar');
+      // o losango fica no centro do olho mais o deslocamento do olhar
+      const px = r.left - hr.left + c.x + gx * c.r, py = r.top - hr.top + c.y - gy * c.r;
+      d.style.left = px + 'px'; d.style.top = py + 'px';
+    }
   }
 
   // ---------- pontos clicáveis nas articulações

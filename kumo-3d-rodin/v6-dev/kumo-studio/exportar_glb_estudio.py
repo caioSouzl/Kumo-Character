@@ -9,7 +9,7 @@ for b in rig.pose.bones: b.rotation_quaternion = (1, 0, 0, 0); b.rotation_euler 
 img = bpy.data.images.get('kumo_quad_diffuse')
 if img: img.filepath = '/home/user/Kumo-Character/kumo-3d-rodin/textures/kumo_quad_diffuse.png'; img.reload()
 for o in bpy.context.selected_objects: o.select_set(False)
-objs = [o for o in bpy.data.objects if o.name in ('Kumo', 'Kumo_Contorno', 'Kumo_Rig') or o.name.startswith('KumoJogo_')]
+objs = [o for o in bpy.data.objects if o.name in ('Kumo', 'Kumo_Contorno', 'Kumo_Rig', 'Kumo_Boca', 'Kumo_Lingua') or o.name.startswith('KumoJogo_')]
 for o in objs: o.hide_set(False); o.select_set(True)
 bpy.context.view_layer.objects.active = rig
 bpy.ops.export_scene.gltf(filepath=OUT, export_format='GLB', use_selection=True, export_apply=False, export_skins=True, export_animations=False,
