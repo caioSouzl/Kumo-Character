@@ -129,6 +129,22 @@ button:disabled { opacity: 0.45; cursor: default; }
 .ver img, .cmp img { display: block; width: 100%; border-radius: 8px; border: 1px solid var(--line); background: #ede5d3; }
 .ver ul { margin: 0; padding-left: 18px; } .ver code { font-family: var(--font-data); font-size: 11.5px; overflow-wrap: anywhere; }
 .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .cmp figure { margin: 0; min-width: 0; } .cmp figcaption { font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+.etapa { border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+.etapa + .etapa { margin-top: 8px; }
+.etapa summary { cursor: pointer; padding: 10px 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; align-items: center; }
+.etapa summary b { font-weight: 800; }
+.etapa .conta { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+.barra { grid-column: 1 / 3; height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.barra i { display: block; height: 100%; background: var(--leaf); }
+.tarefas { padding: 0 12px 12px; display: grid; gap: 6px; }
+.tarefa { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; align-items: start; padding: 8px 0; border-top: 1px solid var(--line); }
+.tarefa .t { font-weight: 600; overflow-wrap: anywhere; } .tarefa .det { grid-column: 2; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.est { font-size: 11px; font-weight: 800; letter-spacing: .3px; padding: 3px 8px; border-radius: 999px; border: 0; min-height: 0; white-space: nowrap; }
+.est.feita { background: var(--ok-bg); color: var(--ok); } .est.andamento { background: var(--leaf-soft); color: var(--leaf); }
+.est.aprovacao { background: var(--aviso-bg); color: var(--aviso); } .est.pendente { background: var(--neutro-bg); color: var(--neutro); }
+.nova { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; } .nova input { font: 13px var(--font-body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 7px 9px; min-width: 0; }
+.resumo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.resumo div { border: 1px solid var(--line); border-radius: 10px; padding: 8px; background: var(--bg); } .resumo b { display: block; font-family: var(--font-data); font-size: 16px; font-variant-numeric: tabular-nums; } .resumo span { font-size: 11px; color: var(--muted); }
 @media (pointer: coarse) {
   button { min-height: 40px; padding: 9px 13px; }
   .steps button, .joints button { min-height: 40px; }
@@ -201,6 +217,7 @@ button:disabled { opacity: 0.45; cursor: default; }
       <button class="tab" role="tab" aria-selected="false" data-tab="anim">Animação</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="comp">Componentes</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="ver">Versões</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="etapas">Etapas</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="arq">Projeto</button>
     </div>
 
@@ -298,6 +315,14 @@ button:disabled { opacity: 0.45; cursor: default; }
       <p class="hint">Todas as versões do Kumo registradas no projeto. Marque duas para comparar as imagens lado a lado. Esta página não troca nem substitui versões.</p>
       <div class="group" id="cmpBox" hidden><div class="group-label">Comparação</div><div class="cmp" id="cmp"></div></div>
       <div id="versoes"><p class="hint">Carregando as versões…</p></div>
+    </div>
+
+    <div class="pane" data-pane="etapas" hidden>
+      <p class="hint">Etapas e tarefas do desenvolvimento. O percentual de cada etapa é a parte das tarefas registradas que está feita; nada é estimado. Toque no estado de uma tarefa para trocá-lo.</p>
+      <div class="resumo" id="resumo"></div>
+      <div id="etapasLista"><p class="hint">Carregando as etapas…</p></div>
+      <div class="group" id="novaEtapaBox" hidden><div class="group-label">Nova etapa</div><form class="nova" id="novaEtapa"><input id="novaEtapaNome" placeholder="Nome da etapa" aria-label="Nome da nova etapa" maxlength="80"><button class="primary">Criar</button></form></div>
+      <p class="status" id="etapasStatus"></p>
     </div>
 
     <div class="pane" data-pane="arq" hidden>
@@ -688,6 +713,68 @@ button:disabled { opacity: 0.45; cursor: default; }
       }
     } catch (e) { box.innerHTML = ''; box.appendChild(el('p', 'hint', 'Não consegui carregar a lista de versões (versoes.json).')); }
   }
+
+  // ---------- etapas e tarefas (banco do próprio artifact: o Claude lê e escreve pelas ferramentas dele)
+  const ESTADOS = ['pendente', 'andamento', 'aprovacao', 'feita'], ESTADO_NOME = { pendente: 'Pendente', andamento: 'Em andamento', aprovacao: 'Aguarda aprovação', feita: 'Feita' };
+  let etapas = [], tarefas = [], podeEscrever = false, dbRef = null; const abertas = new Set(['e1']);
+  function desenharEtapas() {
+    const lista = $('etapasLista'); lista.innerHTML = '';
+    if (!etapas.length) { lista.appendChild(el('p', 'hint', 'Nenhuma etapa registrada ainda.')); return; }
+    const conta = (f) => tarefas.filter(f).length;
+    $('resumo').innerHTML = '';
+    for (const [n, t] of [[conta((x) => x.situacao === 'feita'), 'feitas'], [conta((x) => x.situacao === 'andamento'), 'em andamento'], [conta((x) => x.situacao === 'aprovacao'), 'aguardam você'], [conta((x) => x.situacao === 'pendente'), 'pendentes']]) { const d = el('div'); d.appendChild(el('b', '', String(n))); d.appendChild(el('span', '', t)); $('resumo').appendChild(d); }
+    for (const e of etapas) {
+      const ts = tarefas.filter((t) => t.etapa === e.id).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+      const feitas = ts.filter((t) => t.situacao === 'feita').length, pct = ts.length ? Math.round(100 * feitas / ts.length) : 0;
+      const d = el('details', 'etapa'); d.open = abertas.has(e.id); d.ontoggle = () => { if (d.open) abertas.add(e.id); else abertas.delete(e.id); };
+      const sm = el('summary'); sm.appendChild(el('b', '', `${e.ordem}. ${e.nome}`));
+      sm.appendChild(el('span', 'conta', ts.length ? `${feitas}/${ts.length} · ${pct}%` : 'sem tarefas'));
+      const br = el('div', 'barra'); const bi = el('i'); bi.style.width = pct + '%'; br.appendChild(bi); sm.appendChild(br); d.appendChild(sm);
+      const box = el('div', 'tarefas');
+      for (const t of ts) {
+        const row = el('div', 'tarefa');
+        const b = el('button', 'est ' + t.situacao, ESTADO_NOME[t.situacao] || t.situacao); b.title = podeEscrever ? 'Toque para trocar o estado' : 'Só leitura';
+        b.disabled = !podeEscrever;
+        b.onclick = async () => {
+          const prox = ESTADOS[(ESTADOS.indexOf(t.situacao) + 1) % ESTADOS.length]; b.disabled = true;
+          try { await dbRef.doc('tarefas/' + t.id).update({ situacao: prox, atualizado: new Date().toISOString() }); $('etapasStatus').textContent = `“${t.titulo}”: ${ESTADO_NOME[prox]}.`; }
+          catch (err) { $('etapasStatus').textContent = 'Não consegui salvar: ' + (err && err.code ? err.code : 'erro'); b.disabled = false; }
+        };
+        row.appendChild(b); row.appendChild(el('span', 't', t.titulo));
+        const det = [t.nota, t.relatorio ? 'Relatório: ' + t.relatorio : ''].filter(Boolean).join(' · '); if (det) row.appendChild(el('span', 'det', det));
+        box.appendChild(row);
+      }
+      if (podeEscrever) {
+        const f = el('form', 'nova'); const inp = el('input'); inp.placeholder = 'Nova tarefa'; inp.maxLength = 140; inp.id = 'nova-' + e.id; inp.setAttribute('aria-label', 'Nova tarefa em ' + e.nome);
+        const bt = el('button', 'primary', 'Adicionar'); f.appendChild(inp); f.appendChild(bt);
+        f.onsubmit = async (ev) => {
+          ev.preventDefault(); const titulo = inp.value.trim(); if (!titulo) return; bt.disabled = true;
+          try { await dbRef.collection('tarefas').add({ etapa: e.id, titulo, situacao: 'pendente', ordem: Date.now(), criado: new Date().toISOString() }); inp.value = ''; $('etapasStatus').textContent = 'Tarefa adicionada.'; }
+          catch (err) { $('etapasStatus').textContent = 'Não consegui salvar: ' + (err && err.code ? err.code : 'erro'); }
+          bt.disabled = false;
+        };
+        box.appendChild(f);
+      }
+      d.appendChild(box); lista.appendChild(d);
+    }
+  }
+  async function iniciarEtapas() {
+    const lista = $('etapasLista');
+    if (!window.claude || !window.claude.use) { lista.innerHTML = ''; lista.appendChild(el('p', 'hint', 'As etapas ficam guardadas no claude.ai; abra a página por lá para vê-las.')); return; }
+    const espera = setTimeout(() => { if (!etapas.length) { lista.innerHTML = ''; lista.appendChild(el('p', 'hint', 'As etapas estão demorando para carregar. Verifique a conexão.')); } }, 10000);
+    dbRef = await claude.use('db');
+    if (!dbRef) { clearTimeout(espera); lista.innerHTML = ''; lista.appendChild(el('p', 'hint', 'Entre na sua conta do claude.ai para ver as etapas.')); return; }
+    const u = await claude.use('user'); podeEscrever = !!(u && (u.isOwner() || u.can('data.write') === true));
+    $('novaEtapaBox').hidden = !podeEscrever;
+    dbRef.collection('etapas').onSnapshot((q) => { clearTimeout(espera); etapas = q.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (a.ordem || 0) - (b.ordem || 0)); desenharEtapas(); }, () => { clearTimeout(espera); lista.innerHTML = ''; lista.appendChild(el('p', 'hint', 'Não consegui ler as etapas.')); });
+    dbRef.collection('tarefas').onSnapshot((q) => { tarefas = q.docs.map((d) => ({ id: d.id, ...d.data() })); desenharEtapas(); });
+    $('novaEtapa').onsubmit = async (ev) => {
+      ev.preventDefault(); const nome = $('novaEtapaNome').value.trim(); if (!nome) return;
+      try { await dbRef.collection('etapas').add({ nome, ordem: etapas.length + 1 }); $('novaEtapaNome').value = ''; $('etapasStatus').textContent = 'Etapa criada.'; }
+      catch (err) { $('etapasStatus').textContent = 'Não consegui salvar: ' + (err && err.code ? err.code : 'erro'); }
+    };
+  }
+  iniciarEtapas();
 
   // ---------- losangos do olhar: um sobre cada olho; arrastar move o olhar (controle_olhar)
   // o centro de cada olho é o centro da malha do globo (KumoJogo_OlhoBase.L/R), no sistema de coordenadas do GLB

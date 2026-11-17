@@ -49,7 +49,21 @@ Navegador automático, em tela de computador e de celular:
   - a comparação é por imagem, não por modelo 3D;
   - a situação de cada versão foi tirada dos relatórios e do `DECISOES.md`, e o Caio deve corrigir o que estiver errado.
 
+
+## Fase 3 (feita): etapas e tarefas
+- **Aba Etapas:** 9 etapas do projeto (Modelagem até Exportação) com 46 tarefas.
+  - Situações: pendente, em andamento, aguardando aprovação e feita. Um toque na tarefa troca a situação.
+  - Cada etapa mostra o percentual (tarefas feitas sobre o total); o resumo mostra 4 números.
+  - Formulários para criar tarefa e etapa nova.
+- **Dados salvos de verdade:** ficam no banco da própria página (coleções `etapas` e `tarefas`) e atualizam ao vivo.
+  - Só o dono (Caio) pode escrever; quem só vê o link pode ler, mas não altera.
+  - Situação inicial: 26 feitas, 1 em andamento, 19 pendentes.
+- **Testes:**
+  - página testada no celular com banco de teste: contagens e troca de situação certas, sem erros de script;
+  - banco real conferido: 9 etapas e 46 tarefas lidas como visitante;
+  - escrita como visitante recusada pelo banco (regra de dono funcionando).
+- **Limites:** a lista de tarefas não se atualiza sozinha a partir do repositório; quem muda é o Caio na página (ou eu, quando ele pedir).
+
 ## Próximas fases
-3. Painel de etapas e tarefas.
 4. Assistente Claude com contexto e fila de pedidos.
 5. Botões próprios, layouts e atalhos.
