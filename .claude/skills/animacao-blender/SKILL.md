@@ -1,6 +1,6 @@
 ---
 name: animacao-blender
-description: Processo de criação e animação 3D estilizada no Blender para o Kumo (blocking em degraus, poses-chave, intermediários, animação em 2s com trechos em 1s, correção de câmera, acabamento com smear). Use ao criar ou revisar qualquer animação 3D do Kumo ou de outro personagem do projeto, e ao exportar para o jogo.
+description: Processo de criação, rig e animação 3D estilizada no Blender para o Kumo. Animação (blocking em degraus, poses-chave, intermediários, em 2s com trechos em 1s, correção de câmera, smear); rig (deformadores, mecânicos e controladores, pintura de peso, IK, rig de rosto, boca e língua); criação de personagem a partir de modelo gerado (modelo base, retopologia em loops). Use ao criar ou revisar animação, rig ou modelo 3D do Kumo ou de outro personagem do projeto, e ao exportar para o jogo.
 ---
 
 # Animação 3D estilizada no Blender (Kumo)
@@ -42,6 +42,14 @@ Fonte do processo: vídeo "my full animation process" de @no_the_robot (TikTok, 
 
 ### 7. Depois da animação
 Luz, render e som.
+
+## Rig e criação de personagem
+Para rig (camadas de ossos, pintura de peso, IK, rosto, boca, língua) e para criar um personagem a partir de um modelo gerado, leia `referencias/rig-e-personagem.md`. Cada parte diz o que o Kumo já tem e o que vale trazer.
+
+Três regras de lá que valem sempre:
+- **Pesos são relativos:** um osso com peso baixo sozinho move o vértice por inteiro. Defeito de deformação quase sempre é outro osso puxando junto.
+- **Só deformadores e shape keys vão para o jogo:** constraints, bendy bones e spline IK precisam ser assados antes de exportar.
+- **Pé no chão pede IK:** andar, correr e pular sem IK nos pés faz o pé escorregar.
 
 ## Ferramentas (`scripts/em_2s.py`)
 Testadas no Blender 5.2 com a ação `Lingua_Lancar` do Kumo:
