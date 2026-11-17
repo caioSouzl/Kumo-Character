@@ -24,11 +24,13 @@
   :root:not([data-theme="light"]) {
     --bg: #121813; --stage: #1a231c; --panel: #161e18; --ink: #e6ede4; --muted: #9aab9c;
     --line: #2c3a2f; --leaf: #6cc58e; --leaf-soft: #22382a; --amber: #f4b642; --bark: #c9937d; color-scheme: dark;
+    --ok: #8fdcaa; --ok-bg: #1e3a29; --aviso: #f0c66a; --aviso-bg: #3d3115; --ruim: #f0a399; --ruim-bg: #43201c; --neutro: #a9b5ab; --neutro-bg: #263029;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121813; --stage: #1a231c; --panel: #161e18; --ink: #e6ede4; --muted: #9aab9c;
   --line: #2c3a2f; --leaf: #6cc58e; --leaf-soft: #22382a; --amber: #f4b642; --bark: #c9937d; color-scheme: dark;
+  --ok: #8fdcaa; --ok-bg: #1e3a29; --aviso: #f0c66a; --aviso-bg: #3d3115; --ruim: #f0a399; --ruim-bg: #43201c; --neutro: #a9b5ab; --neutro-bg: #263029;
 }
 html, body { height: 100%; }
 [hidden] { display: none !important; }
@@ -59,11 +61,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-body); 
 .mark { position: absolute; top: 0; width: 12px; height: 12px; margin-left: -6px; transform: rotate(45deg); background: var(--amber); border: 2px solid var(--bark); pointer-events: auto; cursor: pointer; padding: 0; border-radius: 2px; }
 .mark.on { background: var(--bark); }
 .time { font-family: var(--font-data); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); min-width: 92px; text-align: right; }
-.panel { background: var(--panel); border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+.panel { background: var(--panel); border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
 .tabs { display: flex; gap: 4px; padding: 10px 12px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
 .tab { font: 700 13px var(--font-body); padding: 8px 12px; border: 0; background: transparent; color: var(--muted); border-bottom: 3px solid transparent; cursor: pointer; }
 .tab[aria-selected="true"] { color: var(--leaf); border-bottom-color: var(--leaf); }
-.pane { padding: 14px 16px 24px; overflow: auto; display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+.pane { padding: 14px 16px 24px; overflow: auto; display: flex; flex-direction: column; gap: 16px; min-height: 0; flex: 1 1 0; }
+.pane > * { flex: 0 0 auto; }
 h2 { font-family: var(--font-display); font-weight: 600; font-size: 16px; margin: 0; color: var(--ink); text-wrap: balance; }
 .hint { color: var(--muted); font-size: 13px; line-height: 1.45; margin: 0; max-width: 60ch; }
 .group { display: flex; flex-direction: column; gap: 8px; }
@@ -99,6 +102,33 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-data); font-s
 button.on, button[aria-pressed="true"] { background: var(--leaf-soft); border-color: var(--leaf); color: var(--leaf); }
 button:disabled { opacity: 0.45; cursor: default; }
 .sub { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.tab { white-space: nowrap; flex: 0 0 auto; }
+:root { --ok: #1b6b3f; --ok-bg: #d9eedd; --aviso: #8a5a00; --aviso-bg: #f6e7c4; --ruim: #9c2f25; --ruim-bg: #f4d9d5; --neutro: #55615a; --neutro-bg: #e3e8de; }
+.arv details { border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.arv details + details { margin-top: 6px; }
+.arv summary { cursor: pointer; padding: 9px 10px; font-weight: 700; display: flex; gap: 8px; align-items: center; }
+.arv summary small { color: var(--muted); font-weight: 600; margin-left: auto; font-family: var(--font-data); font-size: 11px; }
+.comp { display: flex; gap: 6px; align-items: center; padding: 4px 8px 4px 22px; border-top: 1px solid var(--line); }
+.comp .nome { flex: 1 1 auto; min-width: 0; text-align: left; background: transparent; border: 0; padding: 6px 2px; font-weight: 600; overflow-wrap: anywhere; }
+.comp .nome.on { color: var(--leaf); font-weight: 800; }
+.comp .mini { flex: 0 0 auto; padding: 4px 8px; font-size: 12px; min-height: 0; }
+.comp.oculto .nome { opacity: .45; text-decoration: line-through; }
+.ficha { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); display: grid; gap: 4px; font-size: 13px; }
+.ficha b { font-family: var(--font-display); font-size: 15px; }
+.ficha dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; margin: 4px 0 0; }
+.ficha dt { color: var(--muted); } .ficha dd { margin: 0; overflow-wrap: anywhere; }
+.sit { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--neutro-bg); color: var(--neutro); }
+.sit.oficial, .sit.atual { background: var(--ok-bg); color: var(--ok); } .sit.em-uso { background: var(--leaf-soft); color: var(--leaf); }
+.sit.em-avaliacao { background: var(--aviso-bg); color: var(--aviso); } .sit.reprovada, .sit.apagada { background: var(--ruim-bg); color: var(--ruim); }
+.ver { border: 1px solid var(--line); border-radius: 12px; background: var(--bg); overflow: hidden; }
+.ver + .ver { margin-top: 8px; }
+.ver summary { cursor: pointer; padding: 10px 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; align-items: center; }
+.ver summary b { font-weight: 800; } .ver summary span.data { grid-column: 1 / 3; color: var(--muted); font-family: var(--font-data); font-size: 11px; }
+.ver .corpo { padding: 0 12px 12px; display: grid; gap: 8px; font-size: 13px; line-height: 1.45; }
+.ver img, .cmp img { display: block; width: 100%; border-radius: 8px; border: 1px solid var(--line); background: #ede5d3; }
+.ver ul { margin: 0; padding-left: 18px; } .ver code { font-family: var(--font-data); font-size: 11.5px; overflow-wrap: anywhere; }
+.cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .cmp figure { margin: 0; min-width: 0; } .cmp figcaption { font-weight: 700; font-size: 12px; margin-bottom: 4px; }
 @media (pointer: coarse) {
   button { min-height: 40px; padding: 9px 13px; }
   .steps button, .joints button { min-height: 40px; }
@@ -169,6 +199,8 @@ button:disabled { opacity: 0.45; cursor: default; }
       <button class="tab" role="tab" aria-selected="false" data-tab="maos">Mãos</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="rosto">Rosto</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="anim">Animação</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="comp">Componentes</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="ver">Versões</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="arq">Projeto</button>
     </div>
 
@@ -253,6 +285,19 @@ button:disabled { opacity: 0.45; cursor: default; }
         </div>
       </div>
       <p class="status" id="draftStatus"></p>
+    </div>
+
+    <div class="pane" data-pane="comp" hidden>
+      <p class="hint">As peças reais do modelo. Toque no nome para selecionar e ver a ficha. Só consulta: nada aqui altera arquivos.</p>
+      <div class="ficha" id="ficha"><b>Nenhum componente selecionado</b><span class="hint">Escolha um na lista abaixo.</span></div>
+      <div class="arv" id="arvore"></div>
+      <p class="status" id="compStatus"></p>
+    </div>
+
+    <div class="pane" data-pane="ver" hidden>
+      <p class="hint">Todas as versões do Kumo registradas no projeto. Marque duas para comparar as imagens lado a lado. Esta página não troca nem substitui versões.</p>
+      <div class="group" id="cmpBox" hidden><div class="group-label">Comparação</div><div class="cmp" id="cmp"></div></div>
+      <div id="versoes"><p class="hint">Carregando as versões…</p></div>
     </div>
 
     <div class="pane" data-pane="arq" hidden>
@@ -533,10 +578,115 @@ button:disabled { opacity: 0.45; cursor: default; }
       }
     });
     for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
+    info3d.materiais = (gltf.parser.json.materials || []).map((m) => m.name); info3d.texturas = [...new Set((gltf.parser.json.images || []).map((m) => m.name))];
     scene.updateMatrixWorld(true); prepararOmbro();
-    buildDots(); buildUI(); buildGaze(); afterPose(); histPush();
+    buildDots(); buildUI(); buildGaze(); buildComponentes(); carregarVersoes(); afterPose(); histPush();
     $('loading').hidden = true;
     loadDraft();
+  }
+
+  // ---------- explorador de componentes (peças reais do arquivo; nada aqui altera o modelo)
+  let mostrarPontos = true; const travados = new Set(); const info3d = { materiais: [], texturas: [] };
+  const ORIGEM = { corpo: ['Modelo oficial + mãos com dedos + ombros + boca', 'kumo-3d-rodin/v6-dev/boca/RELATORIO.md'], olho: ['Olhos de jogo (da v5)', 'kumo-3d-rodin/v6-dev/olhos-jogo/RELATORIO.md'],
+    boca: ['Boca e língua', 'kumo-3d-rodin/v6-dev/boca/RELATORIO.md'], contorno: ['Mãos: contorno de jogo', 'kumo-3d-rodin/v6-dev/maos-corretivas/RELATORIO.md'], rig: ['Rig oficial + dedos, mandíbula, língua e controles', 'kumo-3d-rodin/rig-report.json'] };
+  const REGIOES = [['Cabeça', /^(head|neck)$/, 'head'], ['Mandíbula', /^jaw$/, 'jaw'], ['Tronco', /^(hips|spine|chest)$/, 'chest'],
+    ['Braço esquerdo', /^(shoulder|upper_arm|forearm)\.L$/, 'upper_arm.L'], ['Braço direito', /^(shoulder|upper_arm|forearm)\.R$/, 'upper_arm.R'],
+    ['Mão esquerda', /^(hand|metacarpo|dedo\d_\d|polegar_\d)\.L$/, 'hand.L'], ['Mão direita', /^(hand|metacarpo|dedo\d_\d|polegar_\d)\.R$/, 'hand.R'],
+    ['Perna esquerda', /^(thigh|shin)\.L$/, 'thigh.L'], ['Perna direita', /^(thigh|shin)\.R$/, 'thigh.R'], ['Pé esquerdo', /^foot\.L$/, 'foot.L'], ['Pé direito', /^foot\.R$/, 'foot.R'], ['Cauda', /^tail_/, 'tail_01']];
+  const CAMADA = { OlhoBase: 'Globo (branco)', Iris: 'Íris', Pupil: 'Pupila', Catchlight: 'Brilho', Moldura: 'Moldura de pele', Palpebra_sup: 'Pálpebra de cima', Palpebra_sup_borda: 'Pálpebra de cima (borda)', Palpebra_inf: 'Pálpebra de baixo', Palpebra_inf_borda: 'Pálpebra de baixo (borda)' };
+  let compSel = null;
+  function contar(ms) { let v = 0, t = 0; for (const m of ms) { const g = m.geometry; v += g.attributes.position.count; t += (g.index ? g.index.count : g.attributes.position.count) / 3; } return [v, Math.round(t)]; }
+  function fichaDe(c) {
+    const linhas = [['Tipo', c.tipo]];
+    if (c.malhas) { const [v, t] = contar(c.malhas); linhas.push(['Malha', `${v.toLocaleString('pt-BR')} pontos · ${t.toLocaleString('pt-BR')} triângulos`]); const sk = c.malhas[0].morphTargetDictionary; if (sk) linhas.push(['Shape keys', String(Object.keys(sk).length)]); }
+    if (c.ossos) linhas.push(['Ossos', `${c.ossos.length}: ${c.ossos.slice(0, 8).join(', ')}${c.ossos.length > 8 ? '…' : ''}`]);
+    if (c.lista) linhas.push(['Itens', c.lista.join(', ')]);
+    if (c.origem) { linhas.push(['Versão', c.origem[0]]); linhas.push(['Relatório', c.origem[1]]); }
+    if (c.nota) linhas.push(['Observação', c.nota]);
+    $('ficha').innerHTML = `<b></b><dl>${linhas.map(() => '<dt></dt><dd></dd>').join('')}</dl>`;
+    $('ficha').querySelector('b').textContent = c.nome;
+    const dt = $('ficha').querySelectorAll('dt'), dd = $('ficha').querySelectorAll('dd'); linhas.forEach(([a, b], i) => { dt[i].textContent = a; dd[i].textContent = b; });
+  }
+  function buildComponentes() {
+    const porNome = {}; for (const m of meshes) (porNome[m.userData.nome] = porNome[m.userData.nome] || []).push(m);
+    const corpo = porNome.Kumo || [];
+    const grupos = [];
+    grupos.push(['Corpo (uma malha só)', REGIOES.map(([nome, re, osso]) => ({ nome, tipo: 'Região da malha do corpo', ossos: order.filter((n) => re.test(n)), foco: osso, origem: ORIGEM.corpo, nota: 'Faz parte da malha única do corpo: não dá para ocultar em separado.' }))
+      .concat([{ nome: 'Malha do corpo inteira', tipo: 'Malha', malhas: corpo, origem: ORIGEM.corpo, ocultavel: true }])]);
+    for (const [lado, nomeL] of [['L', 'Olho esquerdo'], ['R', 'Olho direito']]) grupos.push([nomeL, Object.keys(CAMADA).filter((k) => porNome[`KumoJogo_${k}.${lado}`]).map((k) => ({ nome: CAMADA[k], tipo: 'Camada do olho', malhas: porNome[`KumoJogo_${k}.${lado}`], origem: ORIGEM.olho, ocultavel: true }))]);
+    grupos.push(['Boca e língua', [['Kumo_Boca', 'Interior da boca'], ['Kumo_Lingua', 'Língua']].filter(([k]) => porNome[k]).map(([k, nome]) => ({ nome, tipo: 'Malha', malhas: porNome[k], origem: ORIGEM.boca, ocultavel: true }))]);
+    grupos.push(['Contorno', porNome.Kumo_Contorno ? [{ nome: 'Contorno de jogo', tipo: 'Malha (casca invertida)', malhas: porNome.Kumo_Contorno, origem: ORIGEM.contorno, ocultavel: true }] : []]);
+    grupos.push(['Esqueleto', [{ nome: 'Pontos das articulações', tipo: 'Controles da página', ossos: order.slice(), origem: ORIGEM.rig, pontos: true, ocultavel: true }]]);
+    grupos.push(['Materiais e texturas', [{ nome: `Materiais (${info3d.materiais.length})`, tipo: 'Lista', lista: info3d.materiais }, { nome: `Texturas (${info3d.texturas.length})`, tipo: 'Lista', lista: info3d.texturas },
+      { nome: 'Cristas (da cabeça e das costas)', tipo: 'Pintura na textura', nota: 'Não são peças separadas: estão pintadas na textura do corpo.' }]]);
+    const arv = $('arvore'); arv.innerHTML = '';
+    grupos.forEach(([titulo, itens], gi) => {
+      if (!itens.length) return;
+      const d = document.createElement('details'); if (gi === 0) d.open = true;
+      const sm = document.createElement('summary'); sm.textContent = titulo; const q = document.createElement('small'); q.textContent = String(itens.length); sm.appendChild(q); d.appendChild(sm);
+      for (const c of itens) {
+        const row = document.createElement('div'); row.className = 'comp';
+        const nb = document.createElement('button'); nb.className = 'nome'; nb.textContent = c.nome; row.appendChild(nb);
+        nb.onclick = () => {
+          compSel = c; arv.querySelectorAll('.nome.on').forEach((x) => x.classList.remove('on')); nb.classList.add('on'); fichaDe(c);
+          if (c.foco && bones[c.foco] && !c.travado) { select(c.foco); const w = bones[c.foco].getWorldPosition(new THREE.Vector3()); orbit.target.copy(w); mexeuCamera = true; orbit.update(); }
+        };
+        if (c.ocultavel) {
+          const hb = document.createElement('button'); hb.className = 'mini'; hb.textContent = 'Ocultar'; hb.title = 'Mostra ou esconde este componente no palco';
+          hb.onclick = () => {
+            if (c.travado) { $('compStatus').textContent = `${c.nome} está travado.`; return; }
+            c.oculto = !c.oculto; row.classList.toggle('oculto', c.oculto); hb.textContent = c.oculto ? 'Exibir' : 'Ocultar';
+            if (c.pontos) mostrarPontos = !c.oculto; else for (const m of c.malhas) m.visible = !c.oculto;
+            $('compStatus').textContent = c.oculto ? `${c.nome}: oculto (só nesta tela).` : `${c.nome}: visível.`;
+          };
+          row.appendChild(hb);
+        }
+        if (c.ocultavel || c.foco) {
+          const lb = document.createElement('button'); lb.className = 'mini'; lb.textContent = 'Travar'; lb.title = 'Travado, o componente não pode ser selecionado, posado nem ocultado por engano';
+          lb.onclick = () => {
+            c.travado = !c.travado; lb.textContent = c.travado ? 'Soltar' : 'Travar'; lb.setAttribute('aria-pressed', String(!!c.travado));
+            if (c.foco) for (const n of c.ossos) { if (c.travado) travados.add(n); else travados.delete(n); }
+            if (c.travado && selected && travados.has(selected)) select(null);
+            $('compStatus').textContent = c.travado ? `${c.nome}: travado.` : `${c.nome}: solto.`;
+          };
+          row.appendChild(lb);
+        }
+        d.appendChild(row);
+      }
+      arv.appendChild(d);
+    });
+  }
+  // ---------- gerenciador de versões (lê versoes.json, gerado por gerar_versoes.py a partir do repositório)
+  const cmpSel = [];
+  function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
+  function desenharCmp(vs) {
+    $('cmpBox').hidden = cmpSel.length < 2; const c = $('cmp'); c.innerHTML = '';
+    for (const id of cmpSel) { const v = vs.find((x) => x.id === id); const f = el('figure'); f.appendChild(el('figcaption', '', v.nome)); if (v.imagem) { const im = el('img'); im.src = v.imagem; im.alt = v.nome; f.appendChild(im); } else f.appendChild(el('p', 'hint', 'Sem imagem.')); c.appendChild(f); }
+  }
+  async function carregarVersoes() {
+    const box = $('versoes');
+    try {
+      const r = await fetch('versoes.json'); if (!r.ok) throw new Error(String(r.status)); const vs = (await r.json()).versoes; box.innerHTML = '';
+      const grupos = [...new Set(vs.map((v) => v.grupo))];
+      for (const g of grupos) {
+        const sec = el('div', 'group'); sec.appendChild(el('div', 'group-label', g));
+        for (const v of vs.filter((x) => x.grupo === g)) {
+          const d = el('details', 'ver'), sm = el('summary'); sm.appendChild(el('b', '', v.nome)); sm.appendChild(el('span', 'sit ' + v.situacao.normalize('NFD').replace(/[^a-z ]/gi, '').replace(/ /g, '-'), v.situacao));
+          sm.appendChild(el('span', 'data', (v.data ? v.data.split('-').reverse().join('/') : 'sem data') + (v.pasta ? ' · ' + v.pasta : ''))); d.appendChild(sm);
+          const c = el('div', 'corpo'); c.appendChild(el('p', '', v.descricao)).style.margin = '0';
+          if (v.imagem) { const im = el('img'); im.loading = 'lazy'; im.src = v.imagem; im.alt = 'Imagem da versão ' + v.nome; c.appendChild(im); }
+          for (const [t, arr] of [['Alterações', v.mudancas], ['Testes', v.testes], ['Arquivos', v.arquivos]]) if (arr && arr.length) { c.appendChild(el('div', 'group-label', t)); const ul = el('ul'); arr.forEach((x) => ul.appendChild(el('li', '', x))); c.appendChild(ul); }
+          if (v.relatorio) { const pr = el('p', '', 'Relatório: '); pr.style.margin = '0'; pr.appendChild(el('code', '', v.relatorio)); c.appendChild(pr); }
+          const lab = el('label', 'row'); const cb = el('input'); cb.type = 'checkbox'; cb.id = 'cmp-' + v.id; lab.appendChild(cb); lab.appendChild(document.createTextNode(' Comparar'));
+          cb.onchange = () => {
+            if (cb.checked) { cmpSel.push(v.id); if (cmpSel.length > 2) { const fora = cmpSel.shift(); const o = $('cmp-' + fora); if (o) o.checked = false; } } else cmpSel.splice(cmpSel.indexOf(v.id), 1);
+            desenharCmp(vs); if (cmpSel.length === 2) $('cmpBox').scrollIntoView({ block: 'nearest' });
+          };
+          c.appendChild(lab); d.appendChild(c); sec.appendChild(d);
+        }
+        box.appendChild(sec);
+      }
+    } catch (e) { box.innerHTML = ''; box.appendChild(el('p', 'hint', 'Não consegui carregar a lista de versões (versoes.json).')); }
   }
 
   // ---------- losangos do olhar: um sobre cada olho; arrastar move o olhar (controle_olhar)
@@ -606,7 +756,7 @@ button:disabled { opacity: 0.45; cursor: default; }
     const lado = selected && /\.(L|R)$/.test(selected) && /^(hand|forearm|dedo|polegar|metacarpo)/.test(selected) ? selected.slice(-1) : null;
     for (const d of dots) {
       const n = d.userData.bone;
-      d.visible = !isFinger(n) || lado === n.slice(-1);      // pontos dos dedos aparecem quando a mão daquele lado está escolhida
+      d.visible = mostrarPontos && (!isFinger(n) || lado === n.slice(-1));      // pontos dos dedos aparecem quando a mão daquele lado está escolhida
       bones[n].getWorldPosition(tmp); d.position.copy(tmp);
       d.material.color.set(d.userData.bone === selected ? 0x5b3a2e : 0xf4b642);
     }
@@ -695,6 +845,7 @@ button:disabled { opacity: 0.45; cursor: default; }
 
   // ---------- interface
   function select(n) {
+    if (n && travados.has(n)) { $('selChip').innerHTML = `<span>Travada:</span> ${label(n)}`; return; }
     selected = n;
     if (n) { gizmo.attach(bones[n]); $('boneSel').value = n; } else gizmo.detach();
     $('selChip').innerHTML = `<span>Articulação:</span> ${n ? label(n) : 'nenhuma'}`;

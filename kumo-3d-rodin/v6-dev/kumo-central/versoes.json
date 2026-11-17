@@ -1,0 +1,445 @@
+{
+ "gerado_de": "kumo-central/gerar_versoes.py",
+ "versoes": [
+  {
+   "id": "oficial",
+   "nome": "Modelo oficial",
+   "grupo": "Kumo 3D",
+   "situacao": "oficial",
+   "pasta": "kumo-3d-rodin/kumo_rigged.blend",
+   "relatorio": "kumo-3d-rodin/README.md",
+   "descricao": "Modelo gerado no Rodin, com malha em quads, textura e rig. É a referência de aparência do 3D.",
+   "mudancas": [
+    "Base de todas as versões seguintes"
+   ],
+   "testes": [
+    "Protegido por conferência de hash: 27 arquivos intactos"
+   ],
+   "arquivos": [
+    "kumo_rigged.blend",
+    "textures/"
+   ],
+   "data": "2026-11-10",
+   "imagem": "versoes/oficial.jpg",
+   "origem_imagem": "kumo-3d-rodin/renders/rig-rest-apose-front.png"
+  },
+  {
+   "id": "olhos-v1",
+   "nome": "Olhos v1",
+   "grupo": "Olhos",
+   "situacao": "substituída",
+   "pasta": "kumo-3d-rodin/olhos-v1",
+   "relatorio": "kumo-3d-rodin/olhos-v1/RELATORIO-OLHOS-V1.md",
+   "descricao": "Primeira versão dos olhos com piscada.",
+   "mudancas": [
+    "Piscada"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "olhos-v1/"
+   ],
+   "data": "2026-11-10",
+   "imagem": "versoes/olhos-v1.jpg",
+   "origem_imagem": "kumo-3d-rodin/olhos-v1/renders/02-fechamento.png"
+  },
+  {
+   "id": "olhos-v2",
+   "nome": "Olhos v2",
+   "grupo": "Olhos",
+   "situacao": "substituída",
+   "pasta": "kumo-3d-rodin/olhos-v2",
+   "relatorio": "kumo-3d-rodin/olhos-v2/RELATORIO-OLHOS-V2.md",
+   "descricao": "Pálpebra refeita e rotação do olho.",
+   "mudancas": [
+    "Pálpebra",
+    "Rotação do olho"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "olhos-v2/"
+   ],
+   "data": "2026-11-10",
+   "imagem": "versoes/olhos-v2.jpg",
+   "origem_imagem": "kumo-3d-rodin/olhos-v2/renders/09-palpebra-v1-x-v2.png"
+  },
+  {
+   "id": "olhos-v3",
+   "nome": "Olhos v3",
+   "grupo": "Olhos",
+   "situacao": "substituída",
+   "pasta": "kumo-3d-rodin/olhos-v3",
+   "relatorio": "kumo-3d-rodin/olhos-v3/RELATORIO-OLHOS-V3.md",
+   "descricao": "Ajustes sobre a v2.",
+   "mudancas": [
+    "Ver relatório"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "olhos-v3/"
+   ],
+   "data": "2026-11-10",
+   "imagem": "versoes/olhos-v3.jpg",
+   "origem_imagem": "kumo-3d-rodin/olhos-v3/renders/09-v2-x-v3-frente.png"
+  },
+  {
+   "id": "olhos-v4",
+   "nome": "Olhos v4",
+   "grupo": "Olhos",
+   "situacao": "substituída",
+   "pasta": "kumo-3d-rodin/olhos-v4",
+   "relatorio": "kumo-3d-rodin/olhos-v4/RELATORIO-OLHOS-V4.md",
+   "descricao": "Ajustes sobre a v3.",
+   "mudancas": [
+    "Ver relatório"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "olhos-v4/"
+   ],
+   "data": "2026-11-10",
+   "imagem": "versoes/olhos-v4.jpg",
+   "origem_imagem": "kumo-3d-rodin/olhos-v4/renders/09-v3-x-v4-34.png"
+  },
+  {
+   "id": "olhos-v5",
+   "nome": "Olhos v5 (variante B)",
+   "grupo": "Olhos",
+   "situacao": "em avaliação",
+   "pasta": "kumo-3d-rodin/olhos-v5",
+   "relatorio": "kumo-3d-rodin/olhos-v5/RELATORIO-OLHOS-V5.md",
+   "descricao": "Linha de olhos que mantém a aparência do Kumo. É a base dos olhos de jogo. A aprovação visual do Caio segue registrada como pendente (decisão D8a).",
+   "mudancas": [
+    "Olhos presos à pele",
+    "Piscada por máscara",
+    "Olhar ±11°"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "kumo_eyes_exp.blend",
+    "textures/"
+   ],
+   "data": "2026-11-11",
+   "imagem": "versoes/olhos-v5.jpg",
+   "origem_imagem": "kumo-3d-rodin/olhos-v5/renders/14-aparo-A-x-B.png"
+  },
+  {
+   "id": "p1",
+   "nome": "P1 iterações 1 a 3",
+   "grupo": "Braços e mãos",
+   "situacao": "reprovada",
+   "pasta": "kumo-3d-rodin/v6-dev/p1",
+   "relatorio": "kumo-3d-rodin/v6-dev/p1/RELATORIO.md",
+   "descricao": "Braço e mão novos. Reprovado na avaliação do próprio Claude.",
+   "mudancas": [
+    "Braço esquerdo e mão refeitos"
+   ],
+   "testes": [
+    "Cotovelo e punho pioraram em relação ao original"
+   ],
+   "arquivos": [
+    "p1_braco_mao.blend"
+   ],
+   "data": "2026-11-11",
+   "imagem": "versoes/p1.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/p1/p1-prancha-iter3.png"
+  },
+  {
+   "id": "p1-iter4",
+   "nome": "P1 iteração 4",
+   "grupo": "Braços e mãos",
+   "situacao": "substituída",
+   "pasta": "kumo-3d-rodin/v6-dev/p1-iter4",
+   "relatorio": "kumo-3d-rodin/v6-dev/p1-iter4/RELATORIO.md",
+   "descricao": "Nova tentativa do braço e da mão.",
+   "mudancas": [
+    "Ver relatório"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "p1-iter4/"
+   ],
+   "data": "2026-11-11",
+   "imagem": "versoes/p1-iter4.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/p1-iter4/p1i4-poses.png"
+  },
+  {
+   "id": "p1-iter5",
+   "nome": "P1 iteração 5",
+   "grupo": "Braços e mãos",
+   "situacao": "substituída",
+   "pasta": "kumo-3d-rodin/v6-dev/p1-iter5",
+   "relatorio": "kumo-3d-rodin/v6-dev/p1-iter5/RELATORIO.md",
+   "descricao": "Ajuste do punho.",
+   "mudancas": [
+    "Punho"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "p1-iter5/"
+   ],
+   "data": "2026-11-11",
+   "imagem": "versoes/p1-iter5.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/p1-iter5/p1i5-punho-2x-vs-2.5x.png"
+  },
+  {
+   "id": "p1-iter6",
+   "nome": "P1 iteração 6",
+   "grupo": "Braços e mãos",
+   "situacao": "substituída",
+   "pasta": "kumo-3d-rodin/v6-dev/p1-iter6",
+   "relatorio": "kumo-3d-rodin/v6-dev/p1-iter6/RELATORIO.md",
+   "descricao": "Propostas de estilo da mão.",
+   "mudancas": [
+    "Encaixe",
+    "Estilos de mão"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "p1-iter6/"
+   ],
+   "data": "2026-11-11",
+   "imagem": "versoes/p1-iter6.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/p1-iter6/p1i6-comparacao-vistas.png"
+  },
+  {
+   "id": "p1-iter7",
+   "nome": "P1 iteração 7 (mão A7)",
+   "grupo": "Braços e mãos",
+   "situacao": "substituída",
+   "pasta": "kumo-3d-rodin/v6-dev/p1-iter7",
+   "relatorio": "kumo-3d-rodin/v6-dev/p1-iter7/RELATORIO.md",
+   "descricao": "Proporções e silhueta da mão. Depois o Caio pediu para manter os braços originais, e esta linha parou.",
+   "mudancas": [
+    "Palma mais longa e mais estreita"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "p1-iter7/"
+   ],
+   "data": "2026-11-11",
+   "imagem": "versoes/p1-iter7.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/p1-iter7/p1i7-comparacao-vistas.png"
+  },
+  {
+   "id": "bracos-dedos",
+   "nome": "Braços originais + mãos com dedos",
+   "grupo": "Braços e mãos",
+   "situacao": "em uso",
+   "pasta": "kumo-3d-rodin/v6-dev/bracos-originais-dedos",
+   "relatorio": "kumo-3d-rodin/v6-dev/bracos-originais-dedos/RELATORIO.md",
+   "descricao": "Pedido do Caio: manter os braços antigos e criar mãos com 3 dedos e polegar, no estilo do Kumo.",
+   "mudancas": [
+    "Mão em luva costurada ao punho original",
+    "3 dedos e polegar com ossos"
+   ],
+   "testes": [
+    "Ver relatório"
+   ],
+   "arquivos": [
+    "bracos-originais-dedos/"
+   ],
+   "data": "2026-11-11",
+   "imagem": "versoes/bracos-dedos.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/bracos-originais-dedos/renders/dedos_R_repouso_perspectiva.png"
+  },
+  {
+   "id": "maos-corretivas",
+   "nome": "Mãos: correção da mão fechada e contorno",
+   "grupo": "Braços e mãos",
+   "situacao": "em uso",
+   "pasta": "kumo-3d-rodin/v6-dev/maos-corretivas",
+   "relatorio": "kumo-3d-rodin/v6-dev/maos-corretivas/RELATORIO.md",
+   "descricao": "Correção automática da pele com a mão fechada e contorno próprio para jogo.",
+   "mudancas": [
+    "Shape key corretiva da mão fechada",
+    "Contorno de jogo"
+   ],
+   "testes": [
+    "Mão fechada: 0 cruzamentos",
+    "FBX e GLB reimportados"
+   ],
+   "arquivos": [
+    "kumo_v6_maos_jogo.blend",
+    ".glb",
+    ".fbx"
+   ],
+   "data": "2026-11-11",
+   "imagem": "versoes/maos-corretivas.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/maos-corretivas/comparacao_fechar_50.png"
+  },
+  {
+   "id": "olhos-jogo",
+   "nome": "Olhos de jogo",
+   "grupo": "Olhos",
+   "situacao": "em uso",
+   "pasta": "kumo-3d-rodin/v6-dev/olhos-jogo",
+   "relatorio": "kumo-3d-rodin/v6-dev/olhos-jogo/RELATORIO.md",
+   "descricao": "Os olhos da v5 convertidos para ossos e shape keys, que exportam para jogo.",
+   "mudancas": [
+    "Camadas de íris, pupila, brilho e pálpebras",
+    "Controles por osso"
+   ],
+   "testes": [
+    "Reimportação GLB e FBX: 0,0 mm",
+    "Diferença média para a v5 em repouso: 0,4 de 255"
+   ],
+   "arquivos": [
+    "kumo_v6_olhos_jogo.blend"
+   ],
+   "data": "2026-11-12",
+   "imagem": "versoes/olhos-jogo.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/olhos-jogo/comparacao-v5-x-jogo.png"
+  },
+  {
+   "id": "ombros",
+   "nome": "Ombros e olhar sem buracos",
+   "grupo": "Kumo 3D",
+   "situacao": "em uso",
+   "pasta": "kumo-3d-rodin/v6-dev/ombros",
+   "relatorio": "kumo-3d-rodin/v6-dev/ombros/RELATORIO.md",
+   "descricao": "Junta do ombro mais alta, ombro automático, pesos suaves e corretivas. Depois: transparência dos olhos no GLB e olhar intermediário.",
+   "mudancas": [
+    "Junta do ombro em z 0,83",
+    "Ombro automático",
+    "8 shape keys de ombro",
+    "Olhar com posições intermediárias"
+   ],
+   "testes": [
+    "Erguer 90°: 0 cruzamentos",
+    "Braço esquerdo à frente 90°: 29 (pendente)",
+    "Reimportação: até 0,055 mm"
+   ],
+   "arquivos": [
+    "kumo_v6_ombros.blend",
+    "kumo_v6_jogo.glb",
+    ".fbx"
+   ],
+   "data": "2026-11-12",
+   "imagem": "versoes/ombros.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/ombros/ombros-antes-x-agora.png"
+  },
+  {
+   "id": "boca",
+   "nome": "Boca e língua",
+   "grupo": "Kumo 3D",
+   "situacao": "atual",
+   "pasta": "kumo-3d-rodin/v6-dev/boca",
+   "relatorio": "kumo-3d-rodin/v6-dev/boca/RELATORIO.md",
+   "descricao": "Versão atual do Kumo de jogo: boca anatômica sem dentes, interior vermelho escuro e língua retrátil de camaleão. É o modelo que esta página mostra.",
+   "mudancas": [
+    "Corte da boca na borda da textura",
+    "Osso da mandíbula",
+    "Interior da boca",
+    "Língua com 12 ossos",
+    "Animações Boca_Abrir e Lingua_Lancar"
+   ],
+   "testes": [
+    "Reimportação GLB e FBX: 0,0 mm",
+    "Kumo parado: igual, salvo a moldura dos olhos na região da boca"
+   ],
+   "arquivos": [
+    "kumo_v6_boca.blend",
+    "kumo_v6_jogo.glb",
+    ".fbx"
+   ],
+   "data": "2026-11-15",
+   "imagem": "versoes/boca.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/boca/fotos/lingua.png"
+  },
+  {
+   "id": "p2",
+   "nome": "P2 (cabeça e olhos novos)",
+   "grupo": "Kumo 3D",
+   "situacao": "apagada",
+   "pasta": "",
+   "relatorio": "kumo-3d-rodin/v6-dev/DECISOES.md",
+   "descricao": "Duas tentativas de cabeça e olhos novos. O Caio reprovou o visual e pediu para apagar (decisões D7 e D8). Daí veio a regra: o Kumo mantém a aparência.",
+   "mudancas": [],
+   "testes": [],
+   "arquivos": [],
+   "data": "2026-11-12",
+   "imagem": ""
+  },
+  {
+   "id": "toon",
+   "nome": "Modelo 2,5D procedural",
+   "grupo": "Outros",
+   "situacao": "arquivada",
+   "pasta": "kumo-3d-toon",
+   "relatorio": "kumo-3d-toon/ARQUIVADO.md",
+   "descricao": "Primeiro modelo 3D, feito por código. Deixou de ser o oficial em 10/11, quando entrou o modelo do Rodin.",
+   "mudancas": [],
+   "testes": [],
+   "arquivos": [
+    "kumo_toon.blend"
+   ],
+   "data": "2026-11-09",
+   "imagem": "versoes/toon.jpg",
+   "origem_imagem": "kumo-3d-toon/kumo-toon-sheet.png"
+  },
+  {
+   "id": "2d",
+   "nome": "Kumo 2D: camadas e animação 2",
+   "grupo": "Outros",
+   "situacao": "em uso",
+   "pasta": "animacao-2d",
+   "relatorio": "animacao-2d/LEIAME.md",
+   "descricao": "Arte original separada em camadas, rig de recorte e animação de 5 segundos conferida pela planilha de tempo.",
+   "mudancas": [
+    "Camadas fiéis à arte",
+    "Planilha de tempo"
+   ],
+   "testes": [
+    "Montagem em repouso: diferença zero",
+    "18 regras de tempo passam"
+   ],
+   "arquivos": [
+    "camadas/",
+    "kumo-animacao-2.mp4"
+   ],
+   "data": "2026-11-12",
+   "imagem": "versoes/2d.jpg",
+   "origem_imagem": "animacao-2d/kumo-animacao-2-quadros.png"
+  },
+  {
+   "id": "desenho",
+   "nome": "Testes de desenho",
+   "grupo": "Outros",
+   "situacao": "em avaliação",
+   "pasta": "testes-desenho",
+   "relatorio": "testes-desenho/README.md",
+   "descricao": "Cópia do 3D pintada com os desenhos aprovados, para gerar o Kumo desenhado em qualquer pose.",
+   "mudancas": [
+    "Projeção dos desenhos na cópia 3D",
+    "12 poses"
+   ],
+   "testes": [
+    "Cor: costas 22, perfil 34, 3/4 44, frente 54 (0 = igual)"
+   ],
+   "arquivos": [
+    "teste-02-kumo-3d-desenho/"
+   ],
+   "data": "2026-11-13",
+   "imagem": "versoes/desenho.jpg",
+   "origem_imagem": "testes-desenho/teste-02-kumo-3d-desenho/folha-poses.png"
+  }
+ ]
+}
