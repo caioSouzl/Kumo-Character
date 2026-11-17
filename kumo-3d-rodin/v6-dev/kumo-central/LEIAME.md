@@ -64,6 +64,19 @@ Navegador automático, em tela de computador e de celular:
   - escrita como visitante recusada pelo banco (regra de dono funcionando).
 - **Limites:** a lista de tarefas não se atualiza sozinha a partir do repositório; quem muda é o Caio na página (ou eu, quando ele pedir).
 
+## Fase 4 (feita): assistente e fila de pedidos
+- **Aba Assistente:** conversa com o Claude dentro da Central.
+  - A cada mensagem ele recebe o estado da tela: aba aberta, componente escolhido, articulações fora do repouso, rosto, quadros da animação, etapas e tarefas, versões e a fila.
+  - Pode mexer na pose, no rosto e nas poses prontas **só na tela** (tudo volta com Desfazer). Abaixo da resposta aparece o que ele mexeu.
+  - Não abre arquivos, não usa o Blender e não altera o projeto. Quando o pedido exige isso, ele mostra um **rascunho de pedido**; só entra na fila quando o Caio toca em "Adicionar à fila".
+  - Usa a conta do claude.ai de quem está vendo (sem chave de API na página). Na primeira pergunta o claude.ai pede permissão.
+- **Fila de pedidos** (coleção `pedidos` no banco da página):
+  - situações: novo, lido, em andamento, feito, recusado;
+  - pedido que mexeria nos arquivos oficiais tem a caixa "Autorizo…", desmarcada por padrão;
+  - o Claude Code lê a fila quando o Caio pede na conversa e escreve a resposta no pedido. A página não chama o Claude Code sozinha.
+  - só o dono escreve; quem só vê, lê.
+- **Testes:** no celular, com um Claude simulado: o contexto chegou completo; girar o braço, abrir a boca, articulação inexistente recusada, rascunho com aviso de arquivo oficial, adicionar à fila, autorizar, trocar situação, pedido escrito à mão, Desfazer, sem rolagem lateral e sem erros. No banco real: escrita de visitante recusada.
+- **Limites:** a conversa some ao recarregar a página; o assistente não vê as imagens do palco; cada pergunta gasta o uso do claude.ai de quem pergunta.
+
 ## Próximas fases
-4. Assistente Claude com contexto e fila de pedidos.
 5. Botões próprios, layouts e atalhos.
