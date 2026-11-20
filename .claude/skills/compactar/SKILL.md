@@ -26,3 +26,15 @@ Quando o usuário escrever **compactar**, produza um resumo da conversa **inteir
   - depois, os pontos numerados de 1 a 5–7, cada um com um título curto em negrito e o conteúdo em tópicos;
   - trechos de código dentro do ponto a que pertencem, em blocos de três crases.
 - Depois do bloco, não escreva mais nada.
+
+## Ambiente Claude Code (terminal, app desktop, web)
+
+Use esta seção quando a conversa acontecer no Claude Code, que é um ambiente de programação com acesso a arquivos e terminal, e não num chat comum.
+
+1. **Mesmo formato:** continue com 5 a 7 pontos, o bloco único de quatro crases e a linha de abertura. A diferença está só no conteúdo.
+2. **Repositório e branch:** diga o caminho do projeto e o branch ativo. Se houve commit ou push, diga o hash ou o nome do branch, nunca invente.
+3. **Arquivos:** liste os caminhos alterados ou criados nesta sessão, com o estado de cada um: salvo, commitado, enviado ou só no disco.
+4. **Comandos:** copie só os comandos que foram executados e que importam para retomar, como testes, builds e scripts de render, com o resultado real (passou, falhou, valor medido).
+5. **Ferramentas externas:** cite o que estava conectado (MCP, sessões remotas, capacidades de página) e o que não foi testado de verdade.
+6. **Não copie o conteúdo de arquivos grandes** nem saídas de terminal longas. Resuma e aponte o caminho.
+7. **Ao final:** se o usuário pedir, grave o resumo também em um arquivo `RESUMO-<data>.md` na raiz do projeto ou no rascunho da sessão, mas só quando ele pedir.
