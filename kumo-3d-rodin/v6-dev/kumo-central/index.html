@@ -192,6 +192,39 @@ button:disabled { opacity: 0.45; cursor: default; }
 .sit.novo { background: var(--amber); color: #2a1d0a; border-color: transparent; }
 .sit.feito { background: var(--leaf, #3f9a62); color: #fff; border-color: transparent; }
 .sit.recusado { opacity: .7; text-decoration: line-through; }
+/* Fase 5: barra de botões próprios, layouts e atalhos */
+.tl-row .mark { min-height: 0; padding: 0; }
+.tab:hover:not([aria-selected="true"]) { border-bottom-color: transparent; }
+.quickbar { left: max(16px, env(safe-area-inset-left, 0px)); right: 16px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); gap: 6px; overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; pointer-events: none; }
+.quickbar > * { pointer-events: auto; flex: 0 0 auto; }
+.quickbar select { width: auto; padding: 6px 8px; font-weight: 700; background: var(--panel); }
+.qb { background: var(--panel); padding: 6px 11px; white-space: nowrap; border-left-width: 4px; }
+.qb.verde, .mb.verde { border-left-color: var(--leaf); } .qb.ambar, .mb.ambar { border-left-color: var(--amber); } .qb.marrom, .mb.marrom { border-left-color: var(--bark); }
+.qb kbd, .mb kbd { font-family: var(--font-data); font-size: 10.5px; color: var(--muted); margin-left: 6px; }
+.mbs { display: grid; gap: 6px; }
+.mb { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 8px; align-items: center; border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 10px; padding: 8px 10px; background: var(--bg); }
+.mb .nm { font-weight: 700; overflow-wrap: anywhere; } .mb .tp { grid-column: 1 / 3; color: var(--muted); font-size: 12px; }
+.mb .acoes { grid-column: 1 / 3; display: flex; flex-wrap: wrap; gap: 6px; }
+.mb .acoes button { padding: 5px 9px; font-size: 12px; }
+.form5 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.form5 label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; color: var(--muted); min-width: 0; }
+.form5 input[type=text] { font: 13px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 7px 9px; min-width: 0; }
+.form5 .larga { grid-column: 1 / 3; }
+.form5 .chk { display: flex; gap: 8px; align-items: center; color: var(--ink); font-weight: 600; font-size: 13px; }
+.abas5 { display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.abas5 label { display: flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 600; color: var(--ink); }
+.atalhos { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; font-size: 13px; margin: 0; }
+.atalhos dt { white-space: nowrap; } .atalhos dd { margin: 0; color: var(--muted); }
+@media (min-width: 821px) {
+  .app.esq { grid-template-columns: 360px minmax(0, 1fr); }
+  .app.esq .panel { order: -1; border-left: 0; border-right: 1px solid var(--line); }
+}
+@media (max-width: 820px) {
+  .app { grid-template-rows: var(--palco, 52vh) minmax(0, 1fr); }
+  .quickbar { position: static; padding: 6px max(12px, env(safe-area-inset-right, 0px)) 6px max(12px, env(safe-area-inset-left, 0px)); border-top: 1px solid var(--line); background: var(--panel); }
+  .quickbar select, .qb { min-height: 36px; }
+  .form5 { grid-template-columns: 1fr; } .form5 .larga { grid-column: 1; }
+}
 </style>
 
 <div class="app">
@@ -213,6 +246,9 @@ button:disabled { opacity: 0.45; cursor: default; }
       </select>
       <button id="enquadrar" title="Volta a mostrar o Kumo inteiro" aria-label="Enquadrar">⤢<span class="lbl"> Enquadrar</span></button>
       <button id="tema" title="Tema: sistema, claro ou escuro" aria-label="Tema">◐<span class="lbl"> Tema</span></button>
+    </div>
+    <div class="hud quickbar" id="quickbar" role="toolbar" aria-label="Meus botões">
+      <select id="layoutSel" aria-label="Layout" title="Troca o arranjo da tela"></select>
     </div>
     <div class="hud timeline" aria-label="Linha do tempo">
       <div class="tl-row">
@@ -238,6 +274,7 @@ button:disabled { opacity: 0.45; cursor: default; }
       <button class="tab" role="tab" aria-selected="false" data-tab="ver">Versões</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="etapas">Etapas</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="ia">Assistente</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="pers">Personalizar</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="arq">Projeto</button>
     </div>
 
@@ -276,7 +313,7 @@ button:disabled { opacity: 0.45; cursor: default; }
         <div class="slider"><label for="tailCurl">Enrolar</label><input type="range" id="tailCurl" min="-60" max="60" step="1" value="0"><output id="otail">0°</output></div>
         <div class="slider"><label for="tailSwing">Abanar</label><input type="range" id="tailSwing" min="-40" max="40" step="1" value="0"><output id="otsw">0°</output></div>
       </div>
-      <p class="hint kbd-hint"><span class="kbd">Esc</span> solta a articulação · <span class="kbd">Espaço</span> toca ou pausa · <span class="kbd">K</span> grava quadro</p>
+      <p class="hint kbd-hint"><span class="kbd">Esc</span> solta a articulação · <span class="kbd">Espaço</span> toca ou pausa · <span class="kbd">K</span> grava quadro · todos os atalhos na aba Personalizar</p>
     </div>
 
     <div class="pane" data-pane="maos" hidden>
@@ -356,6 +393,44 @@ button:disabled { opacity: 0.45; cursor: default; }
         <p class="hint">Pedidos para o Claude Code (a sessão de trabalho no repositório). A página não chama o Claude Code sozinha: ele lê a fila quando você pedir na conversa (“veja a fila”) e escreve a resposta aqui. Pedido que mexe nos arquivos oficiais só anda com a sua autorização marcada.</p>
         <form class="nova" id="novoPedido" hidden><input id="novoPedidoTxt" placeholder="Novo pedido" maxlength="300" aria-label="Novo pedido"><button class="primary">Adicionar</button></form>
         <div id="fila"><p class="hint">Carregando a fila…</p></div>
+      </div>
+    </div>
+
+    <div class="pane" data-pane="pers" hidden>
+      <p class="hint">Crie botões que guardam uma pose, uma vista ou uma animação; escolha como a tela se arranja; e veja os atalhos de teclado. Botões e layouts salvos valem em todos os aparelhos. Nada aqui altera arquivos do projeto.</p>
+      <div class="group">
+        <div class="group-label">Meus botões</div>
+        <div class="mbs" id="mbLista"><p class="hint">Carregando os botões…</p></div>
+        <form class="form5" id="mbForm" hidden>
+          <label class="larga">Nome<input type="text" id="mbNome" maxlength="40" placeholder="Ex.: Pose de aceno, Vista do rosto"></label>
+          <label>Guarda<select id="mbTipo"><option value="pose">A pose atual (corpo, mãos e rosto)</option><option value="vista">A vista atual (câmera e modo)</option><option value="anim">A animação atual (quadros-chave)</option></select></label>
+          <label>Cor<select id="mbCor"><option value="verde">Verde</option><option value="ambar">Âmbar</option><option value="marrom">Marrom</option></select></label>
+          <label>Tecla (opcional)<input type="text" id="mbTecla" maxlength="1" placeholder="Ex.: a" autocapitalize="off" autocomplete="off"></label>
+          <label class="chk"><input type="checkbox" id="mbBarra" checked> Mostrar na barra do palco</label>
+          <div class="row larga"><button class="primary" id="mbCriar">Criar botão</button></div>
+        </form>
+        <p class="status" id="mbStatus"></p>
+      </div>
+      <div class="group">
+        <div class="group-label">Layouts</div>
+        <p class="hint">Um layout escolhe quais abas aparecem, a aba que abre, o tamanho do palco e as barras. O layout em uso fica lembrado neste aparelho.</p>
+        <div class="chips" id="lyLista"></div>
+        <div class="form5" id="lyEditor">
+          <div class="larga"><div class="group-label">Abas que aparecem</div><div class="abas5" id="lyAbas"></div></div>
+          <label>Abre na aba<select id="lyInicial"></select></label>
+          <label>Palco no celular<select id="lyPalco"><option value="p">Pequeno</option><option value="m">Médio</option><option value="g">Grande</option></select></label>
+          <label>Painel no computador<select id="lyLado"><option value="dir">À direita</option><option value="esq">À esquerda</option></select></label>
+          <label class="chk"><input type="checkbox" id="lyVista"> Barra de visualização</label>
+          <label class="chk"><input type="checkbox" id="lyTempo"> Linha do tempo</label>
+          <label class="chk"><input type="checkbox" id="lyBotoes"> Barra de botões</label>
+          <div class="row larga" id="lySalvarBox" hidden><input type="text" id="lyNome" maxlength="40" placeholder="Nome do layout" aria-label="Nome do layout" style="flex:1 1 140px;font:13px var(--font-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 9px;min-width:0"><button class="primary" id="lySalvar">Salvar como novo</button><button id="lyAtualizar" hidden>Atualizar este</button><button id="lyApagar" hidden>Apagar este</button></div>
+        </div>
+        <p class="status" id="lyStatus"></p>
+      </div>
+      <div class="group">
+        <div class="group-label">Atalhos de teclado</div>
+        <p class="hint">Para teclado físico (no computador ou num teclado ligado ao celular). No toque, a barra de botões do palco faz o papel dos atalhos.</p>
+        <dl class="atalhos" id="atalhos"></dl>
       </div>
     </div>
 
@@ -815,7 +890,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   let pedidos = [], versoesCache = null, iaSample = null, iaCtl = null; const iaTurnos = [];
   const REGRAS_IA = `Você é o assistente da Central do Kumo, uma página de trabalho do Caio. Responda sempre em português do Brasil, curto e direto, sem markdown (sem **, sem #); listas com "- ".
 Sobre o projeto: Kumo é um camaleão low-poly feito no Blender (rig com ombro automático, olhos em camadas, boca anatômica sem dentes com interior vermelho escuro, língua retrátil). O jogo será em 3D. Regras do Caio, que você nunca contraria: a aparência do Kumo está travada, nada de mudar o visual; os arquivos oficiais (kumo_rigged.blend, texturas, olhos v1 a v5) nunca são alterados; a boca não é desenhada, faz parte da anatomia; sem dentes.
-O que você pode fazer: explicar, planejar, revisar o progresso e mexer na pose do Kumo APENAS na tela desta página, com as ferramentas girar_articulacao, pose_pronta e rosto (tudo pode ser desfeito com o botão Desfazer da aba Pose). Você NÃO abre arquivos, NÃO executa nada no Blender e NÃO altera o projeto. Se o Caio pedir algo que exige mexer no projeto (animação nova, correção no modelo, exportação, mudança na página), use propor_pedido para deixar um rascunho; ele decide se entra na fila do Claude Code. Nunca diga que fez algo que não fez. Se faltar informação, diga o que falta.
+O que você pode fazer: explicar, planejar, revisar o progresso e mexer na pose do Kumo APENAS na tela desta página, com as ferramentas girar_articulacao, pose_pronta, rosto e usar_botao (tudo pode ser desfeito com o botão Desfazer da aba Pose). Você NÃO abre arquivos, NÃO executa nada no Blender e NÃO altera o projeto. Se o Caio pedir algo que exige mexer no projeto (animação nova, correção no modelo, exportação, mudança na página), use propor_pedido para deixar um rascunho; ele decide se entra na fila do Claude Code. Nunca diga que fez algo que não fez. Se faltar informação, diga o que falta.
 Ângulos em graus. "Dobrar" é o eixo X do osso, "torcer" o Y, "inclinar" o Z, relativos ao repouso.`;
   function iaContexto() {
     const r1 = (x) => Math.round(x * 10) / 10;
@@ -833,6 +908,8 @@ Articulações fora do repouso (dobrar, torcer, inclinar): ${pose.length ? '\n' 
 Rosto: ${rosto}
 Animação: ${keys.length} quadros-chave, duração ${duration} s
 Poses prontas disponíveis: ${Object.keys(PRESETS).join(', ')}
+Botões do Caio (usar_botao): ${botoes.length ? botoes.map((b) => `${b.nome} [${TIPO_NOME[b.tipo] || b.tipo}]`).join(', ') : 'nenhum'}
+Layout em uso: ${layoutAtual().nome}
 Articulações existentes: ${order.filter((n) => !/^(ORG|DEF|MCH)/.test(n)).join(', ')}
 
 ETAPAS E TAREFAS
@@ -860,6 +937,9 @@ ${fila}`;
         execute(inp) { const mapa = [['boca', 'bocaAbrir', 0, 35], ['lingua', 'linguaAlc', 0, 2.4], ['piscar_esq', 'pisE', 0, 1], ['piscar_dir', 'pisD', 0, 1], ['olhar_x', 'olhX', -1, 1], ['olhar_y', 'olhY', -1, 1]]; const feitos = [];
           for (const [k, id, a, b] of mapa) if (inp[k] !== undefined && inp[k] !== null) { const x = $(id); x.value = String(num(inp[k], a, b, Number(x.value))); x.dispatchEvent(new Event('input')); feitos.push(k + ' ' + x.value); }
           onPoseEdited(); if (feitos.length) registro.push('rosto: ' + feitos.join(', ')); return feitos.length ? feitos : 'nada mudou'; } },
+      { name: 'usar_botao', description: 'Aperta um dos botões criados pelo Caio (pose, vista ou animação), só na tela. Retorna ok.',
+        inputSchema: { type: 'object', properties: { nome: { type: 'string', description: 'nome exato do botão' } }, required: ['nome'] },
+        execute(inp) { const b = botoes.find((x) => x.nome === String(inp.nome || '')); if (!b) throw new Error('botão não existe: ' + inp.nome); usarBotao(b); registro.push('botão: ' + b.nome); return 'ok'; } },
       { name: 'propor_pedido', description: 'Mostra ao Caio o rascunho de um pedido para a fila do Claude Code (trabalho que mexe no projeto). Não entra na fila sozinho: o Caio confirma. Use um título curto e um detalhe com o que fazer e como testar.',
         inputSchema: { type: 'object', properties: { titulo: { type: 'string' }, detalhe: { type: 'string' }, mexe_no_oficial: { type: 'boolean', description: 'true se exigiria alterar os arquivos oficiais do Kumo' } }, required: ['titulo', 'detalhe'] },
         execute(inp) { bolhaRasc({ titulo: String(inp.titulo || '').slice(0, 140), detalhe: String(inp.detalhe || '').slice(0, 1500), oficial: !!inp.mexe_no_oficial }); return 'rascunho mostrado ao Caio; só entra na fila se ele confirmar'; } },
@@ -1360,16 +1440,240 @@ ${fila}`;
   };
 
   iniciarAssistente();
-  // ---------- abas e teclado
-  document.querySelectorAll('.tab').forEach((t) => t.onclick = () => {
+  // ---------- Fase 5: botões próprios (coleção botoes), layouts (coleção layouts) e atalhos
+  const TIPO_NOME = { pose: 'pose', vista: 'vista', anim: 'animação' };
+  const ABAS = [...document.querySelectorAll('.tab')].map((t) => [t.dataset.tab, t.textContent]);
+  const PALCO = { p: '40vh', m: '52vh', g: '64vh' };
+  const LAYOUTS_PRONTOS = [
+    { id: 'completo', nome: 'Completo', abas: ABAS.map(([k]) => k), inicial: 'pose', palco: 'm', lado: 'dir', barraVista: true, linhaTempo: true, barraBotoes: true },
+    { id: 'rosto', nome: 'Rosto', abas: ['rosto', 'pose', 'ia', 'pers'], inicial: 'rosto', palco: 'g', lado: 'dir', barraVista: true, linhaTempo: true, barraBotoes: true },
+    { id: 'animacao', nome: 'Animação', abas: ['pose', 'maos', 'anim', 'pers', 'arq'], inicial: 'anim', palco: 'm', lado: 'dir', barraVista: true, linhaTempo: true, barraBotoes: true },
+    { id: 'revisao', nome: 'Revisão', abas: ['etapas', 'ver', 'comp', 'ia', 'pers'], inicial: 'etapas', palco: 'p', lado: 'dir', barraVista: true, linhaTempo: false, barraBotoes: true },
+  ];
+  // teclas fixas: [tecla mostrada, descrição, teste]
+  const ATALHOS = [
+    ['Esc', 'Solta a articulação escolhida'], ['Espaço', 'Toca ou pausa a animação'], ['K', 'Grava um quadro-chave'],
+    ['Ctrl+Z', 'Desfaz a pose'], ['Ctrl+Y', 'Refaz a pose'], ['F', 'Enquadra o Kumo'], ['O', 'Perspectiva ou ortográfica'],
+    ['M', 'Troca o modo (material, sólido, aramado)'], ['1 a 5', 'Vistas: padrão, frente, lado, costas, cima'], ['L', 'Próximo layout'],
+  ];
+  const RESERVADAS = new Set(['k', 'f', 'o', 'm', 'l', 'z', 'y', '1', '2', '3', '4', '5', ' ']);
+  let botoes = [], layoutsSalvos = [], podeEscrever5 = false, db5 = null, editLy = null;
+  const salvoAqui = (() => { try { return localStorage.getItem('kumo-central-layout') || 'completo'; } catch (e) { return 'completo'; } })();
+  let layoutId = salvoAqui;
+  const todosLayouts = () => [...LAYOUTS_PRONTOS, ...layoutsSalvos];
+  function layoutAtual() { return todosLayouts().find((l) => l.id === layoutId) || LAYOUTS_PRONTOS[0]; }
+  const erro5 = (e) => 'Não consegui salvar: ' + (e && e.code ? e.code : 'erro');
+
+  // abas
+  function abrirAba(id) {
+    const t = document.querySelector(`.tab[data-tab="${id}"]`); if (!t || t.hidden) return;
     document.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
-    document.querySelectorAll('.pane').forEach((p) => p.hidden = p.dataset.pane !== t.dataset.tab);
-  });
+    document.querySelectorAll('.pane').forEach((p) => p.hidden = p.dataset.pane !== id);
+    const bar = t.parentElement; bar.scrollLeft = Math.max(0, t.offsetLeft - (bar.clientWidth - t.offsetWidth) / 2);
+  }
+  document.querySelectorAll('.tab').forEach((t) => t.onclick = () => abrirAba(t.dataset.tab));
+
+  // aplicar um layout (a aba Personalizar nunca some: é por ela que se volta atrás)
+  function aplicarLayout(l, abrir) {
+    const abas = new Set([...(l.abas || []), 'pers']);
+    document.querySelectorAll('.tab').forEach((t) => { t.hidden = !abas.has(t.dataset.tab); });
+    const app = document.querySelector('.app');
+    app.style.setProperty('--palco', PALCO[l.palco] || PALCO.m); app.classList.toggle('esq', l.lado === 'esq');
+    document.querySelector('.toolbar').hidden = l.barraVista === false;
+    document.querySelector('.timeline').hidden = l.linhaTempo === false;
+    $('quickbar').hidden = l.barraBotoes === false;
+    const aberta = (document.querySelector('.tab[aria-selected="true"]') || {}).dataset;
+    if (abrir || !aberta || !abas.has(aberta.tab)) abrirAba(abas.has(l.inicial) ? l.inicial : [...abas][0]);
+    if (!editLy || editLy.id !== l.id) carregarEditor(l);
+    desenharLayouts(); desenharBarra(); resize();
+  }
+  function usarLayout(id) {
+    layoutId = id; try { localStorage.setItem('kumo-central-layout', id); } catch (e) { /* sem armazenamento: vale até recarregar */ }
+    editLy = null; aplicarLayout(layoutAtual(), true); $('lyStatus').textContent = 'Layout em uso: ' + layoutAtual().nome + '.';
+  }
+  function lerEditor() {
+    return { abas: [...$('lyAbas').querySelectorAll('input:checked')].map((c) => c.value), inicial: $('lyInicial').value, palco: $('lyPalco').value,
+      lado: $('lyLado').value, barraVista: $('lyVista').checked, linhaTempo: $('lyTempo').checked, barraBotoes: $('lyBotoes').checked };
+  }
+  function carregarEditor(l) {
+    editLy = l; const box = $('lyAbas'); box.innerHTML = '';
+    for (const [k, nome] of ABAS) {
+      const lab = el('label'); const c = el('input'); c.type = 'checkbox'; c.value = k; c.checked = k === 'pers' || (l.abas || []).includes(k); c.disabled = k === 'pers';
+      c.onchange = () => { preencherInicial(); previa(); };
+      lab.appendChild(c); lab.appendChild(document.createTextNode(nome)); box.appendChild(lab);
+    }
+    preencherInicial(l.inicial);
+    $('lyPalco').value = l.palco || 'm'; $('lyLado').value = l.lado || 'dir';
+    $('lyVista').checked = l.barraVista !== false; $('lyTempo').checked = l.linhaTempo !== false; $('lyBotoes').checked = l.barraBotoes !== false;
+    const meu = layoutsSalvos.some((x) => x.id === l.id);
+    $('lyAtualizar').hidden = !meu; $('lyApagar').hidden = !meu;
+  }
+  function preencherInicial(v) {
+    const atual = v || $('lyInicial').value, marcadas = [...$('lyAbas').querySelectorAll('input:checked')].map((c) => c.value);
+    $('lyInicial').innerHTML = ''; for (const [k, nome] of ABAS) if (marcadas.includes(k)) { const o = el('option', '', nome); o.value = k; $('lyInicial').appendChild(o); }
+    $('lyInicial').value = marcadas.includes(atual) ? atual : marcadas[0];
+  }
+  function previa() { aplicarLayout({ ...editLy, ...lerEditor() }); $('lyStatus').textContent = podeEscrever5 ? 'Mudança só na tela. Salve para guardar.' : 'Mudança só na tela, até recarregar.'; }
+  for (const id of ['lyInicial', 'lyPalco', 'lyLado', 'lyVista', 'lyTempo', 'lyBotoes']) $(id).onchange = previa;
+  function desenharLayouts() {
+    const box = $('lyLista'); box.innerHTML = ''; const sel = $('layoutSel'); sel.innerHTML = '';
+    for (const l of todosLayouts()) {
+      const b = el('button', 'chip' + (l.id === layoutId ? ' on' : ''), l.nome); b.setAttribute('aria-pressed', String(l.id === layoutId));
+      b.onclick = () => usarLayout(l.id); box.appendChild(b);
+      const o = el('option', '', 'Layout: ' + l.nome); o.value = l.id; sel.appendChild(o);
+    }
+    sel.value = layoutAtual().id;
+  }
+  $('layoutSel').onchange = () => usarLayout($('layoutSel').value);
+  $('lySalvar').onclick = async () => {
+    const nome = $('lyNome').value.trim(); if (!nome) { $('lyStatus').textContent = 'Dê um nome ao layout.'; $('lyNome').focus(); return; }
+    try { const r = await db5.collection('layouts').add({ nome, ...lerEditor(), ordem: Date.now(), criado: new Date().toISOString() }); $('lyNome').value = ''; layoutId = r.id; try { localStorage.setItem('kumo-central-layout', r.id); } catch (e) { /* ignora */ } $('lyStatus').textContent = `Layout “${nome}” salvo e em uso.`; }
+    catch (e) { $('lyStatus').textContent = erro5(e); }
+  };
+  $('lyAtualizar').onclick = async () => {
+    const l = layoutAtual(); if (!layoutsSalvos.some((x) => x.id === l.id)) return;
+    try { await db5.doc('layouts/' + l.id).update({ ...lerEditor(), atualizado: new Date().toISOString() }); $('lyStatus').textContent = `Layout “${l.nome}” atualizado.`; } catch (e) { $('lyStatus').textContent = erro5(e); }
+  };
+  $('lyApagar').onclick = async () => {
+    const l = layoutAtual(); if (!layoutsSalvos.some((x) => x.id === l.id) || !confirm(`Apagar o layout “${l.nome}”?`)) return;
+    try { await db5.doc('layouts/' + l.id).delete(); usarLayout('completo'); $('lyStatus').textContent = 'Layout apagado.'; } catch (e) { $('lyStatus').textContent = erro5(e); }
+  };
+
+  // botões próprios: o que cada tipo guarda e como volta
+  const r5 = (v) => Math.round(v * 1e4) / 1e4;
+  function poseCompacta(p = pose()) {    // só o que saiu do repouso, para caber folgado no banco
+    const o = { __pos: {} };
+    for (const n of order) { const q = p[n]; if (q && Math.abs(q[0]) < 0.99999) o[n] = q.map(r5); }
+    for (const n of CTRL) o.__pos[n] = ((p.__pos && p.__pos[n]) || [0, 0]).map(r5);
+    return o;
+  }
+  function vistaAgora() {
+    const t = orbit.target, v = { vista: vistaAtual, orto: camera === camO, modo: $('modo').value };
+    if (mexeuCamera) {
+      let pos = camP.position;
+      if (camera === camO) { const d = (ORTO_H / camO.zoom) / (2 * Math.tan(camP.fov * DEG / 2)); pos = t.clone().add(camO.position.clone().sub(t).normalize().multiplyScalar(d)); }
+      v.cam = { p: pos.toArray().map(r5), t: t.toArray().map(r5) };
+    }
+    return v;
+  }
+  function dadosDoTipo(tipo) {
+    if (tipo === 'pose') return { pose: poseCompacta() };
+    if (tipo === 'vista') return vistaAgora();
+    if (!keys.length) return null;
+    return { duracao: duration, quadros: keys.map((k) => ({ t: k.t, pose: poseCompacta(k.pose) })) };
+  }
+  function usarBotao(b) {
+    const d = b.dados || {};
+    if (b.tipo === 'pose' && d.pose) { applyPose(d.pose); onPoseEdited(); }
+    else if (b.tipo === 'vista') {
+      usarCamera(camP); $('vista').value = VISTAS[d.vista] ? d.vista : 'padrao'; irParaVista($('vista').value);
+      if (d.cam) { camP.position.fromArray(d.cam.p); orbit.target.fromArray(d.cam.t); camP.lookAt(orbit.target); mexeuCamera = true; orbit.update(); }
+      if (d.orto) usarCamera(camO);
+      if (d.modo) { $('modo').value = d.modo; modoExibicao(d.modo); }
+    } else if (b.tipo === 'anim' && d.quadros && d.quadros.length) {
+      playing = false; keys.length = 0; keys.push(...d.quadros.map((q) => ({ t: q.t, pose: q.pose }))); selKey = -1;
+      setDuration(d.duracao || 2); time = 0; evalAt(0); renderKeys(); saveDraft(); playing = keys.length > 1; updatePlay();
+    }
+    $('mbStatus').textContent = `“${b.nome}” aplicado na tela.`;
+  }
+  function desenharBarra() {
+    const qb = $('quickbar'); qb.querySelectorAll('.qb').forEach((x) => x.remove());
+    for (const b of botoes.filter((x) => x.barra !== false)) {
+      const x = el('button', 'qb ' + (b.cor || 'verde'), b.nome); x.title = `${b.nome}: aplica ${TIPO_NOME[b.tipo] || b.tipo}`;
+      if (b.tecla) x.appendChild(el('kbd', '', b.tecla.toUpperCase()));
+      x.onclick = () => usarBotao(b); qb.appendChild(x);
+    }
+  }
+  async function trocarOrdem(i, j) {
+    const a = botoes[i], b = botoes[j]; if (!a || !b) return;
+    try { await db5.doc('botoes/' + a.id).update({ ordem: b.ordem || 0 }); await db5.doc('botoes/' + b.id).update({ ordem: a.ordem || 0 }); } catch (e) { $('mbStatus').textContent = erro5(e); }
+  }
+  function desenharBotoes() {
+    const box = $('mbLista'); box.innerHTML = '';
+    if (!botoes.length) box.appendChild(el('p', 'hint', podeEscrever5 ? 'Nenhum botão ainda. Monte uma pose, vista ou animação e crie o primeiro aqui embaixo.' : 'Nenhum botão criado.'));
+    botoes.forEach((b, i) => {
+      const d = el('div', 'mb ' + (b.cor || 'verde'));
+      const nm = el('span', 'nm', b.nome); if (b.tecla) nm.appendChild(el('kbd', '', b.tecla.toUpperCase())); d.appendChild(nm);
+      const usar = el('button', 'primary', 'Usar'); usar.onclick = () => usarBotao(b); d.appendChild(usar);
+      d.appendChild(el('span', 'tp', `Guarda ${TIPO_NOME[b.tipo] || b.tipo}${b.tipo === 'anim' && b.dados && b.dados.quadros ? ` (${b.dados.quadros.length} quadros)` : ''}${b.barra === false ? ' · fora da barra' : ''}`));
+      if (podeEscrever5) {
+        const ac = el('div', 'acoes');
+        const mk = (txt, f, dis) => { const x = el('button', '', txt); x.disabled = !!dis; x.onclick = f; ac.appendChild(x); return x; };
+        mk('↑', () => trocarOrdem(i, i - 1), i === 0).setAttribute('aria-label', 'Subir ' + b.nome);
+        mk('↓', () => trocarOrdem(i, i + 1), i === botoes.length - 1).setAttribute('aria-label', 'Descer ' + b.nome);
+        mk('Regravar', async () => {
+          const dados = dadosDoTipo(b.tipo); if (!dados) { $('mbStatus').textContent = 'Não há quadros-chave para gravar.'; return; }
+          if (!confirm(`Regravar “${b.nome}” com ${TIPO_NOME[b.tipo]} que está na tela agora?`)) return;
+          try { await db5.doc('botoes/' + b.id).update({ dados, atualizado: new Date().toISOString() }); $('mbStatus').textContent = `“${b.nome}” regravado.`; } catch (e) { $('mbStatus').textContent = erro5(e); }
+        });
+        mk('Renomear', async () => {
+          const n = (prompt('Novo nome', b.nome) || '').trim().slice(0, 40); if (!n || n === b.nome) return;
+          try { await db5.doc('botoes/' + b.id).update({ nome: n }); } catch (e) { $('mbStatus').textContent = erro5(e); }
+        });
+        mk(b.barra === false ? 'Pôr na barra' : 'Tirar da barra', async () => { try { await db5.doc('botoes/' + b.id).update({ barra: b.barra === false }); } catch (e) { $('mbStatus').textContent = erro5(e); } });
+        mk('Apagar', async () => { if (!confirm(`Apagar o botão “${b.nome}”?`)) return; try { await db5.doc('botoes/' + b.id).delete(); } catch (e) { $('mbStatus').textContent = erro5(e); } });
+        d.appendChild(ac);
+      }
+      box.appendChild(d);
+    });
+    desenharBarra(); desenharAtalhos();
+  }
+  $('mbForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const nome = $('mbNome').value.trim(), tipo = $('mbTipo').value, tecla = $('mbTecla').value.trim().toLowerCase();
+    if (!nome) { $('mbStatus').textContent = 'Dê um nome ao botão.'; $('mbNome').focus(); return; }
+    if (tecla && (!/^[a-z0-9]$/.test(tecla) || RESERVADAS.has(tecla))) { $('mbStatus').textContent = `A tecla “${tecla}” não serve: use uma letra ou número que não seja K, F, O, M, L, Z, Y ou 1 a 5.`; return; }
+    if (tecla && botoes.some((b) => b.tecla === tecla)) { $('mbStatus').textContent = `A tecla “${tecla.toUpperCase()}” já é de outro botão.`; return; }
+    const dados = dadosDoTipo(tipo);
+    if (!dados) { $('mbStatus').textContent = 'Ainda não há quadros-chave: grave a animação antes.'; return; }
+    if (JSON.stringify(dados).length > 200000) { $('mbStatus').textContent = 'Essa animação é grande demais para um botão. Use menos quadros.'; return; }
+    $('mbCriar').disabled = true;
+    try {
+      await db5.collection('botoes').add({ nome, tipo, cor: $('mbCor').value, tecla: tecla || '', barra: $('mbBarra').checked, dados, ordem: Date.now(), criado: new Date().toISOString() });
+      $('mbNome').value = ''; $('mbTecla').value = ''; $('mbStatus').textContent = `Botão “${nome}” criado.`;
+    } catch (err) { $('mbStatus').textContent = erro5(err); }
+    $('mbCriar').disabled = false;
+  };
+  function desenharAtalhos() {
+    const dl = $('atalhos'); dl.innerHTML = '';
+    for (const [k, d] of [...ATALHOS, ...botoes.filter((b) => b.tecla).map((b) => [b.tecla.toUpperCase(), 'Botão “' + b.nome + '”'])]) {
+      const dt = el('dt'); dt.appendChild(el('span', 'kbd', k)); dl.appendChild(dt); dl.appendChild(el('dd', '', d));
+    }
+  }
+  async function iniciarPersonalizar() {
+    desenharAtalhos(); aplicarLayout(layoutAtual(), true);
+    if (!window.claude || !window.claude.use) { $('mbLista').innerHTML = ''; $('mbLista').appendChild(el('p', 'hint', 'Os botões ficam guardados no claude.ai; abra a página por lá para usá-los.')); return; }
+    const espera = setTimeout(() => { if ($('mbLista').textContent.includes('Carregando')) { $('mbLista').innerHTML = ''; $('mbLista').appendChild(el('p', 'hint', 'Os botões estão demorando para carregar. Verifique a conexão.')); } }, 10000);
+    db5 = await claude.use('db');
+    if (!db5) { clearTimeout(espera); $('mbLista').innerHTML = ''; $('mbLista').appendChild(el('p', 'hint', 'Entre na sua conta do claude.ai para ver os botões.')); return; }
+    const u = await claude.use('user'); podeEscrever5 = !!(u && (u.isOwner() || u.can('data.write') === true));
+    $('mbForm').hidden = !podeEscrever5; $('lySalvarBox').hidden = !podeEscrever5;
+    db5.collection('botoes').onSnapshot((q) => { clearTimeout(espera); botoes = q.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (a.ordem || 0) - (b.ordem || 0)); desenharBotoes(); },
+      () => { clearTimeout(espera); $('mbLista').innerHTML = ''; $('mbLista').appendChild(el('p', 'hint', 'Não consegui ler os botões.')); });
+    db5.collection('layouts').onSnapshot((q) => {
+      layoutsSalvos = q.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+      editLy = null; aplicarLayout(layoutAtual(), false);
+    }, () => { $('lyStatus').textContent = 'Não consegui ler os layouts salvos; os prontos continuam valendo.'; });
+  }
+  iniciarPersonalizar();
+
+  // ---------- teclado
   window.addEventListener('keydown', (e) => {
     if (/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && e.key !== 'Escape') return;
-    if (e.key === 'Escape') select(null);
-    if (e.key === ' ') { e.preventDefault(); $('play').click(); }
-    if (e.key === 'k' || e.key === 'K') addKey();
+    const k = e.key.toLowerCase(), mod = e.ctrlKey || e.metaKey;
+    if (mod && k === 'z') { e.preventDefault(); histGo(e.shiftKey ? 1 : -1); return; }
+    if (mod && k === 'y') { e.preventDefault(); histGo(1); return; }
+    if (mod || e.altKey) return;
+    if (e.key === 'Escape') { select(null); return; }
+    if (e.key === ' ') { e.preventDefault(); $('play').click(); return; }
+    if (k === 'k') { addKey(); return; }
+    if (k === 'f') { irParaVista(vistaAtual); return; }
+    if (k === 'o') { $('proj').click(); return; }
+    if (k === 'm') { const ms = ['material', 'solido', 'aramado']; $('modo').value = ms[(ms.indexOf($('modo').value) + 1) % 3]; modoExibicao($('modo').value); return; }
+    if (k === 'l') { const ls = todosLayouts(); usarLayout(ls[(ls.findIndex((l) => l.id === layoutAtual().id) + 1) % ls.length].id); return; }
+    const vs = ['padrao', 'frente', 'lado', 'costas', 'cima'];
+    if (/^[1-5]$/.test(k)) { $('vista').value = vs[Number(k) - 1]; irParaVista(vs[Number(k) - 1]); return; }
+    const b = botoes.find((x) => x.tecla === k); if (b) usarBotao(b);
   });
 
   // ---------- laço

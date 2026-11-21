@@ -78,5 +78,20 @@ Navegador automático, em tela de computador e de celular:
 - **Testes:** no celular, com um Claude simulado: o contexto chegou completo; girar o braço, abrir a boca, articulação inexistente recusada, rascunho com aviso de arquivo oficial, adicionar à fila, autorizar, trocar situação, pedido escrito à mão, Desfazer, sem rolagem lateral e sem erros. No banco real: escrita de visitante recusada.
 - **Limites:** a conversa some ao recarregar a página; o assistente não vê as imagens do palco; cada pergunta gasta o uso do claude.ai de quem pergunta.
 
-## Próximas fases
-5. Botões próprios, layouts e atalhos.
+## Fase 5 (feita): botões próprios, layouts e atalhos
+- **Aba Personalizar:**
+  - **Meus botões:** cada botão guarda a pose atual (corpo, mãos e rosto), a vista atual (câmera e modo) ou a animação atual. Tem nome, cor, tecla opcional e pode ficar na barra do palco. Dá para usar, mudar a ordem, regravar, renomear, tirar da barra e apagar.
+  - **Layouts:** escolhem as abas que aparecem, a aba que abre, o tamanho do palco no celular, o lado do painel no computador e quais barras aparecem. São 4 prontos (Completo, Rosto, Animação, Revisão), e o Caio pode salvar os dele. O layout em uso fica lembrado em cada aparelho. A aba Personalizar nunca some.
+  - **Atalhos de teclado:** Esc, Espaço, K, Ctrl+Z e Ctrl+Y, F (enquadrar), O (ortográfica), M (modo), 1 a 5 (vistas), L (próximo layout) e as teclas dos botões.
+- **Barra do palco:** troca de layout e os botões marcados. No celular, faz o papel dos atalhos.
+- **Assistente:** vê os botões e o layout em uso e pode apertar um botão com `usar_botao`, só na tela.
+- **Dados:** coleções `botoes` e `layouts` no banco da página. Só o dono escreve; quem só vê, lê.
+- **Correções:** os losangos da linha do tempo ficavam enormes no celular; a aba aberta agora rola para a vista; o sublinhado deixou de ficar preso na aba tocada.
+- **Testes:** no celular (Pixel 7) com banco simulado, sem erros de script:
+  - criar botão de pose, de vista e de animação;
+  - recusa de tecla reservada e de animação sem quadros;
+  - usar pela barra;
+  - trocar a ordem;
+  - os 4 layouts prontos, salvar um layout próprio;
+  - sem rolagem lateral.
+- **Limites:** os ajustes no editor de layout valem só na tela até serem salvos; um botão de animação aceita até cerca de 200 mil caracteres de dados.
