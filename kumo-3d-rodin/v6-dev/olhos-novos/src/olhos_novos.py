@@ -77,13 +77,28 @@ def salvar(a, nome, dados=False):
 
 A = {k: ler(os.path.join(ARTE, f)) for k, f in (('globo', 'globo-ocular.png'), ('circulo', 'globo-ocular-circulo.png'),
      ('membrana', 'membrana-nictitante.png'), ('iris', 'iris.png'), ('pupila', 'pupila.png'))}
+# 22/11, segundo pedido do Caio: a membrana nictitante na cor #E4A633 (a forma e a transparência ficam as da arte)
+COR_MEMBRANA = np.array([0xE4, 0xA6, 0x33], np.float32) / 255
+A['membrana'][..., :3] = COR_MEMBRANA
+# e a íris e a pupila de uma imagem só (`iris-pupila.png`): a íris do mesmo tamanho, a pupila menor
+IRIS_PUPILA = os.path.join(ARTE, 'iris-pupila.png')
 ys, xs = np.nonzero(A['circulo'][..., 3] > 0.5)
 ART_C = np.array([(xs.min() + xs.max() + 1) / 2, (ys.min() + ys.max() + 1) / 2])     # centro do contorno (px, y para cima)
 ART_R = float(np.hypot(xs + 0.5 - ART_C[0], ys + 0.5 - ART_C[1]).max())                # raio de fora do contorno
 BRANCO = A['globo'][int(ART_C[1]), int(ART_C[0]), :3].copy()
 REP['arte'] = {'centro_px': ART_C.round(1).tolist(), 'raio_externo_px': round(ART_R, 1), 'branco': BRANCO.round(3).tolist()}
 # a imagem do decal: íris com a pupila por cima, no quadro da arte
-im_decal = salvar(sobre(A['iris'], A['pupila']), 'olho_decal_iris_pupila')
+if os.path.exists(IRIS_PUPILA):
+    ip = ler(IRIS_PUPILA)
+    # só a elipse da íris (a imagem tem um ponto solto perto da borda de baixo)
+    yy_, xx_ = np.nonzero((ip[..., 3] > 0.5) & (ip[..., 0] > 0.5))
+    cx_, cy_ = (xx_.min() + xx_.max()) / 2, (yy_.min() + yy_.max()) / 2; ax_, ay_ = (xx_.max() - xx_.min()) / 2 + 3, (yy_.max() - yy_.min()) / 2 + 3
+    Y_, X_ = np.mgrid[0:ip.shape[0], 0:ip.shape[1]]
+    ip[((X_ + 0.5 - cx_) / ax_) ** 2 + ((Y_ + 0.5 - cy_) / ay_) ** 2 > 1, 3] = 0
+    REP['decal'] = {'arquivo': 'iris-pupila.png', 'iris_px': [int(xx_.max() - xx_.min() + 1), int(yy_.max() - yy_.min() + 1)]}
+    im_decal = salvar(ip, 'olho_decal_iris_pupila')
+else:
+    im_decal = salvar(sobre(A['iris'], A['pupila']), 'olho_decal_iris_pupila')
 im_decal.alpha_mode = 'STRAIGHT'
 
 

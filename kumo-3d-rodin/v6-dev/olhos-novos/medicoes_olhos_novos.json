@@ -11,6 +11,13 @@
    1.0
   ]
  },
+ "decal": {
+  "arquivo": "iris-pupila.png",
+  "iris_px": [
+   227,
+   413
+  ]
+ },
  "L": {
   "abertura_centro_uv": [
    0.5033,

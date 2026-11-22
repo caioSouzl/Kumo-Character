@@ -5,6 +5,12 @@
 - O brilho fica de fora: ele entra depois, nas animações e nas imagens de postagem.
 - Adendo: "Quero que faça igual aos vídeos que te mandei, para não ter conflito com as camadas na hora do movimento."
 
+**Ajuste do Caio (22/11, depois da primeira versão: "Ficou ótimo"):**
+- íris e pupila trocadas pela imagem nova `arte/iris-pupila.png`: a íris tem o mesmo tamanho, e a pupila ficou menor (172 × 316 px na arte, contra 206 × 375), então aparece mais anel âmbar;
+- membrana nictitante na cor **#E4A633**.
+
+As fotos e a exportação abaixo já são da versão ajustada.
+
 **Resultado:** os olhos novos usam a técnica do vídeo do decal (@pol.gc). Cada olho é **uma superfície só, com um material só**, então não há camadas para brigar no movimento.
 
 Imagens:
