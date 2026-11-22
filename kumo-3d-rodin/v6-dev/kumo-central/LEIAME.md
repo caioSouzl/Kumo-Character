@@ -2,7 +2,7 @@
 
 Evolução do Estúdio do Kumo para uma central de desenvolvimento, feita em fases. O Estúdio original (`../kumo-studio/`) continua intacto até o Caio aprovar esta página.
 
-O modelo é o mesmo do Estúdio (`../kumo-studio/kumo.glb`); esta pasta não guarda uma cópia.
+O modelo é o GLB dos olhos novos (`../olhos-novos/central/kumo_central.glb`, publicado como `kumo.wasm`), com as texturas do olho em `../olhos-novos/central/olhos/` (publicadas em `olhos/`). Sem ele, a página usa o do Estúdio (`../kumo-studio/kumo.glb`), com os olhos antigos.
 
 ## Fase 1 (feita): reorganização visual e navegação
 - **Barra de visualização:**
@@ -24,7 +24,6 @@ Navegador automático, em tela de computador e de celular:
 
 ## Problemas conhecidos
 - Com a boca aberta, o contorno marrom aparece esticado em volta da abertura: o contorno do modelo ainda não foi cortado na boca.
-- Em "sólido" e "aramado", os olhos continuam com o material normal.
 
 ## Fase 2 (feita): componentes e versões
 - **Aba Componentes:** as peças reais do modelo, em 7 grupos.
@@ -95,3 +94,17 @@ Navegador automático, em tela de computador e de celular:
   - os 4 layouts prontos, salvar um layout próprio;
   - sem rolagem lateral.
 - **Limites:** os ajustes no editor de layout valem só na tela até serem salvos; um botão de animação aceita até cerca de 200 mil caracteres de dados.
+
+## Olhos novos (22/11)
+- **O modelo da página tem os olhos novos:** a arte do Caio, numa superfície só por olho, com íris e pupila por decal.
+- **Olhar:** a página refaz a conta do rig do Blender:
+  - o alvo anda com `controle_olhar`;
+  - o osso do olho mira o alvo;
+  - o decal gira com o osso.
+  - Conferido contra o Blender em 3 direções do olhar: diferença de 0,000001 nas matrizes.
+- **Losangos do olhar:** ficam no ponto em que a íris descansa e seguem a cabeça.
+- **Sólido e aramado:** os olhos agora também trocam (antes ficavam com o material).
+- **Componentes:** cada olho aparece como uma peça só, mais as pálpebras.
+- **Versões:** entrou "Olhos novos (arte do Caio)" como atual.
+- **Testes:** no celular (Pixel 7) e no computador, sem erros de script e sem rolagem lateral.
+

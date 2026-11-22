@@ -289,7 +289,7 @@
    "id": "olhos-jogo",
    "nome": "Olhos de jogo",
    "grupo": "Olhos",
-   "situacao": "em uso",
+   "situacao": "substituída",
    "pasta": "kumo-3d-rodin/v6-dev/olhos-jogo",
    "relatorio": "kumo-3d-rodin/v6-dev/olhos-jogo/RELATORIO.md",
    "descricao": "Os olhos da v5 convertidos para ossos e shape keys, que exportam para jogo.",
@@ -340,10 +340,10 @@
    "id": "boca",
    "nome": "Boca e língua",
    "grupo": "Kumo 3D",
-   "situacao": "atual",
+   "situacao": "em uso",
    "pasta": "kumo-3d-rodin/v6-dev/boca",
    "relatorio": "kumo-3d-rodin/v6-dev/boca/RELATORIO.md",
-   "descricao": "Versão atual do Kumo de jogo: boca anatômica sem dentes, interior vermelho escuro e língua retrátil de camaleão. É o modelo que esta página mostra.",
+   "descricao": "Versão atual do Kumo de jogo: boca anatômica sem dentes, interior vermelho escuro e língua retrátil de camaleão. É a base dos olhos novos.",
    "mudancas": [
     "Corte da boca na borda da textura",
     "Osso da mandíbula",
@@ -363,6 +363,34 @@
    "data": "2026-11-15",
    "imagem": "versoes/boca.jpg",
    "origem_imagem": "kumo-3d-rodin/v6-dev/boca/fotos/lingua.png"
+  },
+  {
+   "id": "olhos-novos",
+   "nome": "Olhos novos (arte do Caio)",
+   "grupo": "Olhos",
+   "situacao": "atual",
+   "pasta": "kumo-3d-rodin/v6-dev/olhos-novos",
+   "relatorio": "kumo-3d-rodin/v6-dev/olhos-novos/RELATORIO.md",
+   "descricao": "Pedido do Caio (22/11): olhos novos com a arte dele, feitos como no vídeo do decal. Uma superfície e um material por olho, sem camadas empilhadas; íris e pupila por decal preso ao osso do olho. É o modelo que esta página mostra.",
+   "mudancas": [
+    "Superfície única por olho, no lugar da pele",
+    "Íris e pupila por decal com Damped Track",
+    "Membrana #E4A633 e contorno fixos na borda",
+    "Sem brilho (entra nas animações)"
+   ],
+   "testes": [
+    "Olhar: mesmo sentido do olho antigo, 67 mm a 11°",
+    "Reimportação GLB e FBX: 0,0 mm",
+    "Central: olhar igual ao do Blender (diferença 0,000001)"
+   ],
+   "arquivos": [
+    "kumo_v6_olhos_novos.blend",
+    "jogo/kumo_v6_jogo.glb",
+    ".fbx"
+   ],
+   "data": "2026-11-22",
+   "imagem": "versoes/olhos-novos.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/olhos-novos/renders/kumo-olhos-novos-corpo.png"
   },
   {
    "id": "p2",
