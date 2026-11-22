@@ -126,3 +126,21 @@ Os olhos não são globos. A pupila é uma **imagem projetada na pele** a partir
 - **O que já confirma o nosso rig:**
   - olhos com Damped Track num alvo à frente, que é o mesmo do `eye_target` da v5 e do rig de @tiago_prlco (`rig-e-personagem.md`, parte 6);
   - o pivô do olho tem de ficar no centro da esfera do olho, e o teste do decal mostrou o mesmo: pivô na superfície não move nada.
+
+## Aplicado no Kumo (22/11, `kumo-3d-rodin/v6-dev/olhos-novos/`)
+
+A arte nova do Caio virou olho com a técnica do decal (parte 2). Lições:
+- **Globo esférico não serve num rosto quase plano.**
+  - Uma esfera que gira precisa caber sob a pele em todo o giro.
+  - No Kumo ela ficou de 3 a 8 cm afundada, e de frente aparecia a parede de dentro da cabeça.
+  - O globo (parte 3) pede uma órbita funda de verdade, modelada para ele.
+- **Uma superfície e um material por olho eliminam o conflito de camadas.**
+  - As faces da pele em volta do olho viram um objeto próprio: mesma forma, mesmos pesos, mesma borda.
+  - O material faz tudo na ordem: pele, branco, íris e pupila (decal), membrana e contorno.
+- **Projeção de direção fixa estica onde a superfície se dobra.** A borda do olho tem de recuar onde a normal fica de lado para a projeção (normal · eixo < 0,45), e o aro afina na proporção do esticamento medido.
+- **Solidify de contorno (casca invertida) só funciona em malha fechada.** Numa peça separada e aberta, ele desenha uma faixa escura na borda: tire o modificador da peça.
+- **Bake:** se der "No valid selected objects", veja `scene.render.bake.use_selected_to_active`; no arquivo do Kumo ela vinha ligada.
+- **Jogo:**
+  - O decal usa a coordenada de um objeto, que o glTF e o FBX não levam.
+  - A exportação grava o repouso numa textura.
+  - O olhar no Godot pede um shader que receba a posição do osso do olho.

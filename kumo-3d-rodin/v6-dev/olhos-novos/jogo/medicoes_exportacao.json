@@ -1,0 +1,38 @@
+{
+ "bake_L": "/home/user/Kumo-Character/kumo-3d-rodin/v6-dev/olhos-novos/jogo/olho_L_jogo.png",
+ "bake_R": "/home/user/Kumo-Character/kumo-3d-rodin/v6-dev/olhos-novos/jogo/olho_R_jogo.png",
+ "kb": {
+  "glb": 12026,
+  "fbx": 4582
+ },
+ "glb_erro_max_mm": {
+  "Kumo": 0.0,
+  "Kumo_Boca": 0.0,
+  "Kumo_Lingua": 0.0,
+  "KumoJogo_Palpebra_inf.L": 0.0,
+  "KumoJogo_Palpebra_inf.R": 0.0,
+  "KumoJogo_Palpebra_inf_borda.L": 0.0,
+  "KumoJogo_Palpebra_inf_borda.R": 0.0,
+  "KumoJogo_Palpebra_sup.L": 0.0,
+  "KumoJogo_Palpebra_sup.R": 0.0,
+  "KumoJogo_Palpebra_sup_borda.L": 0.0,
+  "KumoJogo_Palpebra_sup_borda.R": 0.0,
+  "KumoOlho.L": 0.0,
+  "KumoOlho.R": 0.0
+ },
+ "fbx_erro_max_mm": {
+  "Kumo": 0.0,
+  "Kumo_Boca": 0.0,
+  "Kumo_Lingua": 0.0,
+  "KumoJogo_Palpebra_inf.L": 0.0,
+  "KumoJogo_Palpebra_inf.R": 0.0,
+  "KumoJogo_Palpebra_inf_borda.L": 0.0,
+  "KumoJogo_Palpebra_inf_borda.R": 0.0,
+  "KumoJogo_Palpebra_sup.L": 0.0,
+  "KumoJogo_Palpebra_sup.R": 0.0,
+  "KumoJogo_Palpebra_sup_borda.L": 0.0,
+  "KumoJogo_Palpebra_sup_borda.R": 0.0,
+  "KumoOlho.L": 0.0,
+  "KumoOlho.R": 0.0
+ }
+}

@@ -1,0 +1,116 @@
+{
+ "arte": {
+  "centro_px": [
+   504.0,
+   487.5
+  ],
+  "raio_externo_px": 312.0,
+  "branco": [
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ "L": {
+  "abertura_centro_uv": [
+   0.5033,
+   0.4817
+  ],
+  "elipse_semi_eixos_uv": [
+   0.3979,
+   0.3778
+  ],
+  "elipse_angulo_graus": 146.4,
+  "faces_da_superficie": 583,
+  "janela_da_textura": [
+   -0.092,
+   1.079
+  ],
+  "abertura_recuo_max_pct": 11.1,
+  "esticamento_relativo(min,max)": [
+   0.81,
+   1.35
+  ],
+  "aro_largura_uv": 0.0252
+ },
+ "R": {
+  "abertura_centro_uv": [
+   0.508,
+   0.4715
+  ],
+  "elipse_semi_eixos_uv": [
+   0.4002,
+   0.3619
+  ],
+  "elipse_angulo_graus": -141.0,
+  "faces_da_superficie": 475,
+  "janela_da_textura": [
+   -0.101,
+   1.103
+  ],
+  "abertura_recuo_max_pct": 16.3,
+  "esticamento_relativo(min,max)": [
+   0.85,
+   1.11
+  ],
+  "aro_largura_uv": 0.0246
+ },
+ "olhar": {
+  "dir_L": {
+   "giro_graus": 11.0,
+   "desloc_mm": 67.1,
+   "antigo_mm": 65.2,
+   "angulo_entre_sentidos_graus": 2.7
+  },
+  "dir_R": {
+   "giro_graus": 11.0,
+   "desloc_mm": 67.1,
+   "antigo_mm": 57.3,
+   "angulo_entre_sentidos_graus": 19.8
+  },
+  "esq_L": {
+   "giro_graus": 11.0,
+   "desloc_mm": 67.1,
+   "antigo_mm": 70.6,
+   "angulo_entre_sentidos_graus": 16.9
+  },
+  "esq_R": {
+   "giro_graus": 11.0,
+   "desloc_mm": 67.1,
+   "antigo_mm": 52.6,
+   "angulo_entre_sentidos_graus": 5.1
+  },
+  "cima_L": {
+   "giro_graus": 11.0,
+   "desloc_mm": 67.1,
+   "antigo_mm": 67.0,
+   "angulo_entre_sentidos_graus": 0.0
+  },
+  "cima_R": {
+   "giro_graus": 11.0,
+   "desloc_mm": 67.1,
+   "antigo_mm": 53.9,
+   "angulo_entre_sentidos_graus": 2.6
+  },
+  "baixo_L": {
+   "giro_graus": 11.0,
+   "desloc_mm": 67.1,
+   "antigo_mm": 67.6,
+   "angulo_entre_sentidos_graus": 1.7
+  },
+  "baixo_R": {
+   "giro_graus": 11.0,
+   "desloc_mm": 67.1,
+   "antigo_mm": 53.9,
+   "angulo_entre_sentidos_graus": 1.9
+  },
+  "diag_L": {
+   "giro_graus": 15.37,
+   "desloc_mm": 93.6
+  },
+  "diag_R": {
+   "giro_graus": 15.37,
+   "desloc_mm": 93.6
+  }
+ }
+}
