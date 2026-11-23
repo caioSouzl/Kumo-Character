@@ -7,19 +7,22 @@ extends Node3D
 ## A arvore com o terrario e os brinquedos vem de assets/models/ambiente.glb
 ## (Hyper3D). Sem o arquivo, entra uma arvore provisoria.
 
-const RADIUS := 11.0
+const RADIUS := 40.0
 const TOP := 0.05
 ## Faixa da borda onde a grama se desfaz em pixels e vira circuito.
-const FADE := 1.8
+const FADE := 3.0
+## Quanto a borda ondula (multiplica as ondas de edge_r).
+const JITTER := 2.5
 ## Terrario (globo de vidro) no espaco da arvore do .glb, medido no Blender.
 const TERRARIUM_LOCAL := Vector3(0.068, 3.921, -0.002)
 const TERRARIUM_R := 1.26
-## Brinquedos nas bordas: angulo (graus, 0 = +x, 90 = frente/plataforma).
+## Brinquedos nas bordas: angulo (graus, 0 = +x, 90 = frente).
 const TOY_ANGLES := {"bola": 18.0, "bloco": 158.0, "carrinho": 212.0, "balanco": 268.0, "argolas": 326.0}
+## Tamanho dos blocos de detalhes (cada bloco e cortado da tela sozinho).
+const CHUNK := 10.0
 const GRASS_DARK := Color(0.16, 0.38, 0.14)
 const GRASS_LIGHT := Color(0.45, 0.72, 0.22)
 const BARK := Color(0.45, 0.28, 0.18)
-const SOIL := Color(0.28, 0.19, 0.14)
 const ROCK := Color(0.46, 0.45, 0.52)
 const PATH_STONE := Color(0.72, 0.63, 0.5)
 const FLOWERS := [Color(0.62, 0.38, 0.95), Color(0.95, 0.95, 1.0), Color(1.0, 0.5, 0.72), Color(1.0, 0.84, 0.25), Color(0.75, 0.55, 1.0)]
@@ -30,14 +33,17 @@ var toys: Array[Node3D] = []
 var tree_pos := Vector3(0.0, TOP, 0.0)
 var tree_scale := 1.6
 var nest_pos := Vector3.ZERO
-## Area reservada para a plataforma do ZodIA (x min, z min, x max, z max).
-var reserved := Rect2(-3.4, 3.4, 6.8, 6.6)
 ## Pulos do terrario ate o chao.
 var descent_path: Array = []
+## Objetos solidos do mapa (arvore, brinquedos, pedras): [centro xz, raio].
+## O ZodIA nao constroi em cima deles.
+var solids: Array = []
 
 var _rng := RandomNumberGenerator.new()
-## Lugares ja ocupados (centro xz, raio), para nada nascer em cima de nada.
-var _taken: Array = []
+## Detalhes por bloco: chave Vector2i -> {tipo: [transforms, cores]}
+var _decor: Dictionary = {}
+## Instancias desenhadas: [MultiMeshInstance3D, posicoes xz]
+var _decor_nodes: Array = []
 
 
 static func ground_y(p: Vector3) -> float:
@@ -45,8 +51,18 @@ static func ground_y(p: Vector3) -> float:
 
 
 ## Raio da borda num angulo (borda organica, nao um circulo perfeito).
+## O shader da grama repete a mesma conta.
 static func edge_r(a: float) -> float:
-	return RADIUS + sin(a * 3.0 + 0.7) * 0.4 + sin(a * 7.0 + 2.1) * 0.25 + sin(a * 13.0) * 0.12
+	return RADIUS + (sin(a * 3.0 + 0.7) * 0.4 + sin(a * 7.0 + 2.1) * 0.25 + sin(a * 13.0) * 0.12) * JITTER
+
+
+## Ponto dentro do campo (para quem anda nao sair do mapa).
+static func clamp_inside(p: Vector3, margin: float = 1.0) -> Vector3:
+	var v := Vector2(p.x, p.z)
+	var lim := edge_r(atan2(v.y, v.x)) - FADE - margin
+	if v.length() > lim:
+		v = v.normalized() * lim
+	return Vector3(v.x, p.y, v.y)
 
 
 func _ready() -> void:
@@ -59,13 +75,14 @@ func _ready() -> void:
 		_build_placeholder_toys()
 	nest_pos = tree_pos + TERRARIUM_LOCAL * tree_scale + Vector3(0, -TERRARIUM_R * tree_scale + 0.35, 0)
 	descent_path = [nest_pos + Vector3(2.0, -1.0, 1.4), nest_pos + Vector3(3.2, -2.6, 2.2), Vector3(3.8, TOP, 3.0)]
-	_taken.append([Vector2(tree_pos.x, tree_pos.z), 2.4 * tree_scale / 1.6])
+	solids.append([Vector2(tree_pos.x, tree_pos.z), 3.6 * tree_scale / 1.6])
 	for t in toys:
-		_taken.append([Vector2(t.position.x, t.position.z), 1.2])
+		solids.append([Vector2(t.position.x, t.position.z), 1.4])
 	_build_path()
 	_build_rocks()
 	_build_bushes_and_flowers()
 	_build_grass()
+	_flush_decor()
 	_build_walls()
 
 
@@ -74,7 +91,7 @@ func _ready() -> void:
 func _build_ground() -> void:
 	# disco de grama ate a borda + faixa de transicao; o shader desfaz a borda
 	# em pixels e deixa o circuito aparecer por baixo
-	var seg := 128
+	var seg := 256
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i in seg:
@@ -92,6 +109,7 @@ func _build_ground() -> void:
 	gm.shader = load("res://shaders/grass.gdshader")
 	gm.set_shader_parameter("radius", RADIUS)
 	gm.set_shader_parameter("fade", FADE)
+	gm.set_shader_parameter("jitter", JITTER)
 	top.material_override = gm
 	top.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(top)
@@ -232,167 +250,177 @@ func toy_react(t: Node3D) -> void:
 
 # ---------- detalhes ----------
 
+## Ponto livre de objetos solidos, dentro do campo.
 func _free_spot(min_r: float, max_r: float, clearance: float) -> Variant:
-	for _i in 40:
+	for _i in 30:
 		var a := _rng.randf() * TAU
 		var r := sqrt(_rng.randf_range(min_r * min_r, max_r * max_r))
-		r = minf(r, edge_r(a) - FADE - 0.3)
+		r = minf(r, edge_r(a) - FADE - 0.4)
 		var p := Vector2(cos(a) * r, sin(a) * r)
-		var ok := not reserved.has_point(p)
-		for t in _taken:
-			if p.distance_to(t[0]) < float(t[1]) + clearance:
-				ok = false
-				break
-		if ok:
+		if is_free(p, clearance):
 			return Vector3(p.x, TOP, p.y)
 	return null
 
 
-## Caminho de pedras chatas da arvore ate a borda da frente (rumo a plataforma).
+func is_free(p: Vector2, clearance: float) -> bool:
+	for sd in solids:
+		if p.distance_to(sd[0]) < float(sd[1]) + clearance:
+			return false
+	return true
+
+
+## Quadrado (centro xz, meio lado) sem nenhum objeto solido dentro e todo no campo.
+func square_is_free(c: Vector2, half: float) -> bool:
+	for sd in solids:
+		var q: Vector2 = sd[0]
+		var r := float(sd[1])
+		var d := Vector2(maxf(absf(q.x - c.x) - half, 0.0), maxf(absf(q.y - c.y) - half, 0.0))
+		if d.length() < r:
+			return false
+	for corner in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+		var k: Vector2 = c + corner * half
+		if k.length() > edge_r(atan2(k.y, k.x)) - FADE - 0.5:
+			return false
+	return true
+
+
+## Caminho de pedras chatas saindo da frente da arvore.
 func _build_path() -> void:
 	var stone := Mat.solid(PATH_STONE, 0.95)
-	# da frente da arvore, contornando a plataforma pela esquerda ate a borda
-	var pts := [Vector2(-1.2, 2.6), Vector2(-2.6, 3.6), Vector2(-4.0, 5.0), Vector2(-4.6, 6.8), Vector2(-4.4, 8.4)]
-	var n := 11
+	var pts := [Vector2(-1.4, 3.4), Vector2(-3.0, 6.0), Vector2(-3.4, 9.5), Vector2(-2.0, 13.0), Vector2(-2.6, 16.5)]
+	var n := 16
 	for i in n:
 		var k := float(i) / (n - 1) * (pts.size() - 1)
 		var j := mini(int(k), pts.size() - 2)
 		var p: Vector2 = (pts[j] as Vector2).lerp(pts[j + 1], k - j) + Vector2(sin(i * 1.9) * 0.3, 0)
 		var s := _rng.randf_range(0.32, 0.42)
-		Mat.add(self, _rock_mesh(s, 0.07, 7), stone, Vector3(p.x, TOP + 0.015, p.y), Vector3(0, _rng.randf() * 360.0, 0))
-		_taken.append([p, s + 0.1])
-
-
-func _rock_mesh(r: float, h: float, segs: int) -> Mesh:
-	var m := Mat.sphere(r, h * 2.0, segs)
-	m.rings = 3
-	return m
+		var m := Mat.sphere(s, 0.14, 7)
+		m.rings = 3
+		Mat.add(self, m, stone, Vector3(p.x, TOP + 0.015, p.y), Vector3(0, _rng.randf() * 360.0, 0))
+		solids.append([p, s])
 
 
 func _build_rocks() -> void:
 	var cols := [ROCK, ROCK.darkened(0.15), Color(0.5, 0.5, 0.56)]
-	var count := 0
-	while count < 20:
-		var spot: Variant = _free_spot(RADIUS - FADE - 1.6, RADIUS, 0.7) if count < 15 else _free_spot(3.8, 6.0, 0.4)
+	for count in 70:
+		var near_edge := count < 50
+		var spot: Variant = _free_spot(RADIUS - FADE - 4.0, RADIUS, 1.0) if near_edge else _free_spot(5.0, RADIUS - 6.0, 2.0)
 		if spot == null:
-			count += 1
 			continue
 		var p: Vector3 = spot
-		var s := _rng.randf_range(0.25, 0.5)
+		var s := _rng.randf_range(0.25, 0.6)
 		var m := Mat.sphere(s, s * 1.6, 6)
 		m.rings = 3
 		Mat.add(self, m, Mat.solid(cols[count % cols.size()], 0.9), p + Vector3(0, s * 0.35, 0), Vector3(_rng.randf() * 20.0, _rng.randf() * 360.0, _rng.randf() * 20.0), Vector3(1.25, 0.8, 1.0))
-		_taken.append([Vector2(p.x, p.z), s])
-		count += 1
+		solids.append([Vector2(p.x, p.z), s * 1.25])
 
 
 ## Moitas de folhas largas com flores por cima, mais densas perto da borda.
 func _build_bushes_and_flowers() -> void:
-	var leaf_mesh := Mat.sphere(0.16, 0.06, 6)
-	var flower_mesh := Mat.sphere(0.055, 0.05, 6)
-	var leaves := _multimesh(leaf_mesh, 900)
-	var flowers := _multimesh(flower_mesh, 750)
-	var li := 0
-	var fi := 0
-	for c in 100:
-		var near_edge := c < 60
-		var spot: Variant = _free_spot(RADIUS - FADE - 2.2 if near_edge else 3.5, RADIUS if near_edge else RADIUS - FADE - 2.2, 0.25)
+	for c in 320:
+		var near_edge := c < 170
+		var spot: Variant = _free_spot(RADIUS - FADE - 5.0 if near_edge else 4.0, RADIUS if near_edge else RADIUS - FADE - 5.0, 0.2)
 		if spot == null:
 			continue
 		var p: Vector3 = spot
 		var col: Color = FLOWERS[_rng.randi_range(0, FLOWERS.size() - 1)]
-		for k in 9:
-			if li >= 900:
-				break
-			var a := TAU * k / 9.0 + _rng.randf() * 0.4
+		for k in 6:
+			var a := TAU * k / 6.0 + _rng.randf() * 0.5
 			var b := Basis(Vector3.UP, PI / 2.0 - a) * Basis(Vector3.RIGHT, -0.5)
 			var pos := p + Vector3(cos(a), 0, sin(a)) * 0.2 + Vector3(0, 0.12, 0)
-			leaves.multimesh.set_instance_transform(li, Transform3D(b.scaled(Vector3(0.7, 1.0, 1.6) * _rng.randf_range(0.8, 1.3)), pos))
-			leaves.multimesh.set_instance_color(li, GRASS_DARK.lerp(Color(0.25, 0.55, 0.2), _rng.randf()))
-			li += 1
-		var nf := _rng.randi_range(4, 8)
-		for k in nf:
-			if fi >= 750:
-				break
+			_decor_add("folha", Transform3D(b.scaled(Vector3(0.7, 1.0, 1.6) * _rng.randf_range(0.8, 1.3)), pos), GRASS_DARK.lerp(Color(0.25, 0.55, 0.2), _rng.randf()))
+		for k in _rng.randi_range(3, 6):
 			var off := Vector3(_rng.randf_range(-0.35, 0.35), _rng.randf_range(0.22, 0.4), _rng.randf_range(-0.35, 0.35))
-			flowers.multimesh.set_instance_transform(fi, Transform3D(Basis().scaled(Vector3.ONE * _rng.randf_range(0.8, 1.3)), p + off))
-			flowers.multimesh.set_instance_color(fi, col.lightened(_rng.randf() * 0.15))
-			fi += 1
-		_taken.append([Vector2(p.x, p.z), 0.45])
-	leaves.multimesh.visible_instance_count = li
-	flowers.multimesh.visible_instance_count = fi
-	# flores soltas pelo campo
-	var loose := _multimesh(flower_mesh, 260)
-	var stems := _multimesh(Mat.cyl(0.01, 0.01, 0.18, 4), 260)
-	var n := 0
-	for i in 260:
+			_decor_add("flor", Transform3D(Basis().scaled(Vector3.ONE * _rng.randf_range(0.8, 1.3)), p + off), col.lightened(_rng.randf() * 0.15))
+	for i in 700:
 		var spot: Variant = _free_spot(3.0, RADIUS, 0.05)
 		if spot == null:
 			continue
 		var p: Vector3 = spot
-		stems.multimesh.set_instance_transform(n, Transform3D(Basis(), p + Vector3(0, 0.09, 0)))
-		stems.multimesh.set_instance_color(n, Color(0.25, 0.55, 0.2))
-		loose.multimesh.set_instance_transform(n, Transform3D(Basis(), p + Vector3(0, 0.19, 0)))
-		loose.multimesh.set_instance_color(n, FLOWERS[i % FLOWERS.size()])
-		n += 1
-	loose.multimesh.visible_instance_count = n
-	stems.multimesh.visible_instance_count = n
+		_decor_add("caule", Transform3D(Basis(), p + Vector3(0, 0.09, 0)), Color(0.25, 0.55, 0.2))
+		_decor_add("flor", Transform3D(Basis(), p + Vector3(0, 0.19, 0)), FLOWERS[i % FLOWERS.size()])
 
 
 ## Tufos de grama.
 func _build_grass() -> void:
-	var tufts := _multimesh(Mat.cyl(0.0, 0.05, 0.2, 4), 800)
-	var n := 0
-	for i in 800:
+	for i in 2600:
 		var spot: Variant = _free_spot(2.8, RADIUS, -0.2)
 		if spot == null:
 			continue
 		var p: Vector3 = spot
 		var b := Basis(Vector3(1, 0, 0), _rng.randf_range(-0.25, 0.25)) * Basis(Vector3.UP, _rng.randf() * TAU)
-		tufts.multimesh.set_instance_transform(n, Transform3D(b.scaled(Vector3.ONE * _rng.randf_range(0.7, 1.5)), p + Vector3(0, 0.09, 0)))
-		tufts.multimesh.set_instance_color(n, GRASS_DARK.lerp(GRASS_LIGHT, _rng.randf()))
-		n += 1
-	tufts.multimesh.visible_instance_count = n
+		_decor_add("tufo", Transform3D(b.scaled(Vector3.ONE * _rng.randf_range(0.7, 1.5)), p + Vector3(0, 0.09, 0)), GRASS_DARK.lerp(GRASS_LIGHT, _rng.randf()))
 
 
-func _multimesh(mesh: Mesh, count: int) -> MultiMeshInstance3D:
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.use_colors = true
-	mm.mesh = mesh
-	mm.instance_count = count
-	var mmi := MultiMeshInstance3D.new()
-	mmi.multimesh = mm
+func _decor_add(kind: String, xf: Transform3D, col: Color) -> void:
+	var key := Vector2i(floori(xf.origin.x / CHUNK), floori(xf.origin.z / CHUNK))
+	if not _decor.has(key):
+		_decor[key] = {}
+	var chunk: Dictionary = _decor[key]
+	if not chunk.has(kind):
+		chunk[kind] = [[], []]
+	chunk[kind][0].append(xf)
+	chunk[kind][1].append(col)
+
+
+func _flush_decor() -> void:
+	var meshes := {
+		"folha": Mat.sphere(0.16, 0.06, 6),
+		"flor": Mat.sphere(0.055, 0.05, 6),
+		"caule": Mat.cyl(0.01, 0.01, 0.18, 4),
+		"tufo": Mat.cyl(0.0, 0.05, 0.2, 4),
+	}
 	var m := StandardMaterial3D.new()
 	m.vertex_color_use_as_albedo = true
 	m.roughness = 1.0
-	mmi.material_override = m
-	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	add_child(mmi)
-	return mmi
+	for key in _decor:
+		var chunk: Dictionary = _decor[key]
+		for kind in chunk:
+			var xfs: Array = chunk[kind][0]
+			var cols: Array = chunk[kind][1]
+			var mm := MultiMesh.new()
+			mm.transform_format = MultiMesh.TRANSFORM_3D
+			mm.use_colors = true
+			mm.mesh = meshes[kind]
+			mm.instance_count = xfs.size()
+			var pos: Array[Vector2] = []
+			for i in xfs.size():
+				mm.set_instance_transform(i, xfs[i])
+				mm.set_instance_color(i, cols[i])
+				pos.append(Vector2((xfs[i] as Transform3D).origin.x, (xfs[i] as Transform3D).origin.z))
+			var mmi := MultiMeshInstance3D.new()
+			mmi.multimesh = mm
+			mmi.material_override = m
+			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			mmi.visibility_range_end = 55.0
+			add_child(mmi)
+			_decor_nodes.append([mmi, pos])
+	_decor.clear()
+
+
+## Some com flores e tufos dentro de um quadrado (onde o ZodIA vai construir).
+func clear_decor(c: Vector2, half: float) -> void:
+	for entry in _decor_nodes:
+		var mmi: MultiMeshInstance3D = entry[0]
+		var pos: Array[Vector2] = entry[1]
+		for i in pos.size():
+			var d := pos[i] - c
+			if absf(d.x) < half and absf(d.y) < half:
+				mmi.multimesh.set_instance_transform(i, Transform3D(Basis().scaled(Vector3.ZERO), Vector3(pos[i].x, -1.0, pos[i].y)))
 
 
 ## Paredes invisiveis na borda: pecas derrubadas e brinquedos nao saem do campo.
 func _build_walls() -> void:
 	var body := StaticBody3D.new()
 	add_child(body)
-	var n := 48
-	var r := RADIUS - FADE * 0.5
+	var n := 160
 	for i in n:
 		var a := TAU * i / n
+		var r := edge_r(a) - FADE * 0.6
 		var cs := CollisionShape3D.new()
 		var box := BoxShape3D.new()
-		box.size = Vector3(TAU * r / n + 0.2, 6.0, 0.4)
+		box.size = Vector3(TAU * r / n + 0.4, 6.0, 0.4)
 		cs.shape = box
 		cs.position = Vector3(cos(a) * r, 3.0, sin(a) * r)
 		cs.rotation.y = -a + PI / 2.0
 		body.add_child(cs)
-
-
-## Ponto dentro do campo (para quem anda nao sair do mapa).
-static func clamp_inside(p: Vector3, margin: float = 1.0) -> Vector3:
-	var v := Vector2(p.x, p.z)
-	var lim := RADIUS - FADE - margin
-	if v.length() > lim:
-		v = v.normalized() * lim
-	return Vector3(v.x, p.y, v.y)

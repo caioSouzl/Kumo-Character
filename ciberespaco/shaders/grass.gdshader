@@ -1,5 +1,5 @@
 // Grama do campinho: verde vivo com manchas claras (luz) e escuras (sombra),
-// pontinhos amarelados. Na borda a grama se desfaz em pixels com brilho azul
+// pontinhos amarelados. Na borda a grama se desfaz em pixels
 // e o circuito aparece por baixo: o campo se mistura com o espaco digital.
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled, cull_disabled;
@@ -8,8 +8,9 @@ uniform vec3 dark : source_color = vec3(0.2, 0.45, 0.15);
 uniform vec3 mid : source_color = vec3(0.36, 0.66, 0.2);
 uniform vec3 light : source_color = vec3(0.6, 0.82, 0.26);
 uniform vec3 sun : source_color = vec3(0.78, 0.85, 0.35);
-uniform float radius = 11.0;
-uniform float fade = 1.8;
+uniform float radius = 40.0;
+uniform float fade = 3.0;
+uniform float jitter = 2.5;
 uniform vec3 digital : source_color = vec3(0.3, 0.75, 1.0);
 
 varying vec3 wp;
@@ -39,17 +40,15 @@ void fragment() {
 	c = mix(c, sun, speck * 0.5 * smoothstep(0.4, 0.7, n));
 	float r = length(p);
 	float ang = atan(p.y, p.x);
-	float er = radius + sin(ang * 3.0 + 0.7) * 0.4 + sin(ang * 7.0 + 2.1) * 0.25 + sin(ang * 13.0) * 0.12;
+	float er = radius + (sin(ang * 3.0 + 0.7) * 0.4 + sin(ang * 7.0 + 2.1) * 0.25 + sin(ang * 13.0) * 0.12) * jitter;
 	// transicao: pixels de 30 cm somem aos poucos, com contorno azul
-	float t = smoothstep(er - fade, er + fade * 0.6, r + (noise(p * 0.7) - 0.5) * 1.4);
+	float t = smoothstep(er - fade, er + fade * 0.6, r + (noise(p * 0.5) - 0.5) * 2.0);
 	float hz = hash(floor(p * 3.3));
 	if (hz < t) {
 		discard;
 	}
-	float edge = (1.0 - smoothstep(0.0, 0.16, hz - t)) * step(0.02, t);
 	c = mix(c, c * vec3(0.6, 0.85, 1.1), t);
-	c = mix(c, digital, edge * 0.7);
 	ALBEDO = c;
-	EMISSION = c * 0.22 + digital * edge * 0.9;
+	EMISSION = c * 0.22;
 	ROUGHNESS = 1.0;
 }

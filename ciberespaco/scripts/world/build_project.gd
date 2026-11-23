@@ -121,18 +121,16 @@ func shake(secs: float) -> void:
 	await tw.finished
 
 
-## A peca em construcao racha e volta ao comeco (precisa ser refeita).
+## A peca em construcao racha, se despedaca e volta ao comeco (refazer).
 func crack_current() -> void:
 	if _pieces.is_empty() or is_complete():
 		return
-	_crack_index = current_index()
-	_crack = 1.0
+	var i := current_index()
 	var n := float(_pieces.size())
-	var start := _crack_index / n
-	var tw := create_tween()
-	tw.tween_interval(0.8)
-	tw.tween_method(set_progress, progress, start, 0.6)
-	await tw.finished
+	var start := i / n
+	if piece_fraction(i) > 0.05:
+		await _break_pieces([i], _pieces[i].global_position + Vector3(0, 0, 1), 0.6)
+	set_progress(start)
 
 
 func celebrate() -> void:
@@ -147,45 +145,96 @@ func dissolve(secs: float = 1.0) -> void:
 	clear()
 
 
-## Derruba tudo: cada peca vira corpo fisico, racha e some no chao.
+## Derruba tudo: as pecas rachadas se despedacam em estilhacos, caem e somem.
 func knock_down(from: Vector3) -> void:
-	var world := get_parent()
-	var bodies: Array[RigidBody3D] = []
+	var idx: Array = []
 	for i in _pieces.size():
-		if piece_fraction(i) <= 0.0:
-			continue
+		if piece_fraction(i) > 0.0:
+			idx.append(i)
+	await _break_pieces(idx, from, 1.0)
+	clear()
+
+
+## Efeito de quebra em 3 tempos:
+## 1. racha (linhas de falha piscando, a peca treme);
+## 2. se despedaca em estilhacos (pedacos do proprio objeto);
+## 3. os estilhacos caem no chao e somem.
+func _break_pieces(idx: Array, from: Vector3, force: float) -> void:
+	var world := get_parent()
+	# 1. rachar
+	var tw := create_tween().set_parallel(true)
+	for i in idx:
+		tw.tween_method(_set_crack.bind(_mats[i]), 0.0, 1.0, 0.9)
+	var base := {}
+	for i in idx:
+		base[i] = _pieces[i].position
+	var t := 0.0
+	while t < 0.9:
+		await get_tree().process_frame
+		t += get_process_delta_time()
+		for i in idx:
+			_pieces[i].position = (base[i] as Vector3) + Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)) * 0.03 * t
+	# 2. estilhacos
+	var shards: Array[RigidBody3D] = []
+	var shard_mats: Array = []
+	for i in idx:
 		var mi := _pieces[i]
-		var mat := _mats[i]
+		mi.position = base[i]
+		var box := mi.mesh.get_aabb()
+		var mat := Mat.holo()
+		mat.set_shader_parameter("y_min", -1.0)
+		mat.set_shader_parameter("y_max", 1.0)
 		mat.set_shader_parameter("build", 1.0)
 		mat.set_shader_parameter("crack", 1.0)
-		var rb := RigidBody3D.new()
-		rb.mass = 2.0
-		world.add_child(rb)
-		rb.global_transform = mi.global_transform
-		mi.reparent(rb)
-		var cs := CollisionShape3D.new()
-		var shape := BoxShape3D.new()
-		var box := mi.mesh.get_aabb()
-		shape.size = box.size.max(Vector3.ONE * 0.05)
-		cs.shape = shape
-		cs.position = box.get_center()
-		rb.add_child(cs)
-		var away := rb.global_position - from
-		away.y = 0.0
-		away = away.normalized() if away.length() > 0.01 else Vector3(randf_range(-1, 1), 0, 1).normalized()
-		rb.apply_central_impulse((away * randf_range(1.5, 3.2) + Vector3.UP * randf_range(2.0, 4.0)) * rb.mass)
-		rb.apply_torque_impulse(Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * 2.0)
-		bodies.append(rb)
-	_pieces.clear()
-	var mats := _mats.duplicate()
-	_mats.clear()
-	await get_tree().create_timer(3.2).timeout
-	var tw := create_tween()
-	tw.tween_method(_fade_mats.bind(mats), 1.0, 0.0, 1.2)
-	await tw.finished
-	for rb in bodies:
+		shard_mats.append(mat)
+		var cnt := Vector3i(clampi(roundi(box.size.x / 0.35), 1, 3), clampi(roundi(box.size.y / 0.35), 1, 3), clampi(roundi(box.size.z / 0.35), 1, 3))
+		var cell := box.size / Vector3(cnt)
+		var center := mi.global_transform * box.get_center()
+		for x in cnt.x:
+			for y in cnt.y:
+				for z in cnt.z:
+					var local := box.position + cell * Vector3(x + 0.5, y + 0.5, z + 0.5)
+					var sz := (cell * randf_range(0.7, 0.95)).max(Vector3.ONE * 0.05)
+					var rb := RigidBody3D.new()
+					rb.mass = 0.3
+					world.add_child(rb)
+					rb.global_transform = Transform3D(mi.global_transform.basis.orthonormalized() * Basis.from_euler(Vector3(randf(), randf(), randf()) * 0.4), mi.global_transform * local)
+					var m := MeshInstance3D.new()
+					m.mesh = Mat.box(sz)
+					m.material_override = mat
+					m.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+					rb.add_child(m)
+					var cs := CollisionShape3D.new()
+					var shape := BoxShape3D.new()
+					shape.size = sz
+					cs.shape = shape
+					rb.add_child(cs)
+					var out := rb.global_position - center
+					var away := rb.global_position - from
+					away.y = 0.0
+					var dir := (out.normalized() * 0.6 + away.normalized() * 0.4)
+					rb.apply_central_impulse((dir * randf_range(0.8, 1.8) * force + Vector3.UP * randf_range(0.5, 1.5)) * rb.mass)
+					rb.apply_torque_impulse(Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * 0.08)
+					shards.append(rb)
+		mi.visible = false
+	# 3. caem e somem
+	await get_tree().create_timer(1.8).timeout
+	var fade := create_tween().set_parallel(true)
+	fade.tween_method(_fade_mats.bind(shard_mats), 1.0, 0.0, 0.9)
+	for rb in shards:
+		fade.tween_property(rb.get_child(0), "scale", Vector3.ONE * 0.2, 0.9)
+	await fade.finished
+	for rb in shards:
 		if is_instance_valid(rb):
 			rb.queue_free()
+	for i in idx:
+		if i < _mats.size():
+			_set_crack(0.0, _mats[i])
+			_pieces[i].visible = piece_fraction(i) > 0.0
+
+
+func _set_crack(v: float, mat: ShaderMaterial) -> void:
+	mat.set_shader_parameter("crack", v)
 
 
 func _fade_mats(v: float, mats: Array) -> void:

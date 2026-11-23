@@ -41,6 +41,11 @@ var _face_state := Face.SLEEP
 var _blink_left := 0.0
 var _next_blink := 3.0
 var _walk_amp := 0.0
+var _quad := 0.0
+var _cur_speed := 0.0
+## Quanto o corpo deita para frente nas quatro patas (rad) e quanto desce.
+const QUAD_PITCH := 1.15
+const QUAD_DROP := 0.32
 
 
 func _ready() -> void:
@@ -137,23 +142,56 @@ func _setup_rig(glb: Node, cfg: Dictionary) -> void:
 				_lids.append([mi, idx])
 
 
-func _rot(key: String, axis: Vector3, angle: float) -> void:
+## Gira o osso em volta de um eixo do modelo (x = lado, y = cima, z = frente),
+## somando a pose base. Assim o eixo nao depende de como o osso foi criado.
+func _rotm(key: String, axis_model: Vector3, angle: float) -> void:
 	var i: int = _bone.get(key, -1)
-	if i >= 0:
-		_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * Quaternion(axis, angle))
+	if i < 0:
+		return
+	var rb := _skel.get_bone_global_rest(i).basis.orthonormalized()
+	var ax := (rb.inverse() * axis_model).normalized()
+	_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * Quaternion(ax, angle))
 
 
+func _rotm2(key: String, ax1: Vector3, a1: float, ax2: Vector3, a2: float) -> void:
+	var i: int = _bone.get(key, -1)
+	if i < 0:
+		return
+	var rb := _skel.get_bone_global_rest(i).basis.orthonormalized().inverse()
+	var q := Quaternion((rb * ax1).normalized(), a1) * Quaternion((rb * ax2).normalized(), a2)
+	_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * q)
+
+
+## Anda em pe devagar e de quatro patas quando corre.
 func _animate_rig(delta: float) -> void:
 	_walk_amp = move_toward(_walk_amp, 1.0 if _moving else 0.0, delta * 5.0)
-	var w := _t * 11.0
+	var want_quad := _moving and _cur_speed >= float(GameConfig.sub("kumo", "quad_above_speed", 3.0))
+	_quad = move_toward(_quad, 1.0 if want_quad else 0.0, delta * 3.0)
+	var q := _quad
+	var w := _t * (13.0 if q > 0.5 else 10.0)
 	var a := _walk_amp
-	_rot("thigh_l", Vector3.RIGHT, sin(w) * 0.55 * a)
-	_rot("thigh_r", Vector3.RIGHT, -sin(w) * 0.55 * a)
-	_rot("arm_l", Vector3.RIGHT, -sin(w) * 0.45 * a)
-	_rot("arm_r", Vector3.RIGHT, sin(w) * 0.45 * a)
+	var X := Vector3.RIGHT
+	var Z := Vector3.BACK
+	# tronco inclina para frente nas quatro patas
+	_rotm("hips", X, q * QUAD_PITCH + sin(w * 2.0) * 0.03 * a)
+	_rotm("spine", X, q * 0.15)
+	_rotm("chest", X, q * 0.1 + sin(_t * (1.6 if asleep else 2.4)) * 0.03)
+	_rotm("neck", X, -q * 0.7)
 	var nod := -0.25 if asleep else sin(_t * 1.3) * 0.05
-	_rot("head", Vector3.RIGHT, nod)
-	_rot("chest", Vector3.RIGHT, sin(_t * (1.6 if asleep else 2.4)) * 0.03)
+	_rotm("head", X, nod - q * 0.55)
+	# pernas: compensam a inclinacao e alternam o passo
+	var leg := sin(w) * (0.5 + 0.15 * q) * a
+	_rotm("thigh_l", X, -q * QUAD_PITCH - leg)
+	_rotm("thigh_r", X, -q * QUAD_PITCH + leg)
+	_rotm("shin_l", X, maxf(0.0, sin(w)) * 0.5 * a)
+	_rotm("shin_r", X, maxf(0.0, -sin(w)) * 0.5 * a)
+	# bracos: balancam em pe; de quatro viram patas da frente (passo cruzado)
+	var arm_swing := sin(w) * (0.45 + 0.1 * q) * a
+	_rotm2("arm_l", X, -q * 0.95 + arm_swing, Z, q * 0.35)
+	_rotm2("arm_r", X, -q * 0.95 - arm_swing, Z, -q * 0.35)
+	_rotm("forearm_l", X, -q * 0.25)
+	_rotm("forearm_r", X, -q * 0.25)
+	_body.position.y = -q * QUAD_DROP
 	for k in _tail.size():
 		var i: int = _tail[k]
 		var sway := sin(_t * (2.0 + 4.0 * a) - k * 0.45) * (0.06 + 0.06 * a)
@@ -207,6 +245,7 @@ func walk_to(p: Vector3, speed: float) -> bool:
 	_token += 1
 	var my := _token
 	_moving = true
+	_cur_speed = speed
 	while true:
 		await get_tree().process_frame
 		if my != _token:

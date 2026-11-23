@@ -12,9 +12,9 @@ uniform vec3 trace_a : source_color = vec3(0.2, 0.55, 1.0);
 uniform vec3 trace_b : source_color = vec3(0.55, 0.35, 1.0);
 uniform vec3 chip_body : source_color = vec3(0.06, 0.07, 0.2);
 uniform float cell = 0.85;
-uniform float island_r = 9.4;
-uniform float band_end = 26.0;
-uniform float fade_end = 40.0;
+uniform float island_r = 36.0;
+uniform float band_end = 62.0;
+uniform float fade_end = 85.0;
 
 varying vec3 wp;
 
@@ -48,7 +48,7 @@ void fragment() {
 	float via = step(0.9, hash(id + 3.1)) * (1.0 - smoothstep(0.02, 0.05, abs(length(f - 0.5) - 0.11)));
 
 	// densidade: cheia perto do campo, rareando ao longe
-	float density = mix(0.8, 0.35, smoothstep(14.0, band_end, d));
+	float density = mix(0.8, 0.35, smoothstep(44.0, band_end, d));
 	float active = step(hash(id + 5.7), density);
 
 	// chips (blocos escuros com contorno e pinos)
@@ -69,7 +69,7 @@ void fragment() {
 	vec3 tc = mix(trace_a, trace_b, step(0.78, hash(id * 0.37 + 1.0)));
 
 	float I = (line * (0.28 + 0.55 * pulse) + halo + via * 0.45) * active * inner * px * (1.0 - in_chip);
-	vec3 col = mix(base_near, base_far, smoothstep(8.0, 30.0, d));
+	vec3 col = mix(base_near, base_far, smoothstep(40.0, 80.0, d));
 	col = mix(col, chip_body, in_chip);
 	col += tc * I;
 	col += trace_a * (border * 0.5 + pins * 0.3) * px;

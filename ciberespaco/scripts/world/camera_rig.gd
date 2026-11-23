@@ -6,6 +6,8 @@ extends Camera3D
 ## Deslocamento da camera em relacao ao alvo (alto e atras, olhando de cima).
 const FAR_OFFSET := Vector3(0.0, 3.6, 6.6)
 const NEAR_OFFSET := Vector3(1.6, 3.0, 3.8)
+## Para mostrar um objeto do ZodIA (pronto ou quebrando).
+const OBJECT_OFFSET := Vector3(0.0, 3.6, 6.0)
 
 var main_target: Node3D
 ## Ponto que puxa o enquadramento junto com o ZodIA (a plataforma).
@@ -13,6 +15,7 @@ var anchor := Vector3.ZERO
 
 var _focus: Node3D
 var _focus_left := 0.0
+var _focus_offset := Vector3.ZERO
 var _look := Vector3.ZERO
 
 
@@ -20,13 +23,14 @@ func _ready() -> void:
 	keep_aspect = Camera3D.KEEP_WIDTH
 	fov = 62.0
 	near = 0.1
-	far = 80.0
+	far = 160.0
 	current = true
 
 
-func focus(n: Node3D, secs: float) -> void:
+func focus(n: Node3D, secs: float, offset: Vector3 = NEAR_OFFSET) -> void:
 	_focus = n
 	_focus_left = secs
+	_focus_offset = offset
 
 
 func release() -> void:
@@ -47,8 +51,8 @@ func _process(delta: float) -> void:
 	var offset := FAR_OFFSET
 	var speed := 2.2
 	if _focus_left > 0.0 and is_instance_valid(_focus):
-		target = _focus.global_position + Vector3(0, 0.4, 0)
-		offset = NEAR_OFFSET
+		target = _focus.global_position + Vector3(0, 0.4 if _focus_offset == NEAR_OFFSET else 1.0, 0)
+		offset = _focus_offset
 		speed = 4.0
 	elif is_instance_valid(main_target):
 		target = main_target.global_position.lerp(anchor, 0.55) + Vector3(0, 1.1, 0)

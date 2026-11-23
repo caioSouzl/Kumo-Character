@@ -18,23 +18,44 @@ live manda o presente certo. Base: apresentação "Ciberespaço" no Canva.
 
 ## Cenário
 
-- Chão de circuitos azuis e roxos que correm para o horizonte e se desfazem em
-  pontos até sumir no céu roxo escuro.
-- No meio, um campinho redondo de grama com flores, pedras e brinquedos nas
-  bordas (bola, blocos, carrinho, pião).
-- No campo, um tronco retorcido com um terrário de vidro no topo: a cama do Kumo.
-- Na frente do campo, a plataforma quadrada onde o ZodIA projeta os objetos.
+- Campo redondo de grama com 40 m de raio, borda ondulada. Na borda a grama
+  se desfaz em quadradinhos (pixels) e o circuito aparece por baixo: o campo se
+  mistura com o espaço digital.
+- Árvore do Hyper3D no centro (60% maior), com o terrário de vidro onde o
+  Kumo dorme. Brinquedos (bola, bloco, carrinho, argolas, balanço) nas bordas.
+- Pedras, moitas com flores, tufos de grama e caminho de pedras chatas.
+- Fora do campo: placa de circuito escura com trilhas, vias e chips, que se
+  desfaz no horizonte roxo.
+- Paredes invisíveis na borda: nada sai do mapa. Kumo e ZodIA não andam para
+  fora. A única exceção é a queda do ZodIA, que pode passar do limite.
 
 ## Ciclo
 
-1. O ZodIA começa um projeto. Lasers roxos "desenham" cada peça de baixo para
-   cima, em roxo translúcido. Sem interferência, um projeto leva 2 min
-   (`project_build_sec`).
-2. O Kumo começa dormindo no terrário. Em ~1 min (`kumo_wake_sec`) aparece
-   "Kumo está acordando!", a câmera mostra o Kumo descendo da árvore, e daí em
-   diante ele brinca com os brinquedos ou fica observando o ZodIA.
-3. Projeto pronto: ZodIA fica orgulhoso, o objeto se desfaz e começa o próximo.
-   Todos prontos: óculos da vitória, e a lista recomeça embaralhada.
+1. O ZodIA escolhe um lugar livre do campo, perto de onde está, sem árvore,
+   pedras, brinquedos nem objetos que ele já fez. A plataforma aparece ali e
+   ele vai até ela.
+2. Com os dois braços estendidos para frente, ele dispara dois lasers roxos
+   que "desenham" cada peça de baixo para cima. Sem interferência, um projeto
+   leva 2 min (`project_build_sec`).
+3. Projeto pronto: a câmera mostra o objeto, o ZodIA comemora, a plataforma
+   some e **o objeto fica no mapa**. O próximo projeto vai para outro lugar
+   livre. Acima de `max_built_objects`, o objeto mais antigo some.
+4. Todos os projetos prontos: óculos da vitória, e a lista recomeça.
+5. O Kumo começa dormindo no terrário. Em ~1 min (`kumo_wake_sec`) acorda,
+   desce da árvore e passa a brincar ou observar. Anda em pé devagar e corre
+   de quatro patas (`kumo.quad_above_speed`).
+
+## Câmera
+
+- Foca o ZodIA e as reações dele aos eventos.
+- Foca o Kumo nas ações de evento dele (acordar, ir aprontar).
+- Foca o objeto quando ele fica pronto e quando está quebrando.
+
+## Quebra
+
+Rachado (linhas de falha piscando, o objeto treme) → se despedaça em
+estilhaços → os estilhaços caem no chão → somem. Vale para a derrubada
+(Galáxia: o objeto todo) e para o tombo (Perfume: só a peça em construção).
 
 ## Bateria (curtidas)
 

@@ -25,6 +25,9 @@ var _beams: Array[MeshInstance3D] = []
 var _anim: AnimationPlayer
 var _anim_map: Dictionary = {}
 var _anim_mode := ""
+var _skel: Skeleton3D
+## Bracos do modelo do Hyper3D: [{idx, pivot, tip, side, q}]
+var _arms: Array = []
 
 var _spark: MeshInstance3D
 
@@ -73,8 +76,9 @@ func _ready() -> void:
 		_hand.position = Vector3(0.7, 0.75, 0.2)
 		_pose.add_child(_hand)
 
-	for i in 3:
-		var b := Mat.add(self, Mat.cyl(0.018 if i == 0 else 0.008, 0.018 if i == 0 else 0.008, 1.0, 6), Mat.glow(LASER, 4.0 if i == 0 else 2.5))
+	# 2 feixes principais (um por braco) e 2 finos tremulando
+	for i in 4:
+		var b := Mat.add(self, Mat.cyl(0.016 if i < 2 else 0.007, 0.016 if i < 2 else 0.007, 1.0, 6), Mat.glow(LASER, 4.0 if i < 2 else 2.5))
 		b.top_level = true
 		b.visible = false
 		_beams.append(b)
@@ -125,6 +129,16 @@ func _attach_to_rig(glb: Node, cfg: Dictionary) -> bool:
 	if skels.is_empty() or cfg.is_empty():
 		return false
 	var skel := skels[0] as Skeleton3D
+	_skel = skel
+	for side_name in ["left", "right"]:
+		var ac: Dictionary = cfg.get("arms", {}).get(side_name, {})
+		var idx := skel.find_bone(String(ac.get("bone", side_name)))
+		if idx >= 0 and ac.has("pivot") and ac.has("tip"):
+			_arms.append({"idx": idx, "pivot": _v3(ac["pivot"]), "tip": _v3(ac["tip"]), "q": Quaternion.IDENTITY})
+	if _arms.size() == 2:
+		var cx := ((_arms[0]["pivot"] as Vector3).x + (_arms[1]["pivot"] as Vector3).x) / 2.0
+		for arm in _arms:
+			arm["side"] = signf((arm["pivot"] as Vector3).x - cx)
 	# a tela-rosto vira o material do proprio visor (UV plana feita no Blender),
 	# entao acompanha a curva e os movimentos da cabeca sem descolar
 	var screen := _find_surface(glb, String(cfg.get("screen_material", "zodia_tela")))
@@ -204,12 +218,60 @@ func _play_mode_anim() -> void:
 	_anim_mode = arm_mode
 	var name := String(_anim_map.get(arm_mode, ""))
 	if name == "" or not _anim.has_animation(name):
-		name = String(_anim_map.get("idle", ""))
-	if name == "" or not _anim.has_animation(name):
-		_anim.pause()
+		# sem animacao do arquivo: bracos controlados pelo codigo
+		if _anim.active:
+			_anim.active = false
+			if _skel:
+				_skel.reset_bone_poses()
+			for arm in _arms:
+				arm["q"] = Quaternion.IDENTITY
 		return
+	_anim.active = true
 	_anim.get_animation(name).loop_mode = Animation.LOOP_LINEAR
 	_anim.play(name, 0.3)
+
+
+func _anim_playing() -> bool:
+	return _anim != null and _anim.active and _anim.is_playing()
+
+
+## Bracos (paletas) giram em volta do ombro: para frente ao construir,
+## para baixo parado ou sem bateria.
+func _animate_rig_arms(delta: float) -> void:
+	if _arms.is_empty() or _anim_playing():
+		return
+	for arm in _arms:
+		var side: float = arm["side"]
+		var target := Vector3(side * 0.12, 0.05, 1.0)
+		match arm_mode:
+			"build":
+				target = Vector3(side * 0.12, 0.05, 1.0)
+			"droop":
+				target = Vector3(side * 0.2, -1.0, -0.1)
+			_:
+				target = Vector3(side * 0.45, -1.0, 0.2)
+		var p: Vector3 = arm["pivot"]
+		var rest_dir := ((arm["tip"] as Vector3) - p).normalized()
+		var goal_q := Quaternion(rest_dir, target.normalized())
+		var q: Quaternion = (arm["q"] as Quaternion).slerp(goal_q, minf(delta * 6.0, 1.0))
+		arm["q"] = q
+		var b := Basis(q)
+		var idx: int = arm["idx"]
+		_skel.set_bone_global_pose(idx, Transform3D(b, p - b * p) * _skel.get_bone_global_rest(idx))
+
+
+## Pontas dos dois bracos no mundo (de onde saem os lasers).
+func _arm_tips() -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	if _arms.size() == 2 and not _anim_playing():
+		for arm in _arms:
+			var p: Vector3 = arm["pivot"]
+			var tip: Vector3 = p + (arm["q"] as Quaternion) * ((arm["tip"] as Vector3) - p) * 1.15
+			out.append(_skel.global_transform * tip)
+	else:
+		out.append(_hand.global_position)
+		out.append(_hand.global_position)
+	return out
 
 
 func _build_face(parent: Node3D, offset: Vector3, quad_size: Vector2, normal: Vector3) -> void:
@@ -257,17 +319,19 @@ func set_laser(target: Variant) -> void:
 func _update_laser() -> void:
 	var on := _laser_target != null and not _fallen and not _slumped
 	for i in _beams.size():
-		_beams[i].visible = on and (i == 0 or fmod(_t * 7.0 + i * 1.3, 1.0) < 0.7)
+		_beams[i].visible = on and (i < 2 or fmod(_t * 7.0 + i * 1.3, 1.0) < 0.7)
 	_spark.visible = on
 	if not on:
 		return
-	var a := _hand.global_position
+	var tips := _arm_tips()
 	var target: Vector3 = _laser_target
+	var side := global_transform.basis.x.normalized() * 0.08
 	for i in _beams.size():
-		var jitter := Vector3.ZERO
-		if i > 0:
-			jitter = Vector3(sin(_t * 9.0 + i * 2.0), 0.0, cos(_t * 7.0 + i * 3.0)) * 0.35
-		_place_beam(_beams[i], a, target + jitter)
+		var a: Vector3 = tips[i % 2]
+		var off := side * (-1.0 if i % 2 == 0 else 1.0)
+		if i >= 2:
+			off += Vector3(sin(_t * 9.0 + i * 2.0), 0.0, cos(_t * 7.0 + i * 3.0)) * 0.3
+		_place_beam(_beams[i], a, target + off)
 	_spark.global_position = target
 	_spark.scale = Vector3.ONE * (0.8 + 0.4 * sin(_t * 30.0))
 
@@ -367,6 +431,7 @@ func _process(delta: float) -> void:
 
 func _animate_arms(delta: float) -> void:
 	_play_mode_anim()
+	_animate_rig_arms(delta)
 	if _arm_l == null:
 		return
 	var l := 0.0

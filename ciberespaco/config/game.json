@@ -15,8 +15,9 @@
     "hover_height": 0.55
   },
   "kumo": {
-    "walk_speed": 1.6,
-    "run_speed": 4.2,
+    "walk_speed": 2.0,
+    "run_speed": 4.6,
+    "quad_above_speed": 3.0,
     "play_sec": [
       4,
       9
@@ -24,10 +25,7 @@
   },
   "camera": {
     "kumo_focus_sec": 6,
-    "auto_kumo_look_every_sec": [
-      35,
-      55
-    ]
+    "object_focus_sec": 4
   },
   "models": {
     "zodia": "res://assets/models/zodia.glb",
@@ -56,21 +54,56 @@
       ],
       "anims": {
         "idle": "",
-        "build": "indicate",
+        "build": "",
         "cheer": "cheer",
         "wave": "check_in",
         "droop": ""
       },
-      "screen_material": "zodia_tela"
+      "screen_material": "zodia_tela",
+      "arms": {
+        "left": {
+          "bone": "left",
+          "pivot": [
+            -0.1695,
+            0.197,
+            0.0
+          ],
+          "tip": [
+            -0.115,
+            0.186,
+            0.03
+          ]
+        },
+        "right": {
+          "bone": "right",
+          "pivot": [
+            -0.3675,
+            0.2395,
+            0.0
+          ],
+          "tip": [
+            -0.415,
+            0.302,
+            0.03
+          ]
+        }
+      }
     },
     "kumo_rig": {
       "walk_bones": {
+        "hips": "hips",
+        "spine": "spine",
+        "chest": "chest",
+        "neck": "neck",
+        "head": "head",
         "thigh_l": "thigh.L",
         "thigh_r": "thigh.R",
+        "shin_l": "shin.L",
+        "shin_r": "shin.R",
         "arm_l": "upper_arm.L",
         "arm_r": "upper_arm.R",
-        "head": "head",
-        "chest": "chest"
+        "forearm_l": "forearm.L",
+        "forearm_r": "forearm.R"
       },
       "tail_prefix": "tail_",
       "blink_shapes": [
@@ -89,5 +122,6 @@
   "simulator": {
     "visible_on_start": true,
     "likes_per_click": 20
-  }
+  },
+  "max_built_objects": 20
 }

@@ -1,21 +1,26 @@
 extends Node3D
 ## Fluxo do Ciberespaco.
-## - O ZodIA constroi projetos na plataforma quadrada (2 min cada sem interferencia).
+## - O ZodIA escolhe um lugar livre do campo, projeta a plataforma ali e constroi
+##   (2 min cada sem interferencia). Os objetos prontos ficam no mapa.
 ## - O Kumo comeca dormindo no terrario da arvore e acorda em ~1 min.
 ## - Curtidas recarregam a bateria do ZodIA; sem bateria ele fica lento e depois para.
 ## - Presentes passam pela EventQueue: alguns ajudam o ZodIA, outros mandam o Kumo
 ##   atrapalhar (cada um tem a sua consequencia em _on_event_started()).
 
 const E := ZodiaFace.Expr
-## A plataforma fica dentro do campo, na frente da arvore.
-const PAD_CENTER := Vector3(0.0, 0.05, 6.6)
 const PAD_SIZE := 4.4
+## Primeiro lugar tentado (na frente da arvore); depois o ZodIA escolhe.
+const FIRST_SITE := Vector3(0.0, 0.05, 7.5)
 
 var _island: Island
 var _pad: Node3D
 var _zodia: Zodia
 var _kumo: Kumo
 var _project: BuildProject
+## Centro da plataforma atual (muda a cada projeto).
+var _site := FIRST_SITE
+## Objetos ja construidos que ficam no mapa.
+var _built: Array[BuildProject] = []
 var _cam: CameraRig
 var _hud: Hud
 var _rng := RandomNumberGenerator.new()
@@ -31,7 +36,6 @@ var _boost_mult := 1.0
 ## Quantos efeitos estao segurando o ZodIA (caido, rodando, comemorando...).
 var _zodia_lock := 0
 var _battery_notice_cd := 0.0
-var _kumo_look_timer := 45.0
 var _suspicious_cd := 0.0
 var _orbit := 0.0
 var _was_empty := false
@@ -48,11 +52,10 @@ func _ready() -> void:
 	_build_pad()
 
 	_project = BuildProject.new()
-	_project.position = PAD_CENTER
 	add_child(_project)
 
 	_zodia = Zodia.new()
-	_zodia.position = PAD_CENTER + Vector3(2.6, 0, -1.8)
+	_zodia.position = FIRST_SITE + Vector3(2.6, 0, -1.8)
 	add_child(_zodia)
 
 	_kumo = Kumo.new()
@@ -61,7 +64,7 @@ func _ready() -> void:
 
 	_cam = CameraRig.new()
 	_cam.main_target = _zodia
-	_cam.anchor = PAD_CENTER + Vector3(0, 0.8, 0)
+	_cam.anchor = FIRST_SITE + Vector3(0, 0.8, 0)
 	add_child(_cam)
 	_cam.global_position = _cam.anchor + CameraRig.FAR_OFFSET
 	_cam.snap()
@@ -75,7 +78,6 @@ func _ready() -> void:
 	EventQueue.event_started.connect(_on_event_started)
 	EventQueue.gift_received.connect(_hud.thanks)
 	LiveConnector.likes_received.connect(_on_likes)
-	_kumo_look_timer = GameConfig.range_pick("camera", "auto_kumo_look_every_sec", Vector2(35, 55), _rng)
 	_start_project()
 
 
@@ -119,11 +121,12 @@ func _build_environment() -> void:
 	add_child(rim)
 
 	var floor_mesh := PlaneMesh.new()
-	floor_mesh.size = Vector2(80, 80)
+	floor_mesh.size = Vector2(240, 240)
 	var fm := ShaderMaterial.new()
 	fm.shader = load("res://shaders/circuit_floor.gdshader")
 	Mat.add(self, floor_mesh, fm)
 	var floor_body := StaticBody3D.new()
+	floor_body.position.y = Island.TOP
 	var cs := CollisionShape3D.new()
 	cs.shape = WorldBoundaryShape3D.new()
 	floor_body.add_child(cs)
@@ -138,7 +141,7 @@ func _build_environment() -> void:
 		var a := rng.randf() * TAU
 		var r := rng.randf_range(Island.RADIUS + 2.0, Island.RADIUS + 14.0)
 		var c := Vector3(cos(a) * r, 0, sin(a) * r)
-		if c.distance_to(PAD_CENTER) < 4.5:
+		if c.distance_to(_site) < 4.5:
 			continue
 		var sz := Vector3(rng.randf_range(0.8, 2.2), rng.randf_range(0.1, 0.45), rng.randf_range(0.8, 1.8))
 		var chip := Node3D.new()
@@ -170,7 +173,8 @@ func _build_environment() -> void:
 
 func _build_pad() -> void:
 	_pad = Node3D.new()
-	_pad.position = PAD_CENTER
+	_pad.position = FIRST_SITE
+	_pad.scale = Vector3(0.01, 1, 0.01)
 	add_child(_pad)
 	var floor_mat := Mat.glass(Color(0.45, 0.2, 0.9), 0.22)
 	Mat.add(_pad, Mat.box(Vector3(PAD_SIZE, 0.04, PAD_SIZE)), floor_mat, Vector3(0, 0.02, 0))
@@ -195,10 +199,72 @@ func _start_project() -> void:
 	if _projects.is_empty():
 		push_error("Nenhum projeto em config/projects.json")
 		return
-	_project.position = PAD_CENTER
+	_state = "moving"
+	_site = _choose_site()
+	_island.clear_decor(Vector2(_site.x, _site.z), PAD_SIZE * 0.5 + 0.3)
+	_project.position = _site
 	_project.setup(_projects[_project_index])
-	_state = "building"
+	_cam.anchor = _site + Vector3(0, 0.8, 0)
 	_hud.notice("Novo projeto: %s" % _project.project_name, "zodia", 3.0)
+	# a plataforma aparece no lugar novo e o ZodIA vai ate la
+	_pad.position = _site
+	var tw := create_tween()
+	tw.tween_property(_pad, "scale", Vector3.ONE, 0.6).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_zodia.glide_speed = 4.0
+	_zodia.goal = _site + Vector3(0, 0, -PAD_SIZE * 0.5 - 1.0)
+	while is_inside_tree() and Vector2(_zodia.position.x - _zodia.goal.x, _zodia.position.z - _zodia.goal.z).length() > 0.4:
+		_zodia.face_point(_zodia.goal)
+		await get_tree().process_frame
+	_zodia.glide_speed = 1.6
+	if _state == "moving":
+		_state = "building"
+
+
+## Lugar livre para a proxima plataforma: sem arvore, pedras, brinquedos nem
+## objetos que o ZodIA ja fez. Prefere lugares perto dele.
+func _choose_site() -> Vector3:
+	var half := PAD_SIZE * 0.5 + 0.6
+	var from := Vector2(_zodia.position.x, _zodia.position.z)
+	if _built.is_empty() and _island.square_is_free(Vector2(FIRST_SITE.x, FIRST_SITE.z), half) and _project.piece_count() == 0:
+		return FIRST_SITE
+	for attempt in 2:
+		var best := Vector2.INF
+		var best_d := INF
+		for i in 400:
+			var a := _rng.randf() * TAU
+			var r := sqrt(_rng.randf()) * (Island.RADIUS - Island.FADE - half - 1.0)
+			var c := Vector2(cos(a) * r, sin(a) * r)
+			if not _island.square_is_free(c, half) or _overlaps_built(c, half):
+				continue
+			var d := c.distance_to(from)
+			if d < 6.0:
+				d += 20.0  # nao colado no anterior
+			if d < best_d:
+				best_d = d
+				best = c
+		if best != Vector2.INF:
+			return Vector3(best.x, Island.TOP, best.y)
+		# mapa cheio: o objeto mais antigo some para abrir espaco
+		_remove_oldest_built()
+	return FIRST_SITE
+
+
+func _overlaps_built(c: Vector2, half: float) -> bool:
+	for b in _built:
+		var p := Vector2(b.position.x, b.position.z)
+		if absf(p.x - c.x) < half + PAD_SIZE * 0.5 + 0.4 and absf(p.y - c.y) < half + PAD_SIZE * 0.5 + 0.4:
+			return true
+	return false
+
+
+func _remove_oldest_built() -> void:
+	if _built.is_empty():
+		return
+	var old: BuildProject = _built.pop_front()
+	old.dissolve(1.0)
+	await get_tree().create_timer(1.2).timeout
+	if is_instance_valid(old):
+		old.queue_free()
 
 
 func _complete_project() -> void:
@@ -206,6 +272,8 @@ func _complete_project() -> void:
 	_zodia.set_laser(null)
 	_project.celebrate()
 	_zodia_lock += 1
+	# camera mostra o objeto pronto
+	_cam.focus(_project, float(GameConfig.sub("camera", "object_focus_sec", 4.0)), CameraRig.OBJECT_OFFSET)
 	var last := _project_index >= _projects.size() - 1
 	if last:
 		_zodia.express(E.OCULOS_VITORIA, 7.0)
@@ -217,7 +285,14 @@ func _complete_project() -> void:
 		_hud.notice("Projeto concluído: %s!" % _project.project_name, "zodia", 3.5)
 	await get_tree().create_timer(7.0 if last else GameConfig.num("next_project_delay_sec", 4.5)).timeout
 	_zodia.arm_mode = "idle"
-	await _project.dissolve(1.0)
+	# o objeto fica no mapa; a plataforma some
+	var tw := create_tween()
+	tw.tween_property(_pad, "scale", Vector3(0.01, 1, 0.01), 0.4)
+	_built.append(_project)
+	while _built.size() > int(GameConfig.value("max_built_objects", 20)):
+		_remove_oldest_built()
+	_project = BuildProject.new()
+	add_child(_project)
 	_zodia_lock -= 1
 	if last:
 		_projects.shuffle()
@@ -305,24 +380,18 @@ func _update_zodia_position(delta: float) -> void:
 	_orbit += delta * 0.12
 	var a := PI + sin(_orbit) * deg_to_rad(62.0)
 	var r := PAD_SIZE * 0.5 + 1.0
-	_zodia.goal = PAD_CENTER + Vector3(sin(a) * r, 0, cos(a) * r)
+	_zodia.goal = _site + Vector3(sin(a) * r, 0, cos(a) * r)
 	if _state != "building":
 		_zodia.face_point(_cam.global_position)
 
 
-func _update_kumo_watch(delta: float) -> void:
+func _update_kumo_watch(_delta: float) -> void:
 	if not _kumo_woken:
 		return
 	# ZodIA desconfia quando o Kumo chega perto demais
 	if _suspicious_cd <= 0.0 and not _zodia.has_temp_expr() and _kumo.global_position.distance_to(_zodia.global_position) < 2.6:
 		_suspicious_cd = 12.0
 		_zodia.express(E.DESCONFIADO, 2.2)
-	# de vez em quando a camera mostra o que o Kumo esta fazendo
-	_kumo_look_timer -= delta
-	if _kumo_look_timer <= 0.0:
-		_kumo_look_timer = GameConfig.range_pick("camera", "auto_kumo_look_every_sec", Vector2(35, 55), _rng)
-		if not _cam.is_focusing() and EventQueue.current().is_empty():
-			_cam.focus(_kumo, 4.0)
 
 
 # ---------- Kumo ----------
@@ -364,7 +433,7 @@ func _kumo_roam() -> void:
 		else:
 			# observa o ZodIA da beira do campo
 			var side := -1.0 if _rng.randf() < 0.5 else 1.0
-			var watch := PAD_CENTER + Vector3(side * (PAD_SIZE / 2.0 + 1.3), 0, _rng.randf_range(-0.5, 1.5))
+			var watch := _site + Vector3(side * (PAD_SIZE / 2.0 + 1.3), 0, _rng.randf_range(-0.5, 1.5))
 			if not await _kumo.walk_to(watch, walk) or _kumo.acting:
 				continue
 			_kumo.look_toward(_zodia.global_position)
@@ -428,10 +497,10 @@ func _kumo_sabotage(ev: Dictionary) -> void:
 
 ## Kumo esbarra sem querer: o projeto treme, mas nao cai.
 func _do_bump(run: float) -> void:
-	var sx := -1.0 if _kumo.global_position.x < PAD_CENTER.x else 1.0
-	var side := PAD_CENTER + Vector3(sx * (PAD_SIZE / 2.0 + 0.45), 0, 0.3)
+	var sx := -1.0 if _kumo.global_position.x < _site.x else 1.0
+	var side := _site + Vector3(sx * (PAD_SIZE / 2.0 + 0.45), 0, 0.3)
 	await _kumo.walk_to(side, run)
-	_kumo.look_toward(PAD_CENTER)
+	_kumo.look_toward(_site)
 	_kumo.bounce(1, 0.2)
 	_cam.focus(_zodia, 4.0)
 	_zodia.express(E.ASSUSTADO, 1.8)
@@ -440,13 +509,13 @@ func _do_bump(run: float) -> void:
 	_zodia.express(E.ALIVIADO, 1.8)
 	await get_tree().create_timer(1.2).timeout
 	_cam.focus(_kumo, 3.0)
-	await _kumo.walk_to(PAD_CENTER + Vector3(sx * (PAD_SIZE / 2.0 + 1.6), 0, 1.2), run * 0.7)
+	await _kumo.walk_to(_site + Vector3(sx * (PAD_SIZE / 2.0 + 1.6), 0, 1.2), run * 0.7)
 
 
 ## Kumo passa correndo pertinho e o ZodIA rodopia.
 func _do_spin(run: float) -> void:
 	var zp := _zodia.global_position
-	var perp := (zp - PAD_CENTER).normalized().cross(Vector3.UP)
+	var perp := (zp - _site).normalized().cross(Vector3.UP)
 	await _kumo.walk_to(zp - perp * 2.2 + Vector3(0, 0, 0.6), run)
 	_cam.focus(_zodia, 5.0)
 	_kumo.walk_to(zp + perp * 2.4 + Vector3(0, 0, 0.6), run * 1.4)
@@ -461,7 +530,7 @@ func _do_spin(run: float) -> void:
 ## Kumo rola por baixo do ZodIA, que tropeca e cai. A peca em construcao racha.
 func _do_trip(run: float) -> void:
 	var zp := _zodia.global_position
-	await _kumo.walk_to(zp + (zp - PAD_CENTER).normalized() * 1.6, run)
+	await _kumo.walk_to(zp + (zp - _site).normalized() * 1.6, run)
 	_cam.focus(_zodia, 7.0)
 	_kumo.roll(0.8)
 	await _kumo.walk_to(zp, run * 1.3)
@@ -469,11 +538,14 @@ func _do_trip(run: float) -> void:
 	_zodia.set_laser(null)
 	_zodia.express(E.ASSUSTADO, 0.6)
 	await _zodia.fall()
+	# camera mostra a peca rachando e se despedacando, depois volta ao ZodIA
+	_cam.focus(_project, 3.4, CameraRig.OBJECT_OFFSET)
 	_project.crack_current()
-	_zodia.express(E.INEXPRESSIVO, 1.6)
-	await get_tree().create_timer(1.6).timeout
+	_zodia.express(E.INEXPRESSIVO, 3.4)
+	await get_tree().create_timer(3.4).timeout
+	_cam.focus(_zodia, 5.0)
 	_zodia.express(E.CONFUSO, 2.2)
-	_kumo.walk_to(PAD_CENTER + Vector3(PAD_SIZE / 2.0 + 1.5, 0, 1.0), run * 0.7)
+	_kumo.walk_to(_site + Vector3(PAD_SIZE / 2.0 + 1.5, 0, 1.0), run * 0.7)
 	await get_tree().create_timer(2.0).timeout
 	await _zodia.get_up()
 	_zodia.express(E.CHATEADO, 2.5)
@@ -482,23 +554,26 @@ func _do_trip(run: float) -> void:
 
 ## Kumo pula na plataforma e derruba o projeto inteiro.
 func _do_knockdown(run: float) -> void:
-	var edge := PAD_CENTER + Vector3(-PAD_SIZE / 2.0 - 0.6, 0, 0.4)
+	var edge := _site + Vector3(-PAD_SIZE / 2.0 - 0.6, 0, 0.4)
 	await _kumo.walk_to(edge, run)
-	_kumo.look_toward(PAD_CENTER)
-	_cam.focus(_zodia, 12.0)
-	await _kumo.hop_to(PAD_CENTER + Vector3(-0.8, 0.05, 0.4), 1.4, 0.55)
+	_kumo.look_toward(_site)
+	await _kumo.hop_to(_site + Vector3(-0.8, 0.05, 0.4), 1.4, 0.55)
 	_kumo.bounce(1, 0.3)
 	_state = "fallen"
 	_zodia_lock += 1
 	_zodia.set_laser(null)
-	_zodia.express(E.ASSUSTADO, 0.9)
+	_zodia.express(E.ASSUSTADO, 3.8)
+	# camera no objeto: racha, despedaca, cai e some (~3,6 s)
+	_cam.focus(_project, 3.8, CameraRig.OBJECT_OFFSET)
 	_project.knock_down(_kumo.global_position)
-	_hud.shatter("Projeto derrubado!")
 	await get_tree().create_timer(0.9).timeout
+	_hud.shatter("Projeto derrubado!")
+	_kumo.hop_to(_site + Vector3(-PAD_SIZE / 2.0 - 1.2, 0, 1.2), 1.2, 0.6)
+	await get_tree().create_timer(2.9).timeout
+	_kumo.walk_to(_site + Vector3(-PAD_SIZE / 2.0 - 2.2, 0, 2.0), run)
+	_cam.focus(_zodia, 7.0)
 	_zodia.express(E.ENFURECIDO, 3.2)
 	_zodia.arm_mode = "wave"
-	await _kumo.hop_to(PAD_CENTER + Vector3(-PAD_SIZE / 2.0 - 1.2, 0, 1.2), 1.2, 0.6)
-	_kumo.walk_to(PAD_CENTER + Vector3(-PAD_SIZE / 2.0 - 2.2, 0, 2.0), run)
 	await get_tree().create_timer(3.2).timeout
 	_zodia.arm_mode = "droop"
 	_zodia.express(E.CHORAMINGANDO, 3.0)
