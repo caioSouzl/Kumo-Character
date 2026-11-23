@@ -43,95 +43,141 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 
+## Desenhos seguem a folha "Expressoes" do design (tracos claros na tela preta).
 func _draw() -> void:
 	_round_rect(Rect2(6, 6, W - 12, H - 12), 34.0, SCREEN)
-	var c := Vector2(W / 2.0, H / 2.0 + 4.0) + look.clamp(Vector2(-14, -8), Vector2(14, 8))
+	var c := Vector2(W / 2.0, H / 2.0 + 2.0) + look.clamp(Vector2(-14, -8), Vector2(14, 8))
 	var shake := Vector2(sin(_t * 60.0) * 3.0, 0.0) if expr == Expr.ENFURECIDO or expr == Expr.ASSUSTADO else Vector2.ZERO
 	c += shake
-	var le := c + Vector2(-44, -12)
-	var re := c + Vector2(44, -12)
+	var le := c + Vector2(-48, -10)
+	var re := c + Vector2(48, -10)
 	match expr:
 		Expr.NORMAL:
-			var h := 6.0 if _blink > 0.0 else 40.0
-			_pill(le, Vector2(17, h))
-			_pill(re, Vector2(17, h))
-			draw_arc(c + Vector2(0, 18), 11.0, 0.35, PI - 0.35, 12, INK, 4.0)
+			# olhos ovais altos e boquinha em "v"
+			var h := 5.0 if _blink > 0.0 else 40.0
+			_oval(le, Vector2(17, h))
+			_oval(re, Vector2(17, h))
+			draw_polyline(PackedVector2Array([c + Vector2(-9, 26), c + Vector2(0, 33), c + Vector2(9, 26)]), INK, 4.0)
 		Expr.CHATEADO:
-			draw_line(le + Vector2(-14, -6), le + Vector2(14, 4), INK, 7.0)
-			draw_line(re + Vector2(-14, 4), re + Vector2(14, -6), INK, 7.0)
-			_pill(le + Vector2(0, 14), Vector2(12, 12))
-			_pill(re + Vector2(0, 14), Vector2(12, 12))
-			draw_polyline(PackedVector2Array([c + Vector2(-12, 32), c + Vector2(0, 22), c + Vector2(12, 32)]), INK, 4.0)
-		Expr.INEXPRESSIVO:
-			draw_line(le + Vector2(-16, 0), le + Vector2(16, 0), INK, 7.0)
-			draw_line(re + Vector2(-16, 0), re + Vector2(16, 0), INK, 7.0)
-			draw_line(c + Vector2(-10, 28), c + Vector2(10, 28), INK, 4.0)
-		Expr.DESCONFIADO:
-			draw_line(le + Vector2(-16, 2), le + Vector2(16, 2), INK, 7.0)
-			draw_line(le + Vector2(-16, -10), le + Vector2(16, -6), INK, 4.0)
-			draw_arc(re + Vector2(0, 8), 14.0, PI + 0.3, TAU - 0.3, 10, INK, 6.0)
-			draw_line(c + Vector2(-8, 30), c + Vector2(12, 22), INK, 4.0)
-		Expr.ASSUSTADO:
+			# palpebra reta por cima (olho cortado) e boca "^"
 			for e in [le, re]:
-				draw_arc(e, 17.0, 0.0, TAU, 20, INK, 4.0)
-				draw_arc(e, 9.0, 0.0, TAU, 14, INK, 3.0)
-				draw_circle(e, 3.0, INK)
-			draw_arc(c + Vector2(0, 28), 6.0, 0.0, TAU, 12, INK, 3.0)
-			_drop(re + Vector2(34, -20), 1.0)
+				_lidded(e, Vector2(19, 40), 0.32)
+			draw_polyline(PackedVector2Array([c + Vector2(-10, 32), c + Vector2(0, 23), c + Vector2(10, 32)]), INK, 4.5)
+		Expr.INEXPRESSIVO:
+			draw_rect(Rect2(le - Vector2(18, 6), Vector2(36, 12)), INK)
+			draw_rect(Rect2(re - Vector2(18, 6), Vector2(36, 12)), INK)
+			draw_line(c + Vector2(-9, 28), c + Vector2(9, 28), INK, 4.0)
+		Expr.DESCONFIADO:
+			# esquerdo meio fechado com traco em cima; direito aberto com sobrancelha "^"
+			draw_line(le + Vector2(-14, -16), le + Vector2(14, -16), INK, 5.0)
+			_lidded(le + Vector2(0, 2), Vector2(17, 34), 0.36)
+			_oval(re, Vector2(16, 38))
+			draw_polyline(PackedVector2Array([re + Vector2(-11, -26), re + Vector2(0, -36), re + Vector2(11, -26)]), INK, 4.5)
+			draw_line(c + Vector2(14, 34), c + Vector2(26, 26), INK, 4.5)
+		Expr.ASSUSTADO:
+			# olhos de alvo com marquinhas, boca "o" e linhas de suor
+			for e in [le, re]:
+				draw_arc(e, 18.0, 0.0, TAU, 24, INK, 3.5)
+				draw_circle(e, 9.0, INK)
+				for k in 3:
+					var ang := -2.4 + k * 0.5
+					draw_line(e + Vector2.from_angle(ang) * 22.0, e + Vector2.from_angle(ang) * 27.0, INK, 3.0)
+			draw_circle(c + Vector2(-2, 32), 7.0, INK)
+			for k in 3:
+				draw_line(re + Vector2(26 + k * 7, -30), re + Vector2(24 + k * 7, -16), INK, 3.0)
 		Expr.ALIVIADO:
 			draw_arc(le + Vector2(0, 6), 14.0, PI + 0.2, TAU - 0.2, 10, INK, 6.0)
 			draw_arc(re + Vector2(0, 6), 14.0, PI + 0.2, TAU - 0.2, 10, INK, 6.0)
-			draw_arc(c + Vector2(0, 16), 13.0, 0.3, PI - 0.3, 12, INK, 4.0)
+			draw_arc(c + Vector2(0, 18), 13.0, 0.3, PI - 0.3, 12, INK, 4.0)
 			_drop(re + Vector2(36, -12 + fmod(_t * 18.0, 14.0)), 0.8)
 		Expr.CONFUSO:
 			_spiral(le, _t * 5.0)
 			_spiral(re, -_t * 5.0)
-			var pts := PackedVector2Array()
-			for i in 9:
-				pts.append(c + Vector2(-18 + i * 4.5, 28 + sin(i * 1.6 + _t * 8.0) * 3.0))
-			draw_polyline(pts, INK, 3.0)
+			draw_circle(c + Vector2(-2, 32), 6.0, INK)
 		Expr.BATERIA_FRACA:
-			var r := Rect2(c.x - 56, c.y - 30, 104, 56)
-			draw_rect(r, INK, false, 6.0)
-			draw_rect(Rect2(r.end.x + 2, c.y - 12, 10, 20), INK)
+			# bateria grande com um so tracinho piscando
+			var r := Rect2(c.x - 62, c.y - 30, 112, 58)
+			_round_rect_line(r, 10.0, 6.0)
+			draw_rect(Rect2(r.end.x + 4, c.y - 12, 10, 22), INK)
 			if fmod(_t, 1.0) < 0.6:
-				draw_rect(Rect2(r.position + Vector2(9, 9), Vector2(20, r.size.y - 18)), RED)
+				draw_rect(Rect2(r.position + Vector2(10, 10), Vector2(16, r.size.y - 20)), RED)
 		Expr.SEM_BATERIA:
 			for e in [le, re]:
-				draw_line(e + Vector2(-15, -15), e + Vector2(15, 15), INK, 6.0)
-				draw_line(e + Vector2(-15, 15), e + Vector2(15, -15), INK, 6.0)
+				draw_line(e + Vector2(-18, -18), e + Vector2(18, 18), INK, 5.0)
+				draw_line(e + Vector2(-18, 18), e + Vector2(18, -18), INK, 5.0)
 		Expr.ENFURECIDO:
-			draw_colored_polygon(PackedVector2Array([le + Vector2(-20, -14), le + Vector2(18, 4), le + Vector2(-16, 10)]), INK)
-			draw_colored_polygon(PackedVector2Array([re + Vector2(20, -14), re + Vector2(-18, 4), re + Vector2(16, 10)]), INK)
+			# olhos em ponta, bravos, e boca de dentes em zigue-zague
+			draw_colored_polygon(PackedVector2Array([le + Vector2(-24, -14), le + Vector2(20, 4), le + Vector2(6, 16), le + Vector2(-18, 10)]), INK)
+			draw_colored_polygon(PackedVector2Array([re + Vector2(24, -14), re + Vector2(-20, 4), re + Vector2(-6, 16), re + Vector2(18, 10)]), INK)
+			var m := Rect2(c + Vector2(-14, 18), Vector2(28, 26))
+			draw_rect(m, INK)
 			var teeth := PackedVector2Array()
-			for i in 7:
-				teeth.append(c + Vector2(-24 + i * 8, 24.0 if i % 2 == 0 else 36.0))
-			draw_polyline(teeth, INK, 4.0)
-			draw_rect(Rect2(c + Vector2(-26, 22), Vector2(52, 16)), INK, false, 3.0)
+			for i in 5:
+				teeth.append(m.position + Vector2(i * 7.0, 13.0 + (-5.0 if i % 2 == 0 else 5.0)))
+			draw_polyline(teeth, SCREEN, 3.0)
+			draw_line(m.position + Vector2(9, 0), m.position + Vector2(9, 26), SCREEN, 2.0)
+			draw_line(m.position + Vector2(19, 0), m.position + Vector2(19, 26), SCREEN, 2.0)
 		Expr.CHORAMINGANDO:
+			# olhos grandes brilhando e cascatas de lagrimas
 			for e in [le, re]:
-				draw_arc(e, 15.0, 0.0, TAU, 18, INK, 4.0)
-				draw_circle(e + Vector2(3, -3), 4.0, INK)
-				for k in 2:
-					var y := fmod(_t * 40.0 + k * 22.0, 44.0)
-					_drop(e + Vector2(-6 + k * 12, 18 + y), 0.6)
-			draw_arc(c + Vector2(0, 30), 9.0, PI + 0.4, TAU - 0.4, 10, INK, 4.0)
+				draw_arc(e + Vector2(0, -6), 18.0, 0.0, TAU, 24, INK, 3.5)
+				draw_circle(e + Vector2(-5, -11), 6.0, INK)
+				draw_circle(e + Vector2(6, -2), 3.0, INK)
+				for k in 3:
+					var pts := PackedVector2Array()
+					for j in 8:
+						var y := 14.0 + j * 4.5
+						pts.append(e + Vector2(-10 + k * 10 + sin(j * 1.4 + _t * 8.0 + k) * 2.5, y))
+					draw_polyline(pts, INK, 2.5)
+			draw_circle(c + Vector2(0, 34), 3.5, INK)
 		Expr.ORGULHOSO:
-			for s in [-1.0, 1.0]:
-				var e: Vector2 = le if s < 0.0 else re
-				draw_polyline(PackedVector2Array([e + Vector2(-12 * s, -12), e + Vector2(12 * s, 0), e + Vector2(-12 * s, 12)]), INK, 6.0)
-			draw_polyline(PackedVector2Array([c + Vector2(-16, 20), c + Vector2(-8, 30), c + Vector2(0, 22), c + Vector2(8, 30), c + Vector2(16, 20)]), INK, 4.0)
+			# ">  <" e boca de gatinho
+			draw_polyline(PackedVector2Array([le + Vector2(-14, -14), le + Vector2(12, 0), le + Vector2(-14, 14)]), INK, 5.5)
+			draw_polyline(PackedVector2Array([re + Vector2(14, -14), re + Vector2(-12, 0), re + Vector2(14, 14)]), INK, 5.5)
+			draw_arc(c + Vector2(-8, 26), 8.0, 0.0, PI, 10, INK, 4.0)
+			draw_arc(c + Vector2(8, 26), 8.0, 0.0, PI, 10, INK, 4.0)
 		Expr.OCULOS_VITORIA:
-			var bar_y := c.y - 16.0
-			draw_line(Vector2(c.x - 74, bar_y), Vector2(c.x + 74, bar_y), INK, 6.0)
-			for e in [le, re]:
-				var g := Rect2(e.x - 30, bar_y, 60, 30)
-				draw_rect(g, INK)
-				draw_rect(g.grow(-5), Color(0.1, 0.12, 0.2))
-				var sx := fmod(_t * 60.0, 90.0) - 20.0
-				if sx > -5.0 and sx < 55.0:
-					draw_line(Vector2(g.position.x + clampf(sx, 5, 55), g.position.y + 6), Vector2(g.position.x + clampf(sx - 10, 5, 55), g.end.y - 6), INK_SOFT, 4.0)
-			draw_arc(c + Vector2(0, 22), 14.0, 0.25, PI - 0.25, 12, INK, 4.0)
+			# oculos escuros com brilho e sorriso
+			var y0 := c.y - 26.0
+			draw_rect(Rect2(c.x - 78, y0, 156, 10), INK)
+			for sx in [-1.0, 1.0]:
+				var lens: PackedVector2Array = PackedVector2Array([Vector2(c.x + sx * 8, y0 + 6), Vector2(c.x + sx * 72, y0 + 6), Vector2(c.x + sx * 66, y0 + 36), Vector2(c.x + sx * 14, y0 + 36)])
+				draw_colored_polygon(lens, INK)
+				var inner := PackedVector2Array()
+				for v in lens:
+					inner.append(v.lerp(Vector2(c.x + sx * 40, y0 + 20), 0.18))
+				draw_colored_polygon(inner, Color(0.06, 0.08, 0.16))
+				var gx: float = c.x + sx * 40 + fmod(_t * 50.0, 60.0) - 30.0
+				draw_line(Vector2(gx - 4, y0 + 30), Vector2(gx + 6, y0 + 12), INK_SOFT, 3.0)
+				draw_line(Vector2(gx + 4, y0 + 30), Vector2(gx + 14, y0 + 12), INK_SOFT, 3.0)
+			draw_arc(c + Vector2(0, 26), 9.0, 0.2, PI - 0.2, 12, INK, 4.0)
+
+
+func _oval(center: Vector2, sz: Vector2) -> void:
+	var pts := PackedVector2Array()
+	for i in 24:
+		var a := TAU * i / 24.0
+		pts.append(center + Vector2(cos(a) * sz.x / 2.0, sin(a) * sz.y / 2.0))
+	draw_colored_polygon(pts, INK)
+
+
+## Oval com a parte de cima cortada reta (palpebra baixa).
+func _lidded(center: Vector2, sz: Vector2, cut: float) -> void:
+	var top := center.y - sz.y / 2.0 + sz.y * cut
+	var pts := PackedVector2Array()
+	for i in 25:
+		var a := PI * i / 24.0
+		pts.append(center + Vector2(cos(a) * sz.x / 2.0, sin(a) * sz.y / 2.0))
+	var y0 := center.y + 0.0
+	pts.append(Vector2(center.x - sz.x / 2.0, top))
+	pts.append(Vector2(center.x + sz.x / 2.0, top))
+	if top >= y0:
+		pts = PackedVector2Array([Vector2(center.x - sz.x / 2.0, top), Vector2(center.x + sz.x / 2.0, top), center + Vector2(0, sz.y / 2.0)])
+	draw_colored_polygon(pts, INK)
+
+
+func _round_rect_line(r: Rect2, rad: float, w: float) -> void:
+	draw_rect(r, INK, false, w)
 
 
 func _pill(center: Vector2, sz: Vector2) -> void:

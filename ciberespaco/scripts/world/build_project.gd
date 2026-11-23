@@ -15,6 +15,8 @@ var _crack := 0.0
 var _crack_index := -1
 var _flash := 0.0
 var _t := 0.0
+## true enquanto uma peca racha e se despedaca (o ZodIA espera).
+var _breaking := false
 
 
 func setup(def: Dictionary) -> void:
@@ -86,6 +88,10 @@ func built_count() -> int:
 	return n
 
 
+func is_breaking() -> bool:
+	return _breaking
+
+
 func is_complete() -> bool:
 	return progress >= 1.0
 
@@ -110,6 +116,26 @@ func laser_point() -> Vector3:
 	return mi.global_transform * local
 
 
+## Pontos que os lasers varrem: correm em volta da borda da peca em
+## construcao, na altura que esta sendo desenhada.
+func laser_points(n: int = 4) -> Array:
+	var out: Array = []
+	if _pieces.is_empty():
+		return [global_position]
+	var i := current_index()
+	var mi := _pieces[i]
+	var box := mi.mesh.get_aabb()
+	var h := lerpf(box.position.y, box.end.y, piece_fraction(i))
+	var c := box.get_center()
+	for k in n:
+		var a := _t * (1.6 + 0.3 * k) + TAU * k / n
+		var rx := maxf(box.size.x * 0.55, 0.45)
+		var rz := maxf(box.size.z * 0.55, 0.45)
+		var local := Vector3(c.x + cos(a) * rx, h + sin(a * 2.0) * 0.08, c.z + sin(a) * rz)
+		out.append(mi.global_transform * local)
+	return out
+
+
 func shake(secs: float) -> void:
 	var tw := create_tween()
 	var steps := int(secs / 0.06)
@@ -125,12 +151,21 @@ func shake(secs: float) -> void:
 func crack_current() -> void:
 	if _pieces.is_empty() or is_complete():
 		return
+	# quebra a peca em construcao e a ultima peca pronta antes dela, para o
+	# estrago ser visivel mesmo logo depois de outro tombo
 	var i := current_index()
-	var n := float(_pieces.size())
-	var start := i / n
+	var idx: Array = []
 	if piece_fraction(i) > 0.05:
-		await _break_pieces([i], _pieces[i].global_position + Vector3(0, 0, 1), 0.6)
-	set_progress(start)
+		idx.append(i)
+	if i > 0:
+		idx.append(i - 1)
+	if idx.is_empty():
+		return
+	var lowest: int = idx.min()
+	_breaking = true
+	await _break_pieces(idx, _pieces[i].global_position + Vector3(0, 0, 1), 0.6)
+	set_progress(float(lowest) / _pieces.size())
+	_breaking = false
 
 
 func celebrate() -> void:

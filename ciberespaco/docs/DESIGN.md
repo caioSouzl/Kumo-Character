@@ -83,8 +83,8 @@ rosas!") no estilo ZodIA (neon) ou Kumo (folhas), e soma pontos no ranking
 | GG | `kumo_wake` | Acorda o Kumo na hora. |
 | Finger Heart | `kumo_bump` | Kumo esbarra na plataforma: o projeto treme mas não cai (assustado → aliviado). |
 | Rosquinha | `kumo_spin` | Kumo passa correndo pertinho e o ZodIA rodopia (confuso). |
-| Perfume | `zodia_trip` | Kumo rola por baixo do ZodIA, que cai; a peça em construção racha e volta ao começo (assustado → inexpressivo → confuso → chateado). |
-| Galáxia | `kumo_knockdown` | Kumo pula na plataforma e derruba tudo. Painel holográfico se quebra, ZodIA fica enfurecido, choraminga e recomeça o projeto. |
+| Perfume | `zodia_trip` | Kumo rola por baixo do ZodIA, que cai; a peça em construção e a anterior racham e somem (assustado → inexpressivo → confuso → chateado). |
+| Galáxia | `kumo_knockdown` | Kumo derruba o projeto em construção; se ele mal começou, derruba um objeto pronto do mapa (o mais perto). Painel holográfico se quebra, ZodIA fica enfurecido, choraminga e recomeça o projeto. |
 
 Se o Kumo estiver dormindo quando chega uma sabotagem, ele acorda rápido e já
 vai aprontar. A fila de eventos funciona como no Kumo Pizzaria: ordem de
@@ -121,3 +121,9 @@ Orbitron (ZodIA) e Baloo 2 (Kumo).
 
 Agradecimentos mostram a inicial de quem mandou e o ícone do presente.
 `thanks_one` em `config/gifts.json` é o texto para 1 presente ("pela rosa").
+
+## Anéis de flutuação
+
+Embaixo do ZodIA, dois anéis em loop: saem pequenos de baixo dele, descem
+crescendo e somem. Indicam que ele funciona e flutua: desaparecem quando ele
+cai ou fica sem bateria.

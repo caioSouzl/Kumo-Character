@@ -359,7 +359,7 @@ func _update_battery_state() -> void:
 
 
 func _update_build(delta: float) -> void:
-	var can_build := _state == "building" and _zodia_lock == 0 and not _zodia.is_fallen()
+	var can_build := _state == "building" and _zodia_lock == 0 and not _zodia.is_fallen() and not _project.is_breaking()
 	var mult := _battery_mult() * (_boost_mult if _boost_left > 0.0 else 1.0)
 	if not can_build or mult <= 0.0:
 		_zodia.set_laser(null)
@@ -368,7 +368,7 @@ func _update_build(delta: float) -> void:
 		return
 	_project.set_progress(_project.progress + delta * mult / GameConfig.num("project_build_sec", 120.0))
 	var lp := _project.laser_point()
-	_zodia.set_laser(lp)
+	_zodia.set_laser(_project.laser_points())
 	_zodia.face_point(lp)
 	_zodia.arm_mode = "build"
 	if _project.is_complete():
@@ -431,9 +431,11 @@ func _kumo_roam() -> void:
 				continue
 			_kumo.look_toward(tp)
 			_kumo.set_face(Kumo.Face.HAPPY)
+			var play := GameConfig.range_pick("kumo", "play_sec", Vector2(4, 9), _rng)
+			_maybe_show_kumo(play + 1.0)
 			await _kumo.bounce(2)
 			_island.toy_react(toy)
-			await get_tree().create_timer(GameConfig.range_pick("kumo", "play_sec", Vector2(4, 9), _rng)).timeout
+			await get_tree().create_timer(play).timeout
 			if not _kumo.acting:
 				_kumo.set_face(Kumo.Face.OPEN)
 		else:
@@ -444,6 +446,14 @@ func _kumo_roam() -> void:
 				continue
 			_kumo.look_toward(_zodia.global_position)
 			await get_tree().create_timer(_rng.randf_range(4.0, 8.0)).timeout
+
+
+## Mostra o Kumo brincando, se nada mais importante esta na tela.
+func _maybe_show_kumo(secs: float) -> void:
+	if _cam.is_focusing() or not EventQueue.current().is_empty() or _state == "done":
+		return
+	if _rng.randf() < float(GameConfig.sub("camera", "kumo_play_chance", 0.7)):
+		_cam.focus(_kumo, secs)
 
 
 func _find_toy(kind: String) -> Node3D:
@@ -466,7 +476,9 @@ func _kumo_swing(t: Node3D, walk: float) -> void:
 		return
 	_kumo.set_face(Kumo.Face.HAPPY)
 	_kumo.sitting = true
-	_island.swing(t, _rng.randf_range(6.0, 10.0), 0.5)
+	var secs := _rng.randf_range(6.0, 10.0)
+	_island.swing(t, secs, 0.5)
+	_maybe_show_kumo(secs)
 	var face_dir := atan2(fwd.x, fwd.z)
 	while is_inside_tree() and (_island.is_swinging() or _kumo.sitting) and not _kumo.acting:
 		_kumo.global_position = _island.seat_point(t)
@@ -514,8 +526,14 @@ func _kumo_sabotage(ev: Dictionary) -> void:
 		await _wake_kumo(true)
 	var run := float(GameConfig.sub("kumo", "run_speed", 4.2))
 	var kind := String(ev["event"])
-	if kind == "kumo_knockdown" and _project.built_count() == 0:
-		kind = "kumo_bump"
+	# Galaxia: derruba o projeto atual; se ele esta vazio (ja foi derrubado ou
+	# acabou de comecar), derruba um objeto pronto do mapa
+	var built_target: BuildProject = null
+	var min_prog := float(GameConfig.sub("kumo", "knockdown_min_progress", 0.15))
+	if kind == "kumo_knockdown" and (_project.progress < min_prog or _state != "building"):
+		built_target = _nearest_built()
+		if built_target == null and _project.built_count() == 0:
+			kind = "kumo_bump"
 	_kumo.set_face(Kumo.Face.MISCHIEF)
 	_cam.focus(_kumo, 30.0)
 	match kind:
@@ -526,13 +544,55 @@ func _kumo_sabotage(ev: Dictionary) -> void:
 		"zodia_trip":
 			await _do_trip(run)
 		"kumo_knockdown":
-			await _do_knockdown(run)
+			if built_target:
+				await _do_knockdown_built(run, built_target)
+			else:
+				await _do_knockdown(run)
 	_kumo.set_face(Kumo.Face.HAPPY)
 	await _kumo.bounce(2, 0.3)
 	_kumo.set_face(Kumo.Face.OPEN)
 	_cam.release()
 	_kumo.acting = false
 	EventQueue.finish(ev)
+
+
+func _nearest_built() -> BuildProject:
+	var best: BuildProject = null
+	var best_d := INF
+	for b in _built:
+		if not is_instance_valid(b) or b.piece_count() == 0:
+			continue
+		var d := b.global_position.distance_to(_kumo.global_position)
+		if d < best_d:
+			best_d = d
+			best = b
+	return best
+
+
+## Kumo pula num objeto ja pronto e derruba. O ZodIA ve de longe e fica bravo.
+func _do_knockdown_built(run: float, obj: BuildProject) -> void:
+	var c := obj.global_position
+	var away := (c - _kumo.global_position)
+	away.y = 0.0
+	var edge := c - away.normalized() * (PAD_SIZE / 2.0 + 0.6)
+	await _kumo.walk_to(edge, run)
+	_kumo.look_toward(c)
+	await _kumo.hop_to(c + Vector3(0.3, 0.05, 0.3), 1.4, 0.55)
+	_kumo.bounce(1, 0.3)
+	_built.erase(obj)
+	_cam.focus(obj, 3.8, CameraRig.OBJECT_OFFSET)
+	_hud.shatter("Projeto derrubado!")
+	_zodia.express(E.ASSUSTADO, 3.8)
+	obj.knock_down(_kumo.global_position)
+	await get_tree().create_timer(0.9).timeout
+	_kumo.hop_to(edge, 1.2, 0.6)
+	await get_tree().create_timer(2.9).timeout
+	if is_instance_valid(obj):
+		obj.queue_free()
+	_cam.focus(_zodia, 5.0)
+	_zodia.express(E.ENFURECIDO, 3.0)
+	await get_tree().create_timer(3.0).timeout
+	_zodia.express(E.CHORAMINGANDO, 2.5)
 
 
 ## Kumo esbarra sem querer: o projeto treme, mas nao cai.
@@ -571,10 +631,12 @@ func _do_spin(run: float) -> void:
 func _do_trip(run: float) -> void:
 	var zp := _zodia.global_position
 	await _kumo.walk_to(zp + (zp - _site).normalized() * 1.6, run)
+	# o ZodIA pode ter andado enquanto o Kumo vinha: mira onde ele esta agora
+	_zodia_lock += 1
+	zp = _zodia.global_position
 	_cam.focus(_zodia, 7.0)
 	_kumo.roll(0.8)
 	await _kumo.walk_to(zp, run * 1.3)
-	_zodia_lock += 1
 	_zodia.set_laser(null)
 	_zodia.express(E.ASSUSTADO, 0.6)
 	await _zodia.fall()

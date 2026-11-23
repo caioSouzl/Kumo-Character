@@ -39,7 +39,7 @@
       "style": "kumo",
       "event": "kumo_bump",
       "blocking": true,
-      "max_block_sec": 20,
+      "max_block_sec": 60,
       "thanks_one": "pelo Finger Heart"
     },
     "doughnut": {
@@ -52,7 +52,7 @@
       "style": "kumo",
       "event": "kumo_spin",
       "blocking": true,
-      "max_block_sec": 20,
+      "max_block_sec": 60,
       "thanks_one": "pela rosquinha"
     },
     "perfume": {
@@ -65,7 +65,7 @@
       "style": "kumo",
       "event": "zodia_trip",
       "blocking": true,
-      "max_block_sec": 25,
+      "max_block_sec": 60,
       "thanks_one": "pelo perfume"
     },
     "galaxy": {
@@ -78,7 +78,7 @@
       "style": "kumo",
       "event": "kumo_knockdown",
       "blocking": true,
-      "max_block_sec": 35,
+      "max_block_sec": 60,
       "thanks_one": "pela galáxia"
     },
     "gg": {

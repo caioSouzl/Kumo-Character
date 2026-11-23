@@ -33,6 +33,10 @@ var _head_pivot := Vector3.ZERO
 var _head_q := Quaternion.IDENTITY
 
 var _spark: MeshInstance3D
+const RING_COUNT := 2
+const RING_PERIOD := 1.3
+var _rings: Array[MeshInstance3D] = []
+var _rings_on := 1.0
 
 var _base_expr: ZodiaFace.Expr = ZodiaFace.Expr.NORMAL
 var _temp_expr: ZodiaFace.Expr = ZodiaFace.Expr.NORMAL
@@ -55,8 +59,15 @@ func _ready() -> void:
 
 	_hover = Node3D.new()
 	add_child(_hover)
-	_ring = Mat.add(_hover, Mat.torus(0.34, 0.42), Mat.glow(CYAN, 3.0), Vector3(0, -0.06, 0))
-	Mat.add(_hover, Mat.torus(0.52, 0.56), Mat.glow(PURPLE, 2.0), Vector3(0, -0.12, 0))
+	# aneis de flutuacao: saem pequenos de baixo do ZodIA, descem crescendo e
+	# somem; dois sempre visiveis, em loop
+	for i in RING_COUNT:
+		var m := Mat.glow(CYAN, 2.6)
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		var r := Mat.add(_hover, Mat.torus(0.25, 0.31), m, Vector3(0, -0.05, 0))
+		_rings.append(r)
+	_ring = _rings[0]
 
 	_pose = Node3D.new()
 	_hover.add_child(_pose)
@@ -349,16 +360,12 @@ func _update_laser() -> void:
 	if not on:
 		return
 	var tips := _arm_tips()
-	var target: Vector3 = _laser_target
-	var side := global_transform.basis.x.normalized() * 0.08
+	# cada feixe mira um ponto diferente que corre em volta da peca
+	var targets: Array = _laser_target if _laser_target is Array else [_laser_target]
 	for i in _beams.size():
 		var a: Vector3 = tips[i % 2]
-		var off := side * (-1.0 if i % 2 == 0 else 1.0)
-		if i >= 2:
-			off += Vector3(sin(_t * 9.0 + i * 2.0), 0.0, cos(_t * 7.0 + i * 3.0)) * 0.3
-		_place_beam(_beams[i], a, target + off)
-	_spark.global_position = target
-	_spark.scale = Vector3.ONE * (0.8 + 0.4 * sin(_t * 30.0))
+		_place_beam(_beams[i], a, targets[i % targets.size()])
+	_spark.visible = false
 
 
 func _place_beam(b: MeshInstance3D, a: Vector3, c: Vector3) -> void:
@@ -372,6 +379,22 @@ func _place_beam(b: MeshInstance3D, a: Vector3, c: Vector3) -> void:
 
 
 # ---------- movimento ----------
+
+## Aneis somem quando ele cai ou fica sem bateria (sem funcionar, sem flutuar).
+func _update_rings(delta: float) -> void:
+	var on := not _fallen and not _slumped
+	_rings_on = move_toward(_rings_on, 1.0 if on else 0.0, delta * 3.0)
+	for i in _rings.size():
+		var k := fmod(_t / RING_PERIOD + float(i) / _rings.size(), 1.0)
+		var r := _rings[i]
+		r.visible = _rings_on > 0.01
+		r.scale = Vector3.ONE * lerpf(0.35, 1.9, k) * Vector3(1, 0.6, 1)
+		r.position.y = lerpf(-0.04, -_hover_h + 0.06, k)
+		var m := r.material_override as StandardMaterial3D
+		var a := minf(1.0, sin(k * PI) * 1.6) * _rings_on
+		m.albedo_color.a = a
+		m.emission_energy_multiplier = 3.2 * a
+
 
 func face_point(p: Vector3) -> void:
 	var d := p - global_position
@@ -448,8 +471,7 @@ func _process(delta: float) -> void:
 	var bob := 0.0 if (_fallen or _slumped) else sin(_t * 2.2) * 0.07
 	_hover.position.y = _hover_h + bob
 	_hover.position.x = sin(_t * 70.0) * 0.025 * signf(_tremble)
-	_ring.visible = not _slumped
-	_ring.rotation.y += delta * 2.0
+	_update_rings(delta)
 	_animate_arms(delta)
 	_update_laser()
 
