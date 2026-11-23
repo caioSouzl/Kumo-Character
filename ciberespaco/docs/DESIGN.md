@@ -106,3 +106,18 @@ orgulhoso e óculos da vitória.
 3. Conectar a live real (mesma ponte do Kumo Pizzaria, agora com curtidas).
 4. Mais projetos em `config/projects.json`.
 5. Exportar para Android/PC.
+
+## Quadros da live
+
+Toda a arte dos quadros foi desenhada para o jogo (`assets/ui/*.svg`), sem
+usar elementos do Canva. Fontes livres (licença OFL, em `assets/fonts/`):
+Orbitron (ZodIA) e Baloo 2 (Kumo).
+
+| Estilo | Visual | Entrada |
+|---|---|---|
+| ZodIA | painel escuro, cantos chanfrados, borda neon magenta + ciano, trilhas de circuito, varredura de holograma | piscadelas de neon ou glitch (sorteado); glitch curto de vez em quando |
+| Kumo | painel creme, borda de madeira, cipó, folhas, flores e pedrinhas | brota com as folhas crescendo; folhas balançam |
+| Ranking (misto) | painel neon com folhagem, coroa no 1º lugar | quem sobe pisca; o 1º faz a coroa pular |
+
+Agradecimentos mostram a inicial de quem mandou e o ícone do presente.
+`thanks_one` em `config/gifts.json` é o texto para 1 presente ("pela rosa").
