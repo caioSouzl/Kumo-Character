@@ -13,7 +13,7 @@ const GRASS_DARK := Color(0.16, 0.38, 0.14)
 const GRASS_LIGHT := Color(0.45, 0.72, 0.22)
 const BARK := Color(0.45, 0.28, 0.18)
 const SOIL := Color(0.28, 0.19, 0.14)
-const ROCK := Color(0.42, 0.39, 0.5)
+const ROCK := Color(0.46, 0.45, 0.52)
 const PATH_STONE := Color(0.72, 0.63, 0.5)
 const FLOWERS := [Color(0.62, 0.38, 0.95), Color(0.95, 0.95, 1.0), Color(1.0, 0.5, 0.72), Color(1.0, 0.84, 0.25), Color(0.75, 0.55, 1.0)]
 ## Nome do no no .glb -> tipo de brinquedo
@@ -291,13 +291,13 @@ func _rock_mesh(r: float, h: float, segs: int) -> Mesh:
 func _build_rocks() -> void:
 	var cols := [ROCK, ROCK.darkened(0.15), Color(0.5, 0.5, 0.56)]
 	var count := 0
-	while count < 14:
-		var spot: Variant = _free_spot(4.6, 6.0, 0.5) if count < 11 else _free_spot(1.6, 2.6, 0.3)
+	while count < 11:
+		var spot: Variant = _free_spot(4.9, 6.0, 0.6) if count < 9 else _free_spot(1.8, 2.8, 0.3)
 		if spot == null:
 			count += 1
 			continue
 		var p: Vector3 = spot
-		var s := _rng.randf_range(0.28, 0.55)
+		var s := _rng.randf_range(0.22, 0.42)
 		var m := Mat.sphere(s, s * 1.6, 6)
 		m.rings = 3
 		Mat.add(self, m, Mat.solid(cols[count % cols.size()], 0.9), p + Vector3(0, s * 0.35, 0), Vector3(_rng.randf() * 20.0, _rng.randf() * 360.0, _rng.randf() * 20.0), Vector3(1.25, 0.8, 1.0))

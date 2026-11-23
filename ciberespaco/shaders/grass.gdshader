@@ -1,7 +1,7 @@
 // Grama do campinho: verde vivo com manchas claras (luz) e escuras (sombra),
 // pontinhos amarelados e borda mais escura, como na arte de referencia.
 shader_type spatial;
-render_mode diffuse_lambert, specular_disabled;
+render_mode diffuse_lambert, specular_disabled, cull_disabled;
 
 uniform vec3 dark : source_color = vec3(0.13, 0.34, 0.12);
 uniform vec3 mid : source_color = vec3(0.27, 0.56, 0.17);

@@ -58,9 +58,9 @@ void fragment() {
 	float ch = hash(cid + 9.0);
 	vec2 hs = vec2(0.22 + 0.15 * hash(cid + 1.3), 0.18 + 0.15 * hash(cid + 2.7));
 	vec2 q = abs(cf - 0.5);
-	float in_chip = step(0.8, ch) * step(q.x, hs.x) * step(q.y, hs.y) * step(island_r + 1.5, d);
+	float in_chip = step(0.86, ch) * step(q.x, hs.x) * step(q.y, hs.y) * step(island_r + 1.5, d);
 	float border = in_chip * (1.0 - step(0.025, min(hs.x - q.x, hs.y - q.y)));
-	float pins = step(0.8, ch) * step(island_r + 1.5, d) * step(q.y, hs.y - 0.03) * step(hs.x, q.x) * step(q.x, hs.x + 0.06) * step(0.5, fract(cf.y * 14.0));
+	float pins = step(0.86, ch) * step(island_r + 1.5, d) * step(q.y, hs.y - 0.03) * step(hs.x, q.x) * step(q.x, hs.x + 0.06) * step(0.5, fract(cf.y * 14.0));
 
 	float inner = smoothstep(island_r, island_r + 0.5, d);
 	float diss = smoothstep(band_end, fade_end, d);

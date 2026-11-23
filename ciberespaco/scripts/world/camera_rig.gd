@@ -5,7 +5,7 @@ extends Camera3D
 
 ## Deslocamento da camera em relacao ao alvo (alto e atras, olhando de cima).
 const FAR_OFFSET := Vector3(0.0, 3.6, 6.6)
-const NEAR_OFFSET := Vector3(0.0, 2.5, 4.4)
+const NEAR_OFFSET := Vector3(1.6, 3.0, 3.8)
 
 var main_target: Node3D
 ## Ponto que puxa o enquadramento junto com o ZodIA (a plataforma).
