@@ -18,6 +18,8 @@ const CHEEK := Color(1.0, 0.6, 0.6)
 var asleep := true
 ## true enquanto um presente controla o Kumo (a rotina livre espera).
 var acting := false
+## Sentado (no balanco): pernas para frente.
+var sitting := false
 
 var _body: Node3D
 var _visual: Node3D
@@ -43,9 +45,23 @@ var _next_blink := 3.0
 var _walk_amp := 0.0
 var _quad := 0.0
 var _cur_speed := 0.0
-## Quanto o corpo deita para frente nas quatro patas (rad) e quanto desce.
-const QUAD_PITCH := 1.15
-const QUAD_DROP := 0.32
+## Medidas do modelo oficial (altura 1,96): perna ~0,36, quadril ate o ombro ~0,38.
+const MODEL_HEIGHT := 1.96
+const LEG_MODEL := 0.36
+const BODY_MODEL := 0.6
+## Trote: tronco deita 60 graus, pernas abrem 70 graus (lagarto), corpo desce
+## ate as patas da frente tocarem o chao.
+const QUAD_PITCH := 1.05
+const SPRAWL := 1.2
+const QUAD_DROP_MODEL := 0.25
+## Amplitude do passo (rad) andando em pe e no trote.
+const WALK_SWING := 0.45
+const TROT_SWING := 0.55
+const SIT_THIGH := 1.35
+const SIT_SHIN := 1.2
+var _phase := 0.0
+var _last_flat := Vector3.ZERO
+var _model_scale := 0.587
 
 
 func _ready() -> void:
@@ -58,6 +74,7 @@ func _ready() -> void:
 	var glb := ModelSlot.try_load(String(models.get("kumo", "")), float(models.get("kumo_height", 1.0)))
 	if glb:
 		_visual.add_child(glb)
+		_model_scale = float(models.get("kumo_height", 1.15)) / MODEL_HEIGHT
 		_setup_rig(glb, models.get("kumo_rig", {}))
 	else:
 		_build_placeholder()
@@ -153,6 +170,18 @@ func _rotm(key: String, axis_model: Vector3, angle: float) -> void:
 	_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * Quaternion(ax, angle))
 
 
+## Varias rotacoes em eixos do modelo, aplicadas em ordem.
+func _rotm_multi(key: String, rots: Array) -> void:
+	var i: int = _bone.get(key, -1)
+	if i < 0:
+		return
+	var rb := _skel.get_bone_global_rest(i).basis.orthonormalized().inverse()
+	var qq := Quaternion.IDENTITY
+	for r in rots:
+		qq = qq * Quaternion((rb * (r[0] as Vector3)).normalized(), float(r[1]))
+	_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * qq)
+
+
 func _rotm2(key: String, ax1: Vector3, a1: float, ax2: Vector3, a2: float) -> void:
 	var i: int = _bone.get(key, -1)
 	if i < 0:
@@ -162,40 +191,69 @@ func _rotm2(key: String, ax1: Vector3, a1: float, ax2: Vector3, a2: float) -> vo
 	_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * q)
 
 
-## Anda em pe devagar e de quatro patas quando corre.
+## Locomocao proporcional ao corpo (velocidade = tamanho do passo x frequencia):
+## a fase do passo avanca pela distancia andada, entao os pes nao "patinam".
+## - devagar: anda em pe, passos curtos e rapidos (pernas curtas);
+## - correndo: trote de lagarto nas quatro patas, pernas abertas para os lados
+##   e o corpo ondulando de um lado para o outro (onda parada no tronco e onda
+##   que corre pela cauda).
 func _animate_rig(delta: float) -> void:
-	_walk_amp = move_toward(_walk_amp, 1.0 if _moving else 0.0, delta * 5.0)
-	var want_quad := _moving and _cur_speed >= float(GameConfig.sub("kumo", "quad_above_speed", 3.0))
-	_quad = move_toward(_quad, 1.0 if want_quad else 0.0, delta * 3.0)
+	var flat := Vector3(position.x, 0, position.z)
+	var v := 0.0
+	if delta > 0.0:
+		v = (flat - _last_flat).length() / delta
+	_last_flat = flat
+	var moving := _moving and v > 0.05
+	_walk_amp = move_toward(_walk_amp, 1.0 if moving else 0.0, delta * 6.0)
+	var want_quad := moving and _cur_speed >= float(GameConfig.sub("kumo", "quad_above_speed", 1.6))
+	_quad = move_toward(_quad, 1.0 if want_quad else 0.0, delta * 3.5)
 	var q := _quad
-	var w := _t * (13.0 if q > 0.5 else 10.0)
 	var a := _walk_amp
+	# tamanho do passo a partir da perna real (escala do modelo)
+	var leg := LEG_MODEL * _model_scale
+	var step_len := lerpf(2.0 * leg * sin(WALK_SWING), 2.0 * leg * sin(TROT_SWING) + BODY_MODEL * _model_scale * 0.15, q)
+	if moving:
+		_phase = fmod(_phase + v * delta / step_len * PI, TAU)
+	var ph := _phase
+	var swing := sin(ph)
 	var X := Vector3.RIGHT
+	var Y := Vector3.UP
 	var Z := Vector3.BACK
-	# tronco inclina para frente nas quatro patas
-	_rotm("hips", X, q * QUAD_PITCH + sin(w * 2.0) * 0.03 * a)
-	_rotm("spine", X, q * 0.15)
-	_rotm("chest", X, q * 0.1 + sin(_t * (1.6 if asleep else 2.4)) * 0.03)
-	_rotm("neck", X, -q * 0.7)
+	var breathe := sin(_t * (1.6 if asleep else 2.4)) * 0.03
+	# tronco: inclina nas quatro patas e ondula para os lados no trote
+	var und := swing * 0.22 * q * a
+	_rotm_multi("hips", [[X, q * QUAD_PITCH], [Y, und]])
+	_rotm("spine", Y, -und * 0.5)
+	_rotm_multi("chest", [[X, breathe], [Y, -und * 0.8]])
+	_rotm("neck", X, -q * 0.6)
 	var nod := -0.25 if asleep else sin(_t * 1.3) * 0.05
-	_rotm("head", X, nod - q * 0.55)
-	# pernas: compensam a inclinacao e alternam o passo
-	var leg := sin(w) * (0.5 + 0.15 * q) * a
-	_rotm("thigh_l", X, -q * QUAD_PITCH - leg)
-	_rotm("thigh_r", X, -q * QUAD_PITCH + leg)
-	_rotm("shin_l", X, maxf(0.0, sin(w)) * 0.5 * a)
-	_rotm("shin_r", X, maxf(0.0, -sin(w)) * 0.5 * a)
-	# bracos: balancam em pe; de quatro viram patas da frente (passo cruzado)
-	var arm_swing := sin(w) * (0.45 + 0.1 * q) * a
-	_rotm2("arm_l", X, -q * 0.95 + arm_swing, Z, q * 0.35)
-	_rotm2("arm_r", X, -q * 0.95 - arm_swing, Z, -q * 0.35)
-	_rotm("forearm_l", X, -q * 0.25)
-	_rotm("forearm_r", X, -q * 0.25)
-	_body.position.y = -q * QUAD_DROP
+	_rotm_multi("head", [[X, nod - q * 0.45], [Y, und * 0.6]])
+	# pernas: em pe balancam para frente/tras; no trote abrem para os lados
+	var th := lerpf(WALK_SWING, TROT_SWING, q) * a
+	var lift_l := maxf(0.0, -cos(ph)) * a
+	var lift_r := maxf(0.0, cos(ph)) * a
+	_rotm_multi("thigh_l", [[X, -q * QUAD_PITCH], [Z, q * SPRAWL], [X, -swing * th]])
+	_rotm_multi("thigh_r", [[X, -q * QUAD_PITCH], [Z, -q * SPRAWL], [X, swing * th]])
+	_rotm("shin_l", X, lift_l * 0.7)
+	_rotm("shin_r", X, lift_r * 0.7)
+	if sitting:
+		_rotm("thigh_l", X, SIT_THIGH)
+		_rotm("thigh_r", X, SIT_THIGH)
+		_rotm("shin_l", X, -SIT_SHIN + sin(_t * 2.4) * 0.15)
+		_rotm("shin_r", X, -SIT_SHIN - sin(_t * 2.4) * 0.15)
+	# bracos: balancam em pe; no trote viram patas da frente (diagonal com as pernas)
+	var arm := lerpf(0.4, TROT_SWING, q) * a
+	_rotm_multi("arm_l", [[X, -q * QUAD_PITCH], [Z, q * 0.5], [X, swing * arm]])
+	_rotm_multi("arm_r", [[X, -q * QUAD_PITCH], [Z, -q * 0.5], [X, -swing * arm]])
+	_rotm("forearm_l", X, -q * 0.2 - lift_r * 0.3 * q)
+	_rotm("forearm_r", X, -q * 0.2 - lift_l * 0.3 * q)
+	# o corpo desce para as patas da frente tocarem o chao; sobe e desce no passo
+	var bob := absf(cos(ph)) * lerpf(0.025, 0.015, q) * a
+	_body.position.y = -q * QUAD_DROP_MODEL * _model_scale + bob
 	for k in _tail.size():
 		var i: int = _tail[k]
-		var sway := sin(_t * (2.0 + 4.0 * a) - k * 0.45) * (0.06 + 0.06 * a)
-		_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * Quaternion(Vector3.FORWARD, sway))
+		var tail := sin(_t * 2.0 - k * 0.45) * 0.06 + sin(ph - k * 0.5) * (0.08 + 0.18 * q) * a
+		_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * Quaternion(Vector3.FORWARD, tail))
 	# olhos: dormindo fechados, feliz/arteiro meio fechados, piscada de vez em quando
 	_next_blink -= delta
 	if _next_blink <= 0.0:
@@ -242,6 +300,15 @@ func cancel() -> void:
 ## Anda ate p (no chao). Retorna false se outra ordem cancelar.
 func walk_to(p: Vector3, speed: float) -> bool:
 	p = Island.clamp_inside(p, 0.6)
+	# contorna o tronco da arvore em vez de atravessar
+	var via := Island.detour(position, p)
+	for w in via:
+		if not await _walk_straight(w, speed):
+			return false
+	return await _walk_straight(p, speed)
+
+
+func _walk_straight(p: Vector3, speed: float) -> bool:
 	_token += 1
 	var my := _token
 	_moving = true
@@ -336,7 +403,7 @@ func _process(delta: float) -> void:
 		_zzz.modulate.a = 1.0 - fmod(_t * 0.25, 0.3) / 0.3
 	if _skel:
 		_animate_rig(delta)
-	var bob := absf(sin(_t * 10.0)) * 0.08 if _moving else 0.0
+	var bob := absf(sin(_t * 10.0)) * 0.08 if (_moving and _skel == null) else 0.0
 	_visual.position.y = bob
 	var sq := 1.0 - _squash * 0.6
 	_visual.scale = Vector3(s * (2.0 - sq), s * sq, s * (2.0 - sq))

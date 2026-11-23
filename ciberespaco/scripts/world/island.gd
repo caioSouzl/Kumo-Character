@@ -18,6 +18,12 @@ const TERRARIUM_LOCAL := Vector3(0.068, 3.921, -0.002)
 const TERRARIUM_R := 1.26
 ## Brinquedos nas bordas: angulo (graus, 0 = +x, 90 = frente).
 const TOY_ANGLES := {"bola": 18.0, "bloco": 158.0, "carrinho": 212.0, "balanco": 268.0, "argolas": 326.0}
+## Distancia dos brinquedos ate a arvore (m).
+const TOY_RADIUS := 10.0
+## Balanco maior que no modelo, para o Kumo caber sentado.
+const SWING_SCALE := 1.5
+## Eixo da trave do balanco no espaco do modelo (medido no Blender).
+const SWING_AXIS := Vector3(-0.416, 0.0, -0.91)
 ## Tamanho dos blocos de detalhes (cada bloco e cortado da tela sozinho).
 const CHUNK := 10.0
 const GRASS_DARK := Color(0.16, 0.38, 0.14)
@@ -54,6 +60,32 @@ static func ground_y(p: Vector3) -> float:
 ## O shader da grama repete a mesma conta.
 static func edge_r(a: float) -> float:
 	return RADIUS + (sin(a * 3.0 + 0.7) * 0.4 + sin(a * 7.0 + 2.1) * 0.25 + sin(a * 13.0) * 0.12) * JITTER
+
+
+## Raio em volta do tronco que ninguem atravessa andando.
+const TREE_CLEAR := 4.2
+
+
+## Caminho de `from` ate `to` contornando o tronco (a arvore fica no centro).
+## Retorna os pontos intermediarios (vazio se a linha reta ja esta livre).
+static func detour(from: Vector3, to: Vector3) -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	var a := Vector2(from.x, from.z)
+	var b := Vector2(to.x, to.z)
+	var ab := b - a
+	var l2 := ab.length_squared()
+	var t := 0.0 if l2 < 0.0001 else clampf(-a.dot(ab) / l2, 0.0, 1.0)
+	if (a + ab * t).length() >= TREE_CLEAR:
+		return out
+	var r := TREE_CLEAR + 0.6
+	var a0 := atan2(a.y, a.x)
+	var a1 := atan2(b.y, b.x)
+	var d := angle_difference(a0, a1)
+	var steps := maxi(2, ceili(absf(d) / 0.6))
+	for i in range(1, steps):
+		var ang := a0 + d * i / steps
+		out.append(Vector3(cos(ang) * r, from.y, sin(ang) * r))
+	return out
 
 
 ## Ponto dentro do campo (para quem anda nao sair do mapa).
@@ -166,9 +198,10 @@ func _glass_fix(n: Node) -> void:
 ## Brinquedos espalhados pelas extremidades, virados para o centro.
 func _place_on_edge(t: Node3D, kind: String) -> void:
 	var a := deg_to_rad(float(TOY_ANGLES.get(kind, _rng.randf() * 360.0)))
-	var r := edge_r(a) - FADE - 0.9
-	t.position = Vector3(cos(a) * r, 0.0, sin(a) * r)
-	t.rotation.y = atan2(-t.position.x, -t.position.z)
+	t.position = Vector3(tree_pos.x + cos(a) * TOY_RADIUS, 0.0, tree_pos.z + sin(a) * TOY_RADIUS)
+	t.rotation.y = atan2(-(t.position.x - tree_pos.x), -(t.position.z - tree_pos.z))
+	if kind == "balanco":
+		t.scale *= SWING_SCALE
 
 
 func _make_toy(t: Node3D, kind: String) -> void:
@@ -225,7 +258,7 @@ func toy_react(t: Node3D) -> void:
 	match kind:
 		"bola":
 			var a := atan2(t.position.z, t.position.x) + _rng.randf_range(-0.5, 0.5)
-			var r := _rng.randf_range(RADIUS - FADE - 2.6, RADIUS - FADE - 1.0)
+			var r := _rng.randf_range(TOY_RADIUS - 1.5, TOY_RADIUS + 1.5)
 			var dest := Vector3(cos(a) * r, t.position.y, sin(a) * r)
 			tw.set_parallel(true)
 			tw.tween_property(t, "position", dest, 1.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -240,12 +273,70 @@ func toy_react(t: Node3D) -> void:
 			tw.tween_property(t, "position", home + fwd, 0.7).set_trans(Tween.TRANS_SINE)
 			tw.tween_property(t, "position", home, 0.9).set_trans(Tween.TRANS_SINE)
 		"balanco":
-			for k in 3:
-				tw.tween_property(t, "rotation:x", 0.06, 0.35).set_trans(Tween.TRANS_SINE)
-				tw.tween_property(t, "rotation:x", -0.06, 0.35).set_trans(Tween.TRANS_SINE)
-			tw.tween_property(t, "rotation:x", 0.0, 0.3)
+			swing(t, 3.0, 0.35)
+			tw.tween_interval(0.1)
 		_:
 			tw.tween_interval(0.1)
+
+
+# ---------- balanco ----------
+
+var _swing_seat: Node3D
+var _swing_t := 0.0
+var _swing_left := 0.0
+var _swing_amp := 0.0
+var _swing_goal_amp := 0.0
+var _swing_angle := 0.0
+
+
+func _swing_parts(t: Node3D) -> Node3D:
+	return t.find_child("assento", true, false) as Node3D
+
+
+## Faz o assento balancar por um tempo (o Kumo pode estar sentado nele).
+func swing(t: Node3D, secs: float, amp: float = 0.5) -> void:
+	_swing_seat = _swing_parts(t)
+	_swing_left = secs
+	_swing_goal_amp = amp
+
+
+## Ponto do assento no mundo (onde o Kumo senta) e a direcao para frente.
+func seat_point(t: Node3D) -> Vector3:
+	var seat := _swing_parts(t)
+	if seat == null:
+		return t.global_position + Vector3(0, 0.6, 0)
+	var m: MeshInstance3D = seat as MeshInstance3D
+	if m == null:
+		var mi := seat.find_children("*", "MeshInstance3D", true, false)
+		if mi.is_empty():
+			return seat.global_position
+		m = mi[0] as MeshInstance3D
+	var box := m.get_aabb()
+	var local := Vector3(box.get_center().x, box.position.y + 0.09, box.get_center().z)
+	return m.global_transform * local
+
+
+## Direcao (no chao) para onde o assento aponta: perpendicular a trave.
+func swing_forward(t: Node3D) -> Vector3:
+	var ax := (t.global_transform.basis * SWING_AXIS).normalized()
+	var f := ax.cross(Vector3.UP).normalized()
+	return f
+
+
+func _process(delta: float) -> void:
+	if _swing_seat == null:
+		return
+	_swing_t += delta
+	_swing_left -= delta
+	if _swing_left <= 0.0:
+		_swing_goal_amp = 0.0
+	_swing_amp = move_toward(_swing_amp, _swing_goal_amp, delta * 0.4)
+	_swing_angle = sin(_swing_t * 2.4) * _swing_amp
+	_swing_seat.basis = Basis(SWING_AXIS.normalized(), _swing_angle)
+
+
+func is_swinging() -> bool:
+	return _swing_left > 0.0 or _swing_amp > 0.02
 
 
 # ---------- detalhes ----------

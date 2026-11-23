@@ -17,6 +17,8 @@ const RED := Color(1.0, 0.33, 0.45)
 const SCREEN := Color(0.02, 0.02, 0.05)
 
 var expr: Expr = Expr.NORMAL
+## Desvio dos olhos e boca (px) para o lado que a cabeca olha.
+var look := Vector2.ZERO
 var _t := 0.0
 var _blink := 0.0
 var _next_blink := 3.0
@@ -43,7 +45,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	_round_rect(Rect2(6, 6, W - 12, H - 12), 34.0, SCREEN)
-	var c := Vector2(W / 2.0, H / 2.0 + 4.0)
+	var c := Vector2(W / 2.0, H / 2.0 + 4.0) + look.clamp(Vector2(-14, -8), Vector2(14, 8))
 	var shake := Vector2(sin(_t * 60.0) * 3.0, 0.0) if expr == Expr.ENFURECIDO or expr == Expr.ASSUSTADO else Vector2.ZERO
 	c += shake
 	var le := c + Vector2(-44, -12)

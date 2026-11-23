@@ -17,6 +17,11 @@ var _focus: Node3D
 var _focus_left := 0.0
 var _focus_offset := Vector3.ZERO
 var _look := Vector3.ZERO
+## Obstaculo grande (a arvore no centro); a camera se posiciona do lado oposto.
+var obstacle := Vector3.ZERO
+var _yaw := 0.0
+var _check_cut := false
+var _was_focusing := false
 
 
 func _ready() -> void:
@@ -31,10 +36,12 @@ func focus(n: Node3D, secs: float, offset: Vector3 = NEAR_OFFSET) -> void:
 	_focus = n
 	_focus_left = secs
 	_focus_offset = offset
+	_check_cut = true
 
 
 func release() -> void:
 	_focus_left = 0.0
+	_check_cut = true
 
 
 func is_focusing() -> bool:
@@ -42,6 +49,9 @@ func is_focusing() -> bool:
 
 
 func snap() -> void:
+	var out := Vector2(anchor.x - obstacle.x, anchor.z - obstacle.z)
+	if out.length() > 2.5:
+		_yaw = atan2(out.x, out.y)
 	_process(10.0)
 
 
@@ -56,7 +66,27 @@ func _process(delta: float) -> void:
 		speed = 4.0
 	elif is_instance_valid(main_target):
 		target = main_target.global_position.lerp(anchor, 0.55) + Vector3(0, 1.1, 0)
-	var k := minf(delta * speed, 1.0)
+	# a camera fica do lado de fora em relacao a arvore (centro do mapa),
+	# entao o tronco nunca fica entre ela e quem esta sendo mostrado
+	var out := Vector2(target.x - obstacle.x, target.z - obstacle.z)
+	var focusing := _focus_left > 0.0
+	if focusing != _was_focusing:
+		_check_cut = true
+	_was_focusing = focusing
+	var cut := false
+	if out.length() > 2.5:
+		var goal_yaw := atan2(out.x, out.y)
+		# troca de alvo do outro lado da arvore: corte seco em vez de girar
+		# a camera por dentro do tronco
+		if _check_cut and absf(angle_difference(_yaw, goal_yaw)) > 1.0:
+			_yaw = goal_yaw
+			cut = true
+		_yaw = lerp_angle(_yaw, goal_yaw, minf(delta * 1.5, 1.0))
+	_check_cut = false
+	offset = Basis(Vector3.UP, _yaw) * offset
+	var k := 1.0 if cut else minf(delta * speed, 1.0)
+	if cut:
+		_look = target
 	global_position = global_position.lerp(target + offset, k)
 	_look = _look.lerp(target, k)
 	look_at(_look, Vector3.UP)

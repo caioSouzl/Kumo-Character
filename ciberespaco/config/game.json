@@ -15,9 +15,9 @@
     "hover_height": 0.55
   },
   "kumo": {
-    "walk_speed": 2.0,
-    "run_speed": 4.6,
-    "quad_above_speed": 3.0,
+    "walk_speed": 0.8,
+    "run_speed": 2.4,
+    "quad_above_speed": 1.6,
     "play_sec": [
       4,
       9
@@ -64,30 +64,35 @@
         "left": {
           "bone": "left",
           "pivot": [
-            -0.1695,
-            0.197,
+            -0.1912,
+            0.2201,
             0.0
           ],
           "tip": [
-            -0.115,
-            0.127,
+            -0.1356,
+            0.163,
             0.02
           ]
         },
         "right": {
           "bone": "right",
           "pivot": [
-            -0.3675,
-            0.2395,
+            -0.3937,
+            0.2218,
             0.0
           ],
           "tip": [
-            -0.415,
-            0.371,
-            0.02
+            -0.49,
+            0.33,
+            0.03
           ]
         }
-      }
+      },
+      "head_pivot": [
+        -0.2917,
+        0.33,
+        0.0
+      ]
     },
     "kumo_rig": {
       "walk_bones": {

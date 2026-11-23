@@ -39,6 +39,8 @@ var _battery_notice_cd := 0.0
 var _suspicious_cd := 0.0
 var _orbit := 0.0
 var _was_empty := false
+## Rotina livre do Kumo (desligar para testes ou cenas).
+var roam_enabled := true
 
 
 func _ready() -> void:
@@ -63,6 +65,7 @@ func _ready() -> void:
 	_kumo.sleep_at(_island.nest_pos)
 
 	_cam = CameraRig.new()
+	_cam.obstacle = _island.tree_pos
 	_cam.main_target = _zodia
 	_cam.anchor = FIRST_SITE + Vector3(0, 0.8, 0)
 	add_child(_cam)
@@ -414,10 +417,13 @@ func _wake_kumo(fast: bool) -> void:
 func _kumo_roam() -> void:
 	var walk := float(GameConfig.sub("kumo", "walk_speed", 1.6))
 	while is_inside_tree():
-		if _kumo.acting:
+		if _kumo.acting or not roam_enabled:
 			await get_tree().create_timer(0.5).timeout
 			continue
-		if _rng.randf() < 0.6 and not _island.toys.is_empty():
+		var swing_toy := _find_toy("balanco")
+		if swing_toy and _rng.randf() < 0.3:
+			await _kumo_swing(swing_toy, walk)
+		elif _rng.randf() < 0.6 and not _island.toys.is_empty():
 			var toy: Node3D = _island.toys[_rng.randi_range(0, _island.toys.size() - 1)]
 			var tp := toy.global_position
 			var spot := tp + (Vector3(-tp.x, 0, -tp.z).normalized() * 1.0)
@@ -438,6 +444,40 @@ func _kumo_roam() -> void:
 				continue
 			_kumo.look_toward(_zodia.global_position)
 			await get_tree().create_timer(_rng.randf_range(4.0, 8.0)).timeout
+
+
+func _find_toy(kind: String) -> Node3D:
+	for t in _island.toys:
+		if String(t.get_meta("kind", "")) == kind:
+			return t
+	return null
+
+
+## O Kumo vai ate o balanco, senta e balanca um pouco.
+func _kumo_swing(t: Node3D, walk: float) -> void:
+	var fwd := _island.swing_forward(t)
+	var seat := _island.seat_point(t)
+	var front := Vector3(seat.x, 0, seat.z) + fwd * 1.1
+	if not await _kumo.walk_to(front, walk) or _kumo.acting:
+		return
+	_kumo.look_toward(front + fwd)
+	await _kumo.hop_to(seat, 0.6, 0.45)
+	if _kumo.acting:
+		return
+	_kumo.set_face(Kumo.Face.HAPPY)
+	_kumo.sitting = true
+	_island.swing(t, _rng.randf_range(6.0, 10.0), 0.5)
+	var face_dir := atan2(fwd.x, fwd.z)
+	while is_inside_tree() and (_island.is_swinging() or _kumo.sitting) and not _kumo.acting:
+		_kumo.global_position = _island.seat_point(t)
+		_kumo.rotation.y = face_dir
+		if not _island.is_swinging():
+			break
+		await get_tree().process_frame
+	_kumo.sitting = false
+	if not _kumo.acting:
+		await _kumo.hop_to(Vector3(seat.x, Island.TOP, seat.z) + fwd * 1.0, 0.5, 0.4)
+		_kumo.set_face(Kumo.Face.OPEN)
 
 
 # ---------- curtidas e presentes ----------
@@ -566,8 +606,9 @@ func _do_knockdown(run: float) -> void:
 	# camera no objeto: racha, despedaca, cai e some (~3,6 s)
 	_cam.focus(_project, 3.8, CameraRig.OBJECT_OFFSET)
 	_project.knock_down(_kumo.global_position)
-	await get_tree().create_timer(0.9).timeout
+	# o painel holografico aparece e some rapido, antes dos estilhacos
 	_hud.shatter("Projeto derrubado!")
+	await get_tree().create_timer(0.9).timeout
 	_kumo.hop_to(_site + Vector3(-PAD_SIZE / 2.0 - 1.2, 0, 1.2), 1.2, 0.6)
 	await get_tree().create_timer(2.9).timeout
 	_kumo.walk_to(_site + Vector3(-PAD_SIZE / 2.0 - 2.2, 0, 2.0), run)

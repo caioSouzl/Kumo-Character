@@ -28,6 +28,9 @@ var _anim_mode := ""
 var _skel: Skeleton3D
 ## Bracos do modelo do Hyper3D: [{idx, pivot, tip, side, q}]
 var _arms: Array = []
+var _head_idx := -1
+var _head_pivot := Vector3.ZERO
+var _head_q := Quaternion.IDENTITY
 
 var _spark: MeshInstance3D
 
@@ -130,6 +133,8 @@ func _attach_to_rig(glb: Node, cfg: Dictionary) -> bool:
 		return false
 	var skel := skels[0] as Skeleton3D
 	_skel = skel
+	_head_idx = skel.find_bone(String(cfg.get("head_bone", "awake_head")))
+	_head_pivot = _v3(cfg.get("head_pivot", [0, 0, 0]))
 	for side_name in ["left", "right"]:
 		var ac: Dictionary = cfg.get("arms", {}).get(side_name, {})
 		var idx := skel.find_bone(String(ac.get("bone", side_name)))
@@ -225,6 +230,7 @@ func _play_mode_anim() -> void:
 				_skel.reset_bone_poses()
 			for arm in _arms:
 				arm["q"] = Quaternion.IDENTITY
+			_head_q = Quaternion.IDENTITY
 		return
 	_anim.active = true
 	_anim.get_animation(name).loop_mode = Animation.LOOP_LINEAR
@@ -233,6 +239,25 @@ func _play_mode_anim() -> void:
 
 func _anim_playing() -> bool:
 	return _anim != null and _anim.active and _anim.is_playing()
+
+
+## Cabeca: olha para o trabalho e balanca de leve; a tela-rosto (que e o
+## proprio visor) acompanha, e os olhos deslizam para o lado que ela olha.
+func _animate_rig_head(delta: float) -> void:
+	if _head_idx < 0 or _anim_playing():
+		return
+	var yaw := sin(_t * 0.7) * 0.14 + sin(_t * 1.9) * 0.04
+	var pitch := sin(_t * 1.1) * 0.04
+	if arm_mode == "build":
+		pitch += 0.16
+	elif arm_mode == "droop":
+		pitch += 0.35
+	var goal_q := Quaternion(Vector3.UP, yaw) * Quaternion(Vector3.RIGHT, pitch)
+	_head_q = _head_q.slerp(goal_q, minf(delta * 4.0, 1.0))
+	var b := Basis(_head_q)
+	_skel.set_bone_global_pose(_head_idx, Transform3D(b, _head_pivot - b * _head_pivot) * _skel.get_bone_global_rest(_head_idx))
+	if _face:
+		_face.look = Vector2(yaw * 70.0, pitch * 30.0)
 
 
 ## Bracos (paletas) giram em volta do ombro: para frente ao construir,
@@ -432,6 +457,7 @@ func _process(delta: float) -> void:
 func _animate_arms(delta: float) -> void:
 	_play_mode_anim()
 	_animate_rig_arms(delta)
+	_animate_rig_head(delta)
 	if _arm_l == null:
 		return
 	var l := 0.0

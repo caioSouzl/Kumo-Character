@@ -22,7 +22,10 @@ live manda o presente certo. Base: apresentação "Ciberespaço" no Canva.
   se desfaz em quadradinhos (pixels) e o circuito aparece por baixo: o campo se
   mistura com o espaço digital.
 - Árvore do Hyper3D no centro (60% maior), com o terrário de vidro onde o
-  Kumo dorme. Brinquedos (bola, bloco, carrinho, argolas, balanço) nas bordas.
+  Kumo dorme. Brinquedos (bola, bloco, carrinho, argolas, balanço) a 10 m da
+  árvore. O balanço é 50% maior e funciona: às vezes o Kumo senta e balança.
+- Ninguém atravessa o tronco: o Kumo contorna a árvore, e a câmera fica sempre
+  do lado de fora (corta direto quando o alvo muda para o outro lado).
 - Pedras, moitas com flores, tufos de grama e caminho de pedras chatas.
 - Fora do campo: placa de circuito escura com trilhas, vias e chips, que se
   desfaz no horizonte roxo.
@@ -43,7 +46,9 @@ live manda o presente certo. Base: apresentação "Ciberespaço" no Canva.
 4. Todos os projetos prontos: óculos da vitória, e a lista recomeça.
 5. O Kumo começa dormindo no terrário. Em ~1 min (`kumo_wake_sec`) acorda,
    desce da árvore e passa a brincar ou observar. Anda em pé devagar e corre
-   de quatro patas (`kumo.quad_above_speed`).
+   de quatro patas (`kumo.quad_above_speed`). O passo é medido pela perna do
+   modelo e avança pela distância andada (sem pés patinando); no trote as
+   pernas abrem para os lados e o corpo e a cauda ondulam, como um lagarto.
 
 ## Câmera
 
@@ -53,7 +58,8 @@ live manda o presente certo. Base: apresentação "Ciberespaço" no Canva.
 
 ## Quebra
 
-Rachado (linhas de falha piscando, o objeto treme) → se despedaça em
+O painel "Projeto derrubado!" aparece e estoura em meio segundo, antes do
+efeito no objeto. Depois: rachado (linhas de falha piscando, o objeto treme) → se despedaça em
 estilhaços → os estilhaços caem no chão → somem. Vale para a derrubada
 (Galáxia: o objeto todo) e para o tombo (Perfume: só a peça em construção).
 

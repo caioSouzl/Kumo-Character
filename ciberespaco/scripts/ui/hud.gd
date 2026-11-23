@@ -399,7 +399,7 @@ class ShatterPanel extends Control:
 						"rot": rng.randf_range(-4, 4),
 						"col": Color(0.6, 0.3, 1.0, 0.75).lerp(Color(1.0, 0.4, 0.9, 0.75), rng.randf()),
 					})
-		_life = 2.4
+		_life = 0.55
 		visible = true
 
 	func _process(delta: float) -> void:
@@ -407,13 +407,15 @@ class ShatterPanel extends Control:
 			visible = false
 			return
 		_life -= delta
-		_label.modulate.a = clampf((_life - 0.8) / 0.6, 0.0, 1.0)
+		_label.modulate.a = clampf((_life - 0.25) / 0.15, 0.0, 1.0)
 		_label.position.x = 140 + sin(_life * 80.0) * 6.0
 		queue_redraw()
 
 	func _draw() -> void:
-		var age := 2.4 - _life
-		var burst := maxf(age - 0.55, 0.0)
+		# rapido: racha (0,15 s), estoura e some em menos de 1 s,
+		# para o efeito de quebra no objeto aparecer
+		var age := 0.55 - _life
+		var burst := maxf(age - 0.1, 0.0) * 3.0
 		for s in _shards:
 			var off: Vector2 = s["vel"] * burst + Vector2(0, 600.0 * burst * burst)
 			var ang: float = s["rot"] * burst
@@ -422,12 +424,12 @@ class ShatterPanel extends Control:
 			for p in s["pts"]:
 				pts.append(mid + ((p as Vector2) - mid).rotated(ang) * 0.96 + off)
 			var col: Color = s["col"]
-			col.a *= clampf(_life / 0.8, 0.0, 1.0)
+			col.a *= clampf(_life / 0.35, 0.0, 1.0) * 0.8
 			draw_colored_polygon(pts, col)
 			draw_polyline(PackedVector2Array([pts[0], pts[1], pts[2], pts[0]]), Color(1, 0.8, 1, col.a), 2.0)
-		if age < 0.55:
+		if age < 0.1:
 			# rachaduras antes de quebrar
 			var c := Vector2(540, 930)
 			for i in 9:
 				var a := i * 0.7
-				draw_line(c, c + Vector2.from_angle(a) * 330.0 * (age / 0.55), Color(1, 1, 1, 0.9), 3.0)
+				draw_line(c, c + Vector2.from_angle(a) * 330.0 * (age / 0.1), Color(1, 1, 1, 0.9), 3.0)
