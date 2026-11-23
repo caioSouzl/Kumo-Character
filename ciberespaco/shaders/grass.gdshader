@@ -3,9 +3,9 @@
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled, cull_disabled;
 
-uniform vec3 dark : source_color = vec3(0.13, 0.34, 0.12);
-uniform vec3 mid : source_color = vec3(0.27, 0.56, 0.17);
-uniform vec3 light : source_color = vec3(0.52, 0.76, 0.24);
+uniform vec3 dark : source_color = vec3(0.2, 0.45, 0.15);
+uniform vec3 mid : source_color = vec3(0.36, 0.66, 0.2);
+uniform vec3 light : source_color = vec3(0.6, 0.82, 0.26);
 uniform vec3 sun : source_color = vec3(0.78, 0.85, 0.35);
 uniform float radius = 6.2;
 
@@ -37,5 +37,6 @@ void fragment() {
 	float r = length(p);
 	c *= mix(1.0, 0.55, smoothstep(radius - 1.0, radius + 0.2, r));
 	ALBEDO = c;
+	EMISSION = c * 0.22;
 	ROUGHNESS = 1.0;
 }

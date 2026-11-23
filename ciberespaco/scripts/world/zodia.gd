@@ -125,14 +125,10 @@ func _attach_to_rig(glb: Node, cfg: Dictionary) -> bool:
 	if skels.is_empty() or cfg.is_empty():
 		return false
 	var skel := skels[0] as Skeleton3D
-	var head := BoneAttachment3D.new()
-	head.bone_name = String(cfg.get("head_bone", "awake_head"))
-	skel.add_child(head)
+	var head := _bone_space(skel, String(cfg.get("head_bone", "awake_head")))
 	var fs: Array = cfg.get("face_size", [0.19, 0.12])
 	_build_face(head, _v3(cfg.get("face_offset", [0, 0, 0])), Vector2(float(fs[0]), float(fs[1])), _v3(cfg.get("face_normal", [0, 0, 1])))
-	var hand := BoneAttachment3D.new()
-	hand.bone_name = String(cfg.get("hand_bone", "right"))
-	skel.add_child(hand)
+	var hand := _bone_space(skel, String(cfg.get("hand_bone", "right")))
 	_hand = Node3D.new()
 	_hand.position = _v3(cfg.get("hand_offset", [0, 0, 0]))
 	hand.add_child(_hand)
@@ -141,6 +137,22 @@ func _attach_to_rig(glb: Node, cfg: Dictionary) -> bool:
 		_anim = players[0] as AnimationPlayer
 		_anim_map = cfg.get("anims", {})
 	return true
+
+
+## No que segue o osso, mas usa as coordenadas do modelo (as medidas do
+## config sao tiradas do modelo parado, nao do espaco do osso).
+func _bone_space(skel: Skeleton3D, bone: String) -> Node3D:
+	var att := BoneAttachment3D.new()
+	att.bone_name = bone
+	skel.add_child(att)
+	var space := Node3D.new()
+	var idx := skel.find_bone(bone)
+	if idx >= 0:
+		space.transform = skel.get_bone_global_rest(idx).affine_inverse()
+	else:
+		push_warning("Osso %s nao existe no modelo do ZodIA" % bone)
+	att.add_child(space)
+	return space
 
 
 static func _v3(a: Variant) -> Vector3:
