@@ -22,6 +22,10 @@ var _hand: Node3D
 var _ring: MeshInstance3D
 var _face: ZodiaFace
 var _beams: Array[MeshInstance3D] = []
+var _anim: AnimationPlayer
+var _anim_map: Dictionary = {}
+var _anim_mode := ""
+
 var _spark: MeshInstance3D
 
 var _base_expr: ZodiaFace.Expr = ZodiaFace.Expr.NORMAL
@@ -53,11 +57,17 @@ func _ready() -> void:
 
 	var models: Dictionary = GameConfig.value("models", {})
 	var glb := ModelSlot.try_load(String(models.get("zodia", "")), float(models.get("zodia_height", 1.9)))
+	var rigged := false
 	if glb:
 		_pose.add_child(glb)
+		rigged = _attach_to_rig(glb, models.get("zodia_rig", {}))
 	else:
 		_build_placeholder()
-	_build_face(models.get("zodia_face", {}))
+	if not rigged:
+		var cfg: Dictionary = models.get("zodia_face", {})
+		var off: Array = cfg.get("offset", [0, 1.52, 0.51])
+		var sz: Array = cfg.get("size", [0.78, 0.48])
+		_build_face(_pose, _v3(off), Vector2(float(sz[0]), float(sz[1])), Vector3.BACK)
 	if _hand == null:
 		_hand = Node3D.new()
 		_hand.position = Vector3(0.7, 0.75, 0.2)
@@ -108,7 +118,51 @@ func _arm(side: float, mat: Material) -> Node3D:
 	return pivot
 
 
-func _build_face(cfg: Dictionary) -> void:
+## Modelo do Hyper3D com esqueleto: a tela-rosto e a mao seguem os ossos,
+## e as animacoes do arquivo (comemorar, apontar...) entram no lugar dos bracos.
+func _attach_to_rig(glb: Node, cfg: Dictionary) -> bool:
+	var skels := glb.find_children("*", "Skeleton3D", true, false)
+	if skels.is_empty() or cfg.is_empty():
+		return false
+	var skel := skels[0] as Skeleton3D
+	var head := BoneAttachment3D.new()
+	head.bone_name = String(cfg.get("head_bone", "awake_head"))
+	skel.add_child(head)
+	var fs: Array = cfg.get("face_size", [0.19, 0.12])
+	_build_face(head, _v3(cfg.get("face_offset", [0, 0, 0])), Vector2(float(fs[0]), float(fs[1])), _v3(cfg.get("face_normal", [0, 0, 1])))
+	var hand := BoneAttachment3D.new()
+	hand.bone_name = String(cfg.get("hand_bone", "right"))
+	skel.add_child(hand)
+	_hand = Node3D.new()
+	_hand.position = _v3(cfg.get("hand_offset", [0, 0, 0]))
+	hand.add_child(_hand)
+	var players := glb.find_children("*", "AnimationPlayer", true, false)
+	if not players.is_empty():
+		_anim = players[0] as AnimationPlayer
+		_anim_map = cfg.get("anims", {})
+	return true
+
+
+static func _v3(a: Variant) -> Vector3:
+	var arr: Array = a
+	return Vector3(float(arr[0]), float(arr[1]), float(arr[2]))
+
+
+func _play_mode_anim() -> void:
+	if _anim == null or _anim_mode == arm_mode:
+		return
+	_anim_mode = arm_mode
+	var name := String(_anim_map.get(arm_mode, ""))
+	if name == "" or not _anim.has_animation(name):
+		name = String(_anim_map.get("idle", ""))
+	if name == "" or not _anim.has_animation(name):
+		_anim.pause()
+		return
+	_anim.get_animation(name).loop_mode = Animation.LOOP_LINEAR
+	_anim.play(name, 0.3)
+
+
+func _build_face(parent: Node3D, offset: Vector3, quad_size: Vector2, normal: Vector3) -> void:
 	var vp := SubViewport.new()
 	vp.size = Vector2i(int(ZodiaFace.W), int(ZodiaFace.H))
 	vp.transparent_bg = true
@@ -117,10 +171,8 @@ func _build_face(cfg: Dictionary) -> void:
 	add_child(vp)
 	_face = ZodiaFace.new()
 	vp.add_child(_face)
-	var off: Array = cfg.get("offset", [0, 1.52, 0.51])
-	var sz: Array = cfg.get("size", [0.78, 0.48])
 	var q := QuadMesh.new()
-	q.size = Vector2(float(sz[0]), float(sz[1]))
+	q.size = quad_size
 	var m := StandardMaterial3D.new()
 	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -128,7 +180,8 @@ func _build_face(cfg: Dictionary) -> void:
 	m.emission_enabled = true
 	m.emission_texture = vp.get_texture()
 	m.emission_energy_multiplier = 1.6
-	Mat.add(_pose, q, m, Vector3(float(off[0]), float(off[1]), float(off[2])))
+	var quad := Mat.add(parent, q, m, offset + normal.normalized() * 0.004)
+	quad.basis = Basis.looking_at(-normal.normalized(), Vector3.UP)
 
 
 # ---------- expressoes ----------
@@ -267,6 +320,7 @@ func _process(delta: float) -> void:
 
 
 func _animate_arms(delta: float) -> void:
+	_play_mode_anim()
 	if _arm_l == null:
 		return
 	var l := 0.0

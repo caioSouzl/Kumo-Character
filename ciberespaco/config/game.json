@@ -3,7 +3,6 @@
   "kumo_wake_sec": 60,
   "event_min_interval_sec": 3.0,
   "next_project_delay_sec": 4.5,
-
   "battery": {
     "start": 100,
     "drain_per_sec": 0.55,
@@ -12,23 +11,84 @@
     "low_speed_mult": 0.45,
     "notice_cooldown_sec": 25
   },
-
-  "zodia": { "hover_height": 0.55 },
-  "kumo": { "walk_speed": 1.6, "run_speed": 4.2, "play_sec": [4, 9] },
-  "camera": { "kumo_focus_sec": 6, "auto_kumo_look_every_sec": [35, 55] },
-
+  "zodia": {
+    "hover_height": 0.55
+  },
+  "kumo": {
+    "walk_speed": 1.6,
+    "run_speed": 4.2,
+    "play_sec": [
+      4,
+      9
+    ]
+  },
+  "camera": {
+    "kumo_focus_sec": 6,
+    "auto_kumo_look_every_sec": [
+      35,
+      55
+    ]
+  },
   "models": {
     "zodia": "res://assets/models/zodia.glb",
     "zodia_height": 1.9,
-    "zodia_face": { "offset": [0, 1.52, 0.51], "size": [0.78, 0.48] },
+    "zodia_face": {
+      "offset": [
+        0,
+        1.52,
+        0.51
+      ],
+      "size": [
+        0.78,
+        0.48
+      ]
+    },
     "kumo": "res://assets/models/kumo.glb",
     "kumo_height": 1.0,
     "environment": "res://assets/models/ambiente.glb",
-    "environment_radius": 5.2,
-    "kumo_nest": [0.0, 4.2, -0.8]
+    "kumo_nest": [
+      0.32,
+      3.0,
+      -2.06
+    ],
+    "zodia_rig": {
+      "head_bone": "awake_head",
+      "face_offset": [
+        -0.2353,
+        0.3938,
+        0.0876
+      ],
+      "face_normal": [
+        -0.03,
+        0.092,
+        0.995
+      ],
+      "face_size": [
+        0.19,
+        0.118
+      ],
+      "hand_bone": "right",
+      "hand_offset": [
+        -0.415,
+        0.3,
+        0.03
+      ],
+      "anims": {
+        "idle": "",
+        "build": "indicate",
+        "cheer": "cheer",
+        "wave": "check_in",
+        "droop": ""
+      }
+    }
   },
-
   "leaderboard_size": 5,
-  "live_connector": { "enabled": false, "url": "ws://127.0.0.1:21213" },
-  "simulator": { "visible_on_start": true, "likes_per_click": 20 }
+  "live_connector": {
+    "enabled": false,
+    "url": "ws://127.0.0.1:21213"
+  },
+  "simulator": {
+    "visible_on_start": true,
+    "likes_per_click": 20
+  }
 }

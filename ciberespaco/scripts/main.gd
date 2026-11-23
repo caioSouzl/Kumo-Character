@@ -7,7 +7,7 @@ extends Node3D
 ##   atrapalhar (cada um tem a sua consequencia em _on_event_started()).
 
 const E := ZodiaFace.Expr
-const PAD_CENTER := Vector3(0.0, 0.0, 8.0)
+const PAD_CENTER := Vector3(0.0, 0.0, 9.4)
 const PAD_SIZE := 4.4
 
 var _island: Island
@@ -82,8 +82,13 @@ func _ready() -> void:
 
 func _build_environment() -> void:
 	var env := Environment.new()
-	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.07, 0.02, 0.16)
+	var sky_mat := ShaderMaterial.new()
+	sky_mat.shader = load("res://shaders/sky.gdshader")
+	var sky := Sky.new()
+	sky.sky_material = sky_mat
+	sky.radiance_size = Sky.RADIANCE_SIZE_32
+	env.background_mode = Environment.BG_SKY
+	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.55, 0.5, 0.8)
 	env.ambient_light_energy = 0.7
@@ -93,8 +98,8 @@ func _build_environment() -> void:
 	env.glow_bloom = 0.08
 	env.glow_hdr_threshold = 0.9
 	env.fog_enabled = true
-	env.fog_light_color = Color(0.1, 0.03, 0.22)
-	env.fog_density = 0.018
+	env.fog_light_color = Color(0.16, 0.07, 0.3)
+	env.fog_density = 0.012
 	env.fog_sky_affect = 0.0
 	var we := WorldEnvironment.new()
 	we.environment = env
@@ -122,6 +127,27 @@ func _build_environment() -> void:
 	cs.shape = WorldBoundaryShape3D.new()
 	floor_body.add_child(cs)
 	add_child(floor_body)
+
+	# chips em relevo espalhados pela placa de circuito
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5
+	var chip_mat := Mat.solid(Color(0.06, 0.07, 0.2), 0.6)
+	var chip_edge := Mat.glow(Color(0.3, 0.65, 1.0), 2.0)
+	for i in 16:
+		var a := rng.randf() * TAU
+		var r := rng.randf_range(9.0, 20.0)
+		var c := Vector3(cos(a) * r, 0, sin(a) * r)
+		if c.distance_to(PAD_CENTER) < 4.5:
+			continue
+		var sz := Vector3(rng.randf_range(0.8, 2.2), rng.randf_range(0.1, 0.45), rng.randf_range(0.8, 1.8))
+		var chip := Node3D.new()
+		chip.position = c
+		chip.rotation.y = round(rng.randf() * 4.0) * PI / 4.0
+		add_child(chip)
+		Mat.add(chip, Mat.box(sz), chip_mat, Vector3(0, sz.y / 2.0, 0))
+		for sgn in [-1.0, 1.0]:
+			Mat.add(chip, Mat.box(Vector3(sz.x + 0.04, 0.03, 0.04)), chip_edge, Vector3(0, sz.y, sz.z / 2.0 * sgn))
+			Mat.add(chip, Mat.box(Vector3(0.04, 0.03, sz.z + 0.04)), chip_edge, Vector3(sz.x / 2.0 * sgn, sz.y, 0))
 
 	# particulas de dados flutuando
 	var motes := CPUParticles3D.new()
@@ -324,7 +350,7 @@ func _kumo_roam() -> void:
 		if _rng.randf() < 0.6 and not _island.toys.is_empty():
 			var toy: Node3D = _island.toys[_rng.randi_range(0, _island.toys.size() - 1)]
 			var tp := toy.global_position
-			var spot := tp + (Vector3(-tp.x, 0, -tp.z).normalized() * 0.65)
+			var spot := tp + (Vector3(-tp.x, 0, -tp.z).normalized() * 1.0)
 			if not await _kumo.walk_to(spot, walk) or _kumo.acting:
 				continue
 			_kumo.look_toward(tp)

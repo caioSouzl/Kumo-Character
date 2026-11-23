@@ -1,14 +1,19 @@
 class_name Kumo
 extends Node3D
-## O Kumo, a nuvenzinha curiosa. Dorme no terrario da arvore, acorda, desce,
+## O Kumo, o lagartinho curioso. Dorme no terrario da arvore, acorda, desce,
 ## brinca com os brinquedos e so atrapalha o ZodIA quando chega o presente certo.
-## Modelo provisorio em esferas; se existir assets/models/kumo.glb, ele entra no lugar.
+## Modelo provisorio (lagartinho em esferas, paleta oficial); se existir assets/models/kumo.glb, ele entra no lugar.
 
 enum Face { OPEN, SLEEP, HAPPY, MISCHIEF }
 
-const WHITE := Color(1.0, 1.0, 1.0)
-const INK := Color(0.17, 0.13, 0.25)
-const CHEEK := Color(1.0, 0.55, 0.68)
+## Paleta oficial do Kumo
+const GREEN_DARK := Color("#708C32")
+const GREEN := Color("#90A235")
+const GREEN_LIGHT := Color("#DCDC83")
+const BEIGE := Color("#D1B681")
+const BELLY := Color("#DCDC83")
+const INK := Color("#2a2418")
+const CHEEK := Color(1.0, 0.6, 0.6)
 
 var asleep := true
 ## true enquanto um presente controla o Kumo (a rotina livre espera).
@@ -53,25 +58,41 @@ func _ready() -> void:
 
 
 func _build_placeholder() -> void:
-	var white := Mat.solid(WHITE, 0.9)
-	for p in [[Vector3(-0.32, 0.42, 0), 0.3], [Vector3(0.32, 0.42, 0), 0.3], [Vector3(0, 0.62, 0), 0.4], [Vector3(0, 0.36, 0.05), 0.36], [Vector3(-0.18, 0.78, -0.05), 0.24], [Vector3(0.2, 0.8, -0.04), 0.22]]:
-		Mat.add(_visual, Mat.sphere(p[1], -1, 14), white, p[0])
-	var ink := Mat.solid(INK, 0.5)
+	# lagartinho fofo nas cores oficiais do Kumo (provisorio ate o modelo 3D)
+	var green := Mat.solid(GREEN, 0.8)
+	var green_dark := Mat.solid(GREEN_DARK, 0.85)
+	var belly := Mat.solid(BELLY, 0.9)
+	Mat.add(_visual, Mat.sphere(0.3, -1, 14), green, Vector3(0, 0.32, -0.05), Vector3.ZERO, Vector3(1.0, 0.85, 1.15))
+	Mat.add(_visual, Mat.sphere(0.24, -1, 12), belly, Vector3(0, 0.28, 0.1), Vector3.ZERO, Vector3(0.9, 0.85, 0.7))
+	Mat.add(_visual, Mat.sphere(0.3, -1, 16), green, Vector3(0, 0.68, 0.12), Vector3.ZERO, Vector3(1.1, 0.95, 1.0))
+	Mat.add(_visual, Mat.sphere(0.16, -1, 12), Mat.solid(GREEN_LIGHT, 0.8), Vector3(0, 0.6, 0.34), Vector3.ZERO, Vector3(1.3, 0.7, 0.8))
+	# cauda enrolando para tras
+	for i in 5:
+		var k := i / 4.0
+		Mat.add(_visual, Mat.sphere(lerpf(0.13, 0.04, k), -1, 8), green if i % 2 == 0 else green_dark, Vector3(sin(k * 2.2) * 0.25, 0.14 + k * 0.12, -0.35 - k * 0.32))
+	# pintinhas nas costas
+	for i in 3:
+		Mat.add(_visual, Mat.sphere(0.05, 0.03, 8), Mat.solid(BEIGE, 0.9), Vector3((i - 1) * 0.1, 0.55 - i * 0.05, -0.2 - i * 0.08), Vector3(-40, 0, 0))
+	for x in [-0.17, 0.17]:
+		for z in [-0.18, 0.12]:
+			Mat.add(_visual, Mat.sphere(0.075, 0.12, 8), green_dark, Vector3(x, 0.06, z))
+	var ink := Mat.solid(INK, 0.3)
 	for s in [-1.0, 1.0]:
-		var e := Mat.add(_visual, Mat.sphere(0.055, 0.12, 10), ink, Vector3(0.13 * s, 0.62, 0.37))
+		var e := Node3D.new()
+		e.position = Vector3(0.14 * s, 0.76, 0.33)
+		_visual.add_child(e)
+		Mat.add(e, Mat.sphere(0.075, 0.1, 10), ink)
+		Mat.add(e, Mat.sphere(0.022, -1, 6), Mat.solid(Color.WHITE, 0.3), Vector3(0.02, 0.025, 0.06))
 		_eyes_open.append(e)
-		var c := Mat.add(_visual, Mat.box(Vector3(0.12, 0.022, 0.02)), ink, Vector3(0.13 * s, 0.6, 0.39))
+		var c := Mat.add(_visual, Mat.box(Vector3(0.12, 0.022, 0.02)), ink, Vector3(0.14 * s, 0.74, 0.37))
 		_eyes_closed.append(c)
 		var h := Node3D.new()
-		h.position = Vector3(0.13 * s, 0.62, 0.385)
+		h.position = Vector3(0.14 * s, 0.76, 0.37)
 		_visual.add_child(h)
 		Mat.add(h, Mat.box(Vector3(0.08, 0.022, 0.02)), ink, Vector3(-0.03, -0.015, 0), Vector3(0, 0, 35))
 		Mat.add(h, Mat.box(Vector3(0.08, 0.022, 0.02)), ink, Vector3(0.03, -0.015, 0), Vector3(0, 0, -35))
 		_eyes_happy.append(h)
-		Mat.add(_visual, Mat.sphere(0.06, 0.06, 10), Mat.solid(CHEEK, 0.9), Vector3(0.25 * s, 0.52, 0.33), Vector3.ZERO, Vector3(1.2, 0.6, 0.5))
-	# pezinhos
-	for s in [-1.0, 1.0]:
-		Mat.add(_visual, Mat.sphere(0.1, 0.12, 10), white, Vector3(0.17 * s, 0.07, 0.05))
+		Mat.add(_visual, Mat.sphere(0.05, 0.04, 8), Mat.solid(CHEEK, 0.9), Vector3(0.24 * s, 0.62, 0.3), Vector3.ZERO, Vector3(1.2, 0.6, 0.5))
 
 
 func set_face(f: Face) -> void:
