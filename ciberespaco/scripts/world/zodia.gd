@@ -266,7 +266,7 @@ func _arm_tips() -> Array[Vector3]:
 	if _arms.size() == 2 and not _anim_playing():
 		for arm in _arms:
 			var p: Vector3 = arm["pivot"]
-			var tip: Vector3 = p + (arm["q"] as Quaternion) * ((arm["tip"] as Vector3) - p) * 1.15
+			var tip: Vector3 = p + (arm["q"] as Quaternion) * ((arm["tip"] as Vector3) - p) * 1.05
 			out.append(_skel.global_transform * tip)
 	else:
 		out.append(_hand.global_position)
