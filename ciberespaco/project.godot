@@ -1,0 +1,36 @@
+; Engine configuration file.
+; Godot 4.x
+
+config_version=5
+
+[application]
+
+config/name="Ciberespaço"
+config/description="ZodIA tenta terminar seus projetos holográficos enquanto o Kumo, movido pelos presentes da live, atrapalha."
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.4", "Mobile")
+
+[autoload]
+
+GameConfig="*res://scripts/autoload/game_config.gd"
+EventQueue="*res://scripts/autoload/event_queue.gd"
+LiveConnector="*res://scripts/autoload/live_connector.gd"
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+window/size/window_width_override=540
+window/size/window_height_override=960
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+window/handheld/orientation=1
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_3d=0
+scaling_3d/scale=0.8
+lights_and_shadows/directional_shadow/size=1024
+environment/defaults/default_clear_color=Color(0.07, 0.02, 0.16, 1)

@@ -1,0 +1,62 @@
+{
+  "_comment": "Projetos do ZodIA: objetos da vida real em formas simples. Medidas em metros, a partir do centro da plataforma. shape: box | cylinder | cone | sphere. As pecas sao construidas na ordem da lista.",
+  "projects": [
+    {
+      "name": "Cadeira",
+      "pieces": [
+        { "shape": "box", "size": [0.16, 0.9, 0.16], "pos": [-0.55, 0.45, -0.55] },
+        { "shape": "box", "size": [0.16, 0.9, 0.16], "pos": [0.55, 0.45, -0.55] },
+        { "shape": "box", "size": [0.16, 0.9, 0.16], "pos": [-0.55, 0.45, 0.55] },
+        { "shape": "box", "size": [0.16, 0.9, 0.16], "pos": [0.55, 0.45, 0.55] },
+        { "shape": "box", "size": [1.35, 0.16, 1.35], "pos": [0, 0.98, 0] },
+        { "shape": "box", "size": [1.35, 1.25, 0.16], "pos": [0, 1.68, -0.6] }
+      ]
+    },
+    {
+      "name": "Mesa com luminária",
+      "pieces": [
+        { "shape": "box", "size": [0.15, 1.05, 0.15], "pos": [-1.0, 0.52, -0.6] },
+        { "shape": "box", "size": [0.15, 1.05, 0.15], "pos": [1.0, 0.52, -0.6] },
+        { "shape": "box", "size": [0.15, 1.05, 0.15], "pos": [-1.0, 0.52, 0.6] },
+        { "shape": "box", "size": [0.15, 1.05, 0.15], "pos": [1.0, 0.52, 0.6] },
+        { "shape": "box", "size": [2.4, 0.15, 1.5], "pos": [0, 1.12, 0] },
+        { "shape": "cylinder", "radius": 0.22, "height": 0.08, "pos": [0.65, 1.24, -0.1] },
+        { "shape": "cylinder", "radius": 0.04, "height": 0.7, "pos": [0.65, 1.62, -0.1] },
+        { "shape": "cone", "radius": 0.32, "top_radius": 0.1, "height": 0.34, "pos": [0.65, 2.0, -0.1] }
+      ]
+    },
+    {
+      "name": "Casinha",
+      "pieces": [
+        { "shape": "box", "size": [2.4, 1.6, 2.0], "pos": [0, 0.8, 0] },
+        { "shape": "box", "size": [1.55, 1.55, 2.15], "pos": [0, 1.6, 0], "rot": [0, 0, 45] },
+        { "shape": "box", "size": [0.55, 0.95, 0.06], "pos": [0, 0.48, 1.03] },
+        { "shape": "box", "size": [0.45, 0.45, 0.06], "pos": [-0.75, 1.0, 1.03] },
+        { "shape": "box", "size": [0.45, 0.45, 0.06], "pos": [0.75, 1.0, 1.03] },
+        { "shape": "box", "size": [0.3, 0.9, 0.3], "pos": [0.7, 2.25, -0.45] }
+      ]
+    },
+    {
+      "name": "Foguete",
+      "pieces": [
+        { "shape": "box", "size": [0.08, 0.8, 0.7], "pos": [-0.5, 0.4, 0] },
+        { "shape": "box", "size": [0.08, 0.8, 0.7], "pos": [0.5, 0.4, 0] },
+        { "shape": "box", "size": [0.7, 0.8, 0.08], "pos": [0, 0.4, 0.5] },
+        { "shape": "cylinder", "radius": 0.45, "height": 2.2, "pos": [0, 1.4, 0] },
+        { "shape": "sphere", "radius": 0.2, "pos": [0, 1.95, 0.42] },
+        { "shape": "cone", "radius": 0.45, "top_radius": 0.0, "height": 0.85, "pos": [0, 2.92, 0] }
+      ]
+    },
+    {
+      "name": "Sofá",
+      "pieces": [
+        { "shape": "box", "size": [2.6, 0.5, 1.1], "pos": [0, 0.3, 0] },
+        { "shape": "box", "size": [1.2, 0.22, 0.85], "pos": [-0.62, 0.66, 0.1] },
+        { "shape": "box", "size": [1.2, 0.22, 0.85], "pos": [0.62, 0.66, 0.1] },
+        { "shape": "box", "size": [2.6, 0.95, 0.25], "pos": [0, 1.0, -0.45] },
+        { "shape": "box", "size": [0.3, 0.8, 1.1], "pos": [-1.35, 0.6, 0] },
+        { "shape": "box", "size": [0.3, 0.8, 1.1], "pos": [1.35, 0.6, 0] }
+      ]
+    }
+  ]
+}

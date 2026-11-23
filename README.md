@@ -4,6 +4,12 @@
 
 <img width="1312" height="1199" alt="file_00000000a470820e827afdd644f82450" src="https://github.com/user-attachments/assets/7001e626-60af-4257-b32f-7f6addd025f1" />
 
+## Ciberespaço (protótipo, novo)
+
+O Kumo divide o mundo digital com o ZodIA, a IA do Criador. O ZodIA constrói
+projetos holográficos e o Kumo, movido pelos presentes da live, atrapalha.
+Jogo 3D vertical (9:16) em [`ciberespaco/`](ciberespaco/README.md).
+
 ## Kumo Pizzaria (protótipo)
 
 Jogo para lives: o Kumo cuida de uma pizzaria por 5 minutos e os espectadores

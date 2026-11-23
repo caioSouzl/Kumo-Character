@@ -1,0 +1,34 @@
+{
+  "project_build_sec": 120,
+  "kumo_wake_sec": 60,
+  "event_min_interval_sec": 3.0,
+  "next_project_delay_sec": 4.5,
+
+  "battery": {
+    "start": 100,
+    "drain_per_sec": 0.55,
+    "per_like": 0.4,
+    "low_at": 25,
+    "low_speed_mult": 0.45,
+    "notice_cooldown_sec": 25
+  },
+
+  "zodia": { "hover_height": 0.55 },
+  "kumo": { "walk_speed": 1.6, "run_speed": 4.2, "play_sec": [4, 9] },
+  "camera": { "kumo_focus_sec": 6, "auto_kumo_look_every_sec": [35, 55] },
+
+  "models": {
+    "zodia": "res://assets/models/zodia.glb",
+    "zodia_height": 1.9,
+    "zodia_face": { "offset": [0, 1.52, 0.51], "size": [0.78, 0.48] },
+    "kumo": "res://assets/models/kumo.glb",
+    "kumo_height": 1.0,
+    "environment": "res://assets/models/ambiente.glb",
+    "environment_radius": 5.2,
+    "kumo_nest": [0.0, 4.2, -0.8]
+  },
+
+  "leaderboard_size": 5,
+  "live_connector": { "enabled": false, "url": "ws://127.0.0.1:21213" },
+  "simulator": { "visible_on_start": true, "likes_per_click": 20 }
+}

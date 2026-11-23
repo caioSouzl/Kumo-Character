@@ -1,0 +1,54 @@
+{
+  "_comment": "Cada presente aponta para um evento. tiktok_names = nomes que o conector da live envia (sem diferenciar maiusculas). coins conta para o ranking. style escolhe o quadro de agradecimento: zodia ou kumo. Troque nomes e valores aqui, sem mexer no codigo.",
+  "gifts": {
+    "rose": {
+      "label": "Rosa", "plural": "rosas",
+      "tiktok_names": ["Rose"],
+      "coins": 1, "style": "zodia",
+      "event": "recharge", "battery_per_gift": 3,
+      "groupable": true, "blocking": false
+    },
+    "heart_me": {
+      "label": "Heart Me", "plural": "Heart Me",
+      "tiktok_names": ["Heart Me"],
+      "coins": 1, "style": "zodia",
+      "event": "zodia_boost", "multiplier": 1.8, "duration_sec": 15,
+      "blocking": false
+    },
+    "finger_heart": {
+      "label": "Finger Heart", "plural": "Finger Hearts",
+      "tiktok_names": ["Finger Heart"],
+      "coins": 5, "style": "kumo",
+      "event": "kumo_bump",
+      "blocking": true, "max_block_sec": 20
+    },
+    "doughnut": {
+      "label": "Rosquinha", "plural": "rosquinhas",
+      "tiktok_names": ["Doughnut"],
+      "coins": 30, "style": "kumo",
+      "event": "kumo_spin",
+      "blocking": true, "max_block_sec": 20
+    },
+    "perfume": {
+      "label": "Perfume", "plural": "perfumes",
+      "tiktok_names": ["Perfume"],
+      "coins": 20, "style": "kumo",
+      "event": "zodia_trip",
+      "blocking": true, "max_block_sec": 25
+    },
+    "galaxy": {
+      "label": "Galáxia", "plural": "galáxias",
+      "tiktok_names": ["Galaxy"],
+      "coins": 1000, "style": "kumo",
+      "event": "kumo_knockdown",
+      "blocking": true, "max_block_sec": 35
+    },
+    "gg": {
+      "label": "GG", "plural": "GGs",
+      "tiktok_names": ["GG"],
+      "coins": 1, "style": "kumo",
+      "event": "kumo_wake",
+      "blocking": false
+    }
+  }
+}
