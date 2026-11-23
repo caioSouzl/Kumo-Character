@@ -234,11 +234,11 @@ func _build_placeholder_toys() -> void:
 	var rings := _toy_node("argolas", Vector3(-3.1, TOP, 3.0))
 	for i in 4:
 		Mat.add(rings, Mat.torus(0.05, 0.35 - i * 0.06), Mat.solid(FLOWERS[i], 0.5), Vector3(0, 0.1 + i * 0.16, 0))
-	var swing := _toy_node("balanco", Vector3(-4.4, TOP, 0.6))
-	Mat.add(swing, Mat.box(Vector3(0.1, 1.6, 0.1)), Mat.solid(BARK, 0.8), Vector3(-0.9, 0.8, 0))
-	Mat.add(swing, Mat.box(Vector3(0.1, 1.6, 0.1)), Mat.solid(BARK, 0.8), Vector3(0.9, 0.8, 0))
-	Mat.add(swing, Mat.box(Vector3(1.9, 0.1, 0.1)), Mat.solid(BARK, 0.8), Vector3(0, 1.6, 0))
-	Mat.add(swing, Mat.box(Vector3(0.6, 0.06, 0.3)), Mat.solid(Color(0.85, 0.3, 0.3), 0.8), Vector3(0, 0.5, 0))
+	var swing_toy := _toy_node("balanco", Vector3(-4.4, TOP, 0.6))
+	Mat.add(swing_toy, Mat.box(Vector3(0.1, 1.6, 0.1)), Mat.solid(BARK, 0.8), Vector3(-0.9, 0.8, 0))
+	Mat.add(swing_toy, Mat.box(Vector3(0.1, 1.6, 0.1)), Mat.solid(BARK, 0.8), Vector3(0.9, 0.8, 0))
+	Mat.add(swing_toy, Mat.box(Vector3(1.9, 0.1, 0.1)), Mat.solid(BARK, 0.8), Vector3(0, 1.6, 0))
+	Mat.add(swing_toy, Mat.box(Vector3(0.6, 0.06, 0.3)), Mat.solid(Color(0.85, 0.3, 0.3), 0.8), Vector3(0, 0.5, 0))
 
 
 func _toy_node(kind: String, _pos: Vector3) -> Node3D:

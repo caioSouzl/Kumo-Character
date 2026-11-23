@@ -100,7 +100,7 @@ static func label(text: String, size: int, font: Font, color: Color, outline: Co
 	ls.font = font
 	ls.font_size = size
 	ls.font_color = color
-	ls.outline_size = outline_px if outline_px >= 0 else (maxi(size / 7, 3) if outline.a > 0.0 else 0)
+	ls.outline_size = outline_px if outline_px >= 0 else (maxi(int(size / 7.0), 3) if outline.a > 0.0 else 0)
 	ls.outline_color = outline
 	l.label_settings = ls
 	l.text = text
@@ -109,14 +109,14 @@ static func label(text: String, size: int, font: Font, color: Color, outline: Co
 	return l
 
 
-static func tex(name: String) -> Texture2D:
-	var p := UI + name
+static func tex(file: String) -> Texture2D:
+	var p := UI + file
 	return load(p) if ResourceLoader.exists(p) else null
 
 
-static func sprite(name: String, sz: Vector2, pos: Vector2, rot_deg: float = 0.0, flip := Vector2.ONE) -> TextureRect:
+static func sprite(file: String, sz: Vector2, pos: Vector2, rot_deg: float = 0.0, flip := Vector2.ONE) -> TextureRect:
 	var r := TextureRect.new()
-	r.texture = tex(name)
+	r.texture = tex(file)
 	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	r.size = sz

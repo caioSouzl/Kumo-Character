@@ -221,8 +221,8 @@ func _play_mode_anim() -> void:
 	if _anim == null or _anim_mode == arm_mode:
 		return
 	_anim_mode = arm_mode
-	var name := String(_anim_map.get(arm_mode, ""))
-	if name == "" or not _anim.has_animation(name):
+	var anim_name := String(_anim_map.get(arm_mode, ""))
+	if anim_name == "" or not _anim.has_animation(anim_name):
 		# sem animacao do arquivo: bracos controlados pelo codigo
 		if _anim.active:
 			_anim.active = false
@@ -233,8 +233,8 @@ func _play_mode_anim() -> void:
 			_head_q = Quaternion.IDENTITY
 		return
 	_anim.active = true
-	_anim.get_animation(name).loop_mode = Animation.LOOP_LINEAR
-	_anim.play(name, 0.3)
+	_anim.get_animation(anim_name).loop_mode = Animation.LOOP_LINEAR
+	_anim.play(anim_name, 0.3)
 
 
 func _anim_playing() -> bool:
