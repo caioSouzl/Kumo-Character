@@ -45,12 +45,14 @@ func _process(delta: float) -> void:
 	_focus_left = maxf(_focus_left - delta, 0.0)
 	var target := anchor
 	var offset := FAR_OFFSET
+	var speed := 2.2
 	if _focus_left > 0.0 and is_instance_valid(_focus):
 		target = _focus.global_position + Vector3(0, 0.4, 0)
 		offset = NEAR_OFFSET
+		speed = 4.0
 	elif is_instance_valid(main_target):
 		target = main_target.global_position.lerp(anchor, 0.55) + Vector3(0, 1.1, 0)
-	var k := minf(delta * 2.2, 1.0)
+	var k := minf(delta * speed, 1.0)
 	global_position = global_position.lerp(target + offset, k)
 	_look = _look.lerp(target, k)
 	look_at(_look, Vector3.UP)
