@@ -7,7 +7,8 @@ extends Node3D
 ##   atrapalhar (cada um tem a sua consequencia em _on_event_started()).
 
 const E := ZodiaFace.Expr
-const PAD_CENTER := Vector3(0.0, 0.0, 9.4)
+## A plataforma fica dentro do campo, na frente da arvore.
+const PAD_CENTER := Vector3(0.0, 0.05, 6.6)
 const PAD_SIZE := 4.4
 
 var _island: Island
@@ -94,9 +95,9 @@ func _build_environment() -> void:
 	env.ambient_light_energy = 0.9
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.glow_enabled = true
-	env.glow_intensity = 0.9
+	env.glow_intensity = 0.6
 	env.glow_bloom = 0.08
-	env.glow_hdr_threshold = 0.9
+	env.glow_hdr_threshold = 1.1
 	env.fog_enabled = true
 	env.fog_light_color = Color(0.16, 0.07, 0.3)
 	env.fog_density = 0.012
@@ -132,10 +133,10 @@ func _build_environment() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 5
 	var chip_mat := Mat.solid(Color(0.06, 0.07, 0.2), 0.6)
-	var chip_edge := Mat.glow(Color(0.3, 0.65, 1.0), 2.0)
+	var chip_edge := Mat.glow(Color(0.3, 0.65, 1.0), 0.9)
 	for i in 16:
 		var a := rng.randf() * TAU
-		var r := rng.randf_range(9.0, 20.0)
+		var r := rng.randf_range(Island.RADIUS + 2.0, Island.RADIUS + 14.0)
 		var c := Vector3(cos(a) * r, 0, sin(a) * r)
 		if c.distance_to(PAD_CENTER) < 4.5:
 			continue
@@ -155,15 +156,15 @@ func _build_environment() -> void:
 	motes.lifetime = 6.0
 	motes.preprocess = 6.0
 	motes.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	motes.emission_box_extents = Vector3(12, 0.5, 12)
+	motes.emission_box_extents = Vector3(18, 0.5, 18)
 	motes.direction = Vector3.UP
 	motes.spread = 10.0
 	motes.initial_velocity_min = 0.3
 	motes.initial_velocity_max = 0.8
 	motes.gravity = Vector3.ZERO
 	motes.mesh = Mat.box(Vector3(0.05, 0.05, 0.05))
-	motes.material_override = Mat.glow(Color(0.5, 0.8, 1.0), 3.0)
-	motes.position = Vector3(0, 0.5, 3)
+	motes.material_override = Mat.glow(Color(0.5, 0.8, 1.0), 1.4)
+	motes.position = Vector3(0, 0.5, 0)
 	add_child(motes)
 
 

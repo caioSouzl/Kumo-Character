@@ -31,6 +31,17 @@ var _moving := false
 var _token := 0
 var _squash := 0.0
 
+# modelo oficial (kumo-3d-rodin) com esqueleto: animacao feita no codigo
+var _skel: Skeleton3D
+var _base_rot: Dictionary = {}
+var _bone: Dictionary = {}
+var _tail: Array[int] = []
+var _lids: Array = []
+var _face_state := Face.SLEEP
+var _blink_left := 0.0
+var _next_blink := 3.0
+var _walk_amp := 0.0
+
 
 func _ready() -> void:
 	_shadow = Mat.add(self, Mat.cyl(0.42, 0.42, 0.01, 18), Mat.blob(), Vector3(0, 0.02, 0))
@@ -42,6 +53,7 @@ func _ready() -> void:
 	var glb := ModelSlot.try_load(String(models.get("kumo", "")), float(models.get("kumo_height", 1.0)))
 	if glb:
 		_visual.add_child(glb)
+		_setup_rig(glb, models.get("kumo_rig", {}))
 	else:
 		_build_placeholder()
 	_zzz = Label3D.new()
@@ -52,7 +64,7 @@ func _ready() -> void:
 	_zzz.outline_size = 18
 	_zzz.outline_modulate = Color(0.2, 0.1, 0.4)
 	_zzz.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	_zzz.position = Vector3(0.45, 1.15, 0)
+	_zzz.position = Vector3(0.45, 1.35, 0)
 	add_child(_zzz)
 	set_face(Face.SLEEP)
 
@@ -95,7 +107,79 @@ func _build_placeholder() -> void:
 		Mat.add(_visual, Mat.sphere(0.05, 0.04, 8), Mat.solid(CHEEK, 0.9), Vector3(0.24 * s, 0.62, 0.3), Vector3.ZERO, Vector3(1.2, 0.6, 0.5))
 
 
+func _setup_rig(glb: Node, cfg: Dictionary) -> void:
+	var skels := glb.find_children("*", "Skeleton3D", true, false)
+	if skels.is_empty():
+		return
+	_skel = skels[0] as Skeleton3D
+	# pose de apresentacao (bracos baixos) como base, se existir
+	var players := glb.find_children("*", "AnimationPlayer", true, false)
+	if not players.is_empty():
+		var ap := players[0] as AnimationPlayer
+		var pose := String(cfg.get("base_pose", ""))
+		if pose != "" and ap.has_animation(pose):
+			ap.play(pose)
+			ap.seek(0.0, true)
+		ap.active = false
+	for i in _skel.get_bone_count():
+		_base_rot[i] = _skel.get_bone_pose_rotation(i)
+	var wb: Dictionary = cfg.get("walk_bones", {})
+	for key in wb:
+		_bone[key] = _skel.find_bone(String(wb[key]))
+	var prefix := String(cfg.get("tail_prefix", "tail_"))
+	for i in _skel.get_bone_count():
+		if _skel.get_bone_name(i).begins_with(prefix):
+			_tail.append(i)
+	for mi in glb.find_children("*", "MeshInstance3D", true, false):
+		for shape in cfg.get("blink_shapes", []):
+			var idx := (mi as MeshInstance3D).find_blend_shape_by_name(StringName(shape))
+			if idx >= 0:
+				_lids.append([mi, idx])
+
+
+func _rot(key: String, axis: Vector3, angle: float) -> void:
+	var i: int = _bone.get(key, -1)
+	if i >= 0:
+		_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * Quaternion(axis, angle))
+
+
+func _animate_rig(delta: float) -> void:
+	_walk_amp = move_toward(_walk_amp, 1.0 if _moving else 0.0, delta * 5.0)
+	var w := _t * 11.0
+	var a := _walk_amp
+	_rot("thigh_l", Vector3.RIGHT, sin(w) * 0.55 * a)
+	_rot("thigh_r", Vector3.RIGHT, -sin(w) * 0.55 * a)
+	_rot("arm_l", Vector3.RIGHT, -sin(w) * 0.45 * a)
+	_rot("arm_r", Vector3.RIGHT, sin(w) * 0.45 * a)
+	var nod := -0.25 if asleep else sin(_t * 1.3) * 0.05
+	_rot("head", Vector3.RIGHT, nod)
+	_rot("chest", Vector3.RIGHT, sin(_t * (1.6 if asleep else 2.4)) * 0.03)
+	for k in _tail.size():
+		var i: int = _tail[k]
+		var sway := sin(_t * (2.0 + 4.0 * a) - k * 0.45) * (0.06 + 0.06 * a)
+		_skel.set_bone_pose_rotation(i, (_base_rot[i] as Quaternion) * Quaternion(Vector3.FORWARD, sway))
+	# olhos: dormindo fechados, feliz/arteiro meio fechados, piscada de vez em quando
+	_next_blink -= delta
+	if _next_blink <= 0.0:
+		_next_blink = randf_range(2.5, 5.0)
+		_blink_left = 0.14
+	_blink_left = maxf(_blink_left - delta, 0.0)
+	var lid := 0.0
+	match _face_state:
+		Face.SLEEP:
+			lid = 1.0
+		Face.HAPPY:
+			lid = 0.55
+		Face.MISCHIEF:
+			lid = 0.4
+	if _blink_left > 0.0:
+		lid = 1.0
+	for l in _lids:
+		(l[0] as MeshInstance3D).set_blend_shape_value(int(l[1]), lid)
+
+
 func set_face(f: Face) -> void:
+	_face_state = f
 	for e in _eyes_open:
 		e.visible = f == Face.OPEN or f == Face.MISCHIEF
 	for e in _eyes_closed:
@@ -119,6 +203,7 @@ func cancel() -> void:
 
 ## Anda ate p (no chao). Retorna false se outra ordem cancelar.
 func walk_to(p: Vector3, speed: float) -> bool:
+	p = Island.clamp_inside(p, 0.6)
 	_token += 1
 	var my := _token
 	_moving = true
@@ -141,6 +226,7 @@ func walk_to(p: Vector3, speed: float) -> bool:
 
 ## Pulo em arco ate p (usado para descer da arvore e subir na plataforma).
 func hop_to(p: Vector3, height: float, secs: float) -> void:
+	p = Island.clamp_inside(p, 0.6)
 	cancel()
 	var from := position
 	_face_dir(p - from)
@@ -207,8 +293,10 @@ func _process(delta: float) -> void:
 	var s := 1.0
 	if asleep:
 		s = 1.0 + sin(_t * 1.6) * 0.04
-		_zzz.position.y = 1.15 + fmod(_t * 0.25, 0.3)
+		_zzz.position.y = 1.35 + fmod(_t * 0.25, 0.3)
 		_zzz.modulate.a = 1.0 - fmod(_t * 0.25, 0.3) / 0.3
+	if _skel:
+		_animate_rig(delta)
 	var bob := absf(sin(_t * 10.0)) * 0.08 if _moving else 0.0
 	_visual.position.y = bob
 	var sq := 1.0 - _squash * 0.6

@@ -50,7 +50,7 @@ func clear() -> void:
 			p.queue_free()
 	_pieces.clear()
 	_mats.clear()
-	position = Vector3(position.x, 0.0, position.z)
+	position = Vector3(position.x, Island.TOP, position.z)
 
 
 func _mesh_for(d: Dictionary) -> Mesh:
@@ -173,7 +173,7 @@ func knock_down(from: Vector3) -> void:
 		var away := rb.global_position - from
 		away.y = 0.0
 		away = away.normalized() if away.length() > 0.01 else Vector3(randf_range(-1, 1), 0, 1).normalized()
-		rb.apply_central_impulse((away * randf_range(3.0, 6.0) + Vector3.UP * randf_range(2.0, 5.0)) * rb.mass)
+		rb.apply_central_impulse((away * randf_range(1.5, 3.2) + Vector3.UP * randf_range(2.0, 4.0)) * rb.mass)
 		rb.apply_torque_impulse(Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * 2.0)
 		bodies.append(rb)
 	_pieces.clear()

@@ -12,9 +12,9 @@ uniform vec3 trace_a : source_color = vec3(0.2, 0.55, 1.0);
 uniform vec3 trace_b : source_color = vec3(0.55, 0.35, 1.0);
 uniform vec3 chip_body : source_color = vec3(0.06, 0.07, 0.2);
 uniform float cell = 0.85;
-uniform float island_r = 6.6;
-uniform float band_end = 22.0;
-uniform float fade_end = 34.0;
+uniform float island_r = 9.4;
+uniform float band_end = 26.0;
+uniform float fade_end = 40.0;
 
 varying vec3 wp;
 
@@ -44,11 +44,11 @@ void fragment() {
 	else if (h < 0.86) dist = min(seg(f, vec2(0.0, 0.5), vec2(0.5, 0.5)), seg(f, vec2(0.5, 0.5), vec2(0.5, 0.0)));
 	float lw = 0.05;
 	float line = 1.0 - smoothstep(lw * 0.5, lw, dist);
-	float halo = (1.0 - smoothstep(0.0, 0.3, dist)) * 0.3;
+	float halo = (1.0 - smoothstep(0.0, 0.3, dist)) * 0.12;
 	float via = step(0.9, hash(id + 3.1)) * (1.0 - smoothstep(0.02, 0.05, abs(length(f - 0.5) - 0.11)));
 
 	// densidade: cheia perto do campo, rareando ao longe
-	float density = mix(0.85, 0.35, smoothstep(9.0, band_end, d));
+	float density = mix(0.8, 0.35, smoothstep(14.0, band_end, d));
 	float active = step(hash(id + 5.7), density);
 
 	// chips (blocos escuros com contorno e pinos)
@@ -58,9 +58,9 @@ void fragment() {
 	float ch = hash(cid + 9.0);
 	vec2 hs = vec2(0.22 + 0.15 * hash(cid + 1.3), 0.18 + 0.15 * hash(cid + 2.7));
 	vec2 q = abs(cf - 0.5);
-	float in_chip = step(0.86, ch) * step(q.x, hs.x) * step(q.y, hs.y) * step(island_r + 1.5, d);
+	float in_chip = step(0.86, ch) * step(q.x, hs.x) * step(q.y, hs.y) * step(island_r + 2.5, d);
 	float border = in_chip * (1.0 - step(0.025, min(hs.x - q.x, hs.y - q.y)));
-	float pins = step(0.86, ch) * step(island_r + 1.5, d) * step(q.y, hs.y - 0.03) * step(hs.x, q.x) * step(q.x, hs.x + 0.06) * step(0.5, fract(cf.y * 14.0));
+	float pins = step(0.86, ch) * step(island_r + 2.5, d) * step(q.y, hs.y - 0.03) * step(hs.x, q.x) * step(q.x, hs.x + 0.06) * step(0.5, fract(cf.y * 14.0));
 
 	float inner = smoothstep(island_r, island_r + 0.5, d);
 	float diss = smoothstep(band_end, fade_end, d);
@@ -68,11 +68,11 @@ void fragment() {
 	float pulse = pow(0.5 + 0.5 * sin(d * 0.8 - TIME * 2.2 + h * 3.0), 8.0);
 	vec3 tc = mix(trace_a, trace_b, step(0.78, hash(id * 0.37 + 1.0)));
 
-	float I = (line * (0.5 + 1.3 * pulse) + halo + via * 0.9) * active * inner * px * (1.0 - in_chip);
+	float I = (line * (0.28 + 0.55 * pulse) + halo + via * 0.45) * active * inner * px * (1.0 - in_chip);
 	vec3 col = mix(base_near, base_far, smoothstep(8.0, 30.0, d));
 	col = mix(col, chip_body, in_chip);
 	col += tc * I;
-	col += trace_a * (border * 1.1 + pins * 0.7) * px;
+	col += trace_a * (border * 0.5 + pins * 0.3) * px;
 	col = mix(col, horizon, smoothstep(fade_end * 0.75, fade_end * 1.3, d));
 	ALBEDO = col;
 }

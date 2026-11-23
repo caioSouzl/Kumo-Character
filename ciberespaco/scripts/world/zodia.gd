@@ -125,9 +125,20 @@ func _attach_to_rig(glb: Node, cfg: Dictionary) -> bool:
 	if skels.is_empty() or cfg.is_empty():
 		return false
 	var skel := skels[0] as Skeleton3D
-	var head := _bone_space(skel, String(cfg.get("head_bone", "awake_head")))
-	var fs: Array = cfg.get("face_size", [0.19, 0.12])
-	_build_face(head, _v3(cfg.get("face_offset", [0, 0, 0])), Vector2(float(fs[0]), float(fs[1])), _v3(cfg.get("face_normal", [0, 0, 1])))
+	# a tela-rosto vira o material do proprio visor (UV plana feita no Blender),
+	# entao acompanha a curva e os movimentos da cabeca sem descolar
+	var screen := _find_surface(glb, String(cfg.get("screen_material", "zodia_tela")))
+	if screen.is_empty():
+		return false
+	_face_viewport()
+	var sm := StandardMaterial3D.new()
+	sm.albedo_color = Color(0.01, 0.01, 0.03)
+	sm.roughness = 0.15
+	sm.metallic_specular = 0.8
+	sm.emission_enabled = true
+	sm.emission_texture = _face_vp.get_texture()
+	sm.emission_energy_multiplier = 1.4
+	(screen[0] as MeshInstance3D).set_surface_override_material(int(screen[1]), sm)
 	var hand := _bone_space(skel, String(cfg.get("hand_bone", "right")))
 	_hand = Node3D.new()
 	_hand.position = _v3(cfg.get("hand_offset", [0, 0, 0]))
@@ -137,6 +148,33 @@ func _attach_to_rig(glb: Node, cfg: Dictionary) -> bool:
 		_anim = players[0] as AnimationPlayer
 		_anim_map = cfg.get("anims", {})
 	return true
+
+
+## [MeshInstance3D, indice] da superficie com esse material, ou [].
+func _find_surface(root: Node, mat_name: String) -> Array:
+	for mi in root.find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		for i in m.mesh.get_surface_count():
+			var mat := m.mesh.surface_get_material(i)
+			if mat and mat.resource_name == mat_name:
+				return [m, i]
+	return []
+
+
+var _face_vp: SubViewport
+
+
+func _face_viewport() -> void:
+	if _face_vp:
+		return
+	_face_vp = SubViewport.new()
+	_face_vp.size = Vector2i(int(ZodiaFace.W), int(ZodiaFace.H))
+	_face_vp.transparent_bg = true
+	_face_vp.disable_3d = true
+	_face_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(_face_vp)
+	_face = ZodiaFace.new()
+	_face_vp.add_child(_face)
 
 
 ## No que segue o osso, mas usa as coordenadas do modelo (as medidas do
@@ -175,14 +213,8 @@ func _play_mode_anim() -> void:
 
 
 func _build_face(parent: Node3D, offset: Vector3, quad_size: Vector2, normal: Vector3) -> void:
-	var vp := SubViewport.new()
-	vp.size = Vector2i(int(ZodiaFace.W), int(ZodiaFace.H))
-	vp.transparent_bg = true
-	vp.disable_3d = true
-	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	add_child(vp)
-	_face = ZodiaFace.new()
-	vp.add_child(_face)
+	_face_viewport()
+	var vp := _face_vp
 	var q := QuadMesh.new()
 	q.size = quad_size
 	var m := StandardMaterial3D.new()
@@ -312,6 +344,8 @@ func _process(delta: float) -> void:
 		_face.set_expr(_base_expr)
 	_tremble = maxf(_tremble - delta, 0.0)
 
+	# o ZodIA so sai do campo se cair perto da borda (a queda nao e limitada)
+	goal = Island.clamp_inside(goal, 1.0)
 	if not _fallen:
 		var to := goal - position
 		to.y = 0.0
