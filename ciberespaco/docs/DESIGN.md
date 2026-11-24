@@ -127,3 +127,11 @@ Agradecimentos mostram a inicial de quem mandou e o ícone do presente.
 Embaixo do ZodIA, dois anéis em loop: saem pequenos de baixo dele, descem
 crescendo e somem. Indicam que ele funciona e flutua: desaparecem quando ele
 cai ou fica sem bateria.
+
+## Painéis em SVG (editáveis fora do Godot)
+
+Os painéis podem ser desenhados em arquivos SVG em `assets/ui/paineis/` e
+abertos no Figma, Inkscape ou navegador. O Godot importa o arquivo e usa como
+fundo do painel. Primeiro exemplar: `ranking.svg` (usado pelo "Top
+presenteadores"). Para trocar um painel, substitua o SVG mantendo o tamanho
+indicado no código.

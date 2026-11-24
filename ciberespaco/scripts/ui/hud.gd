@@ -684,6 +684,13 @@ class Leaderboard extends Control:
 		_frame = Frame.new()
 		add_child(_frame)
 		_frame.build(Vector2(360, 430), "misto")
+		# painel desenhado em SVG (assets/ui/paineis/ranking.svg): editavel fora do Godot
+		var art := Hud.sprite("paineis/ranking.svg", Vector2(360, 430), Vector2(180, 215))
+		art.stretch_mode = TextureRect.STRETCH_SCALE
+		art.position = Vector2.ZERO
+		art.size = Vector2(360, 430)
+		_frame.content.add_child(art)
+		_frame.content.move_child(art, 0)
 		var c := _frame.content
 		var title := Hud.label("TOP", 22, Hud.zfont(true), Hud.CYAN)
 		title.position = Vector2(0, 22)
