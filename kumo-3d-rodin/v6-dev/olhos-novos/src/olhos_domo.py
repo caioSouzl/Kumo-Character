@@ -60,6 +60,12 @@ ip[..., :3] = np.where(ip[..., 3:4] > 0.5, ip[..., :3], 0)
 
 RESULT = {}
 calotas = {}
+# o olho antigo (superfície plana e decal) sai de cena no fim; antes ele vira referência do plano da pele
+for s in 'LR':
+    o = bpy.data.objects.get(f'KumoOlho.{s}')
+    if o: o.name = f'OLD_KumoOlho.{s}'
+    d_ = bpy.data.objects.get(f'Decal_Olho.{s}')
+    if d_: bpy.data.objects.remove(d_)
 for s in 'LR':
     Mw = Matrix(INFO[s]['Mw']); zw = (Mw.to_3x3() @ Vector((0, 0, 1))).normalized()
     e1 = (Mw.to_3x3() @ Vector((1, 0, 0))).normalized(); e1 = (e1 - zw * e1.dot(zw)).normalized(); e2 = zw.cross(e1).normalized()
@@ -71,7 +77,7 @@ for s in 'LR':
         t = np.asarray(th) - EANG; return EA * EB / np.sqrt((EB * np.cos(t)) ** 2 + (EA * np.sin(t)) ** 2)
     # ---- aro da abertura na pele: pontos da pele logo fora da abertura (q = 1,03), por raio
     # a pele em volta do olho está quase plana: o plano é o da superfície do olho antigo (vértices da pele, zona do olho)
-    pat = bpy.data.objects[f'KumoOlho.{s}']; Vp = np.array([tuple(pat.matrix_world @ v.co) for v in pat.data.vertices])
+    pat = bpy.data.objects[f'OLD_KumoOlho.{s}']; Vp = np.array([tuple(pat.matrix_world @ v.co) for v in pat.data.vertices])
     Cp = Vp.mean(0); zarr0 = np.array(tuple(zw))
     ring = []
     for t in np.linspace(0, 2 * math.pi, 96, endpoint=False):
@@ -132,18 +138,17 @@ for s in 'LR':
     calotas[s] = dict(Cs=Cs, zw=zw, R=R, a=a, h=h, cc=Cc)
     RESULT[s] = {'calota_raio_m': round(R, 4), 'abertura_raio_m': round(a, 4), 'altura_m': h, 'centro': [round(x, 4) for x in Cs]}
 
-# ---- remove o olho antigo (superfície plana e decal)
+# ---- remove o olho antigo (superfície plana) agora que a calota está criada
 for s in 'LR':
-    for n in (f'KumoOlho.{s}', f'Decal_Olho.{s}'):
-        o = bpy.data.objects.get(n)
-        if o: bpy.data.objects.remove(o)
+    o = bpy.data.objects.get(f'OLD_KumoOlho.{s}')
+    if o: bpy.data.objects.remove(o)
 # (o nome da malha antiga pode ter ficado; mesmo nome agora é a calota)
 
 # ---- ossos: olho.L/R no centro da calota, apontando para fora; alvo do Damped Track à frente
 bpy.context.view_layer.objects.active = rig; rig.select_set(True)
 bpy.ops.object.mode_set(mode='EDIT'); eb = rig.data.edit_bones
 for s, d in calotas.items():
-    b = eb[f'olho.{s}']; b.head = d['Cs']; b.tail = d['Cs'] + d['zw'] * 0.1
+    b = eb[f'olho.{s}']; b.head = d['Cs']; b.tail = d['Cs'] + d['zw'] * 0.1; b.use_deform = True   # deforma a calota
     t = eb[f'MCH_alvo_olho.{s}']; t.head = d['Cs'] + d['zw'] * 1.0; t.tail = t.head + d['zw'] * 0.08
 bpy.ops.object.mode_set(mode='OBJECT')
 json.dump(RESULT, open(os.path.join(os.path.dirname(OUT), 'calotas.json'), 'w'), indent=1)
