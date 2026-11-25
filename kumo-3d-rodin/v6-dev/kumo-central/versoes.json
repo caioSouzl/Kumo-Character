@@ -375,13 +375,16 @@
    "mudancas": [
     "Superfície única por olho, no lugar da pele",
     "Íris e pupila por decal com Damped Track",
+    "Globo em off-white (#F7F3EA)",
+    "Anel da íris em âmbar escuro (#DE9C1E)",
     "Membrana #E4A633 e contorno fixos na borda",
     "Sem brilho (entra nas animações)"
    ],
    "testes": [
     "Olhar: mesmo sentido do olho antigo, 67 mm a 11°",
     "Reimportação GLB e FBX: 0,0 mm",
-    "Central: olhar igual ao do Blender (diferença 0,000001)"
+    "Central: olhar igual ao do Blender (diferença 0,000001)",
+    "Central: pontos só nos ossos do corpo"
    ],
    "arquivos": [
     "kumo_v6_olhos_novos.blend",
