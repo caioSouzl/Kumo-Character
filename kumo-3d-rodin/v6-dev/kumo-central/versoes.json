@@ -366,12 +366,12 @@
   },
   {
    "id": "olhos-novos",
-   "nome": "Olhos novos (arte do Caio)",
+   "nome": "Olhos novos (arte do Caio, decal)",
    "grupo": "Olhos",
-   "situacao": "atual",
+   "situacao": "substituída",
    "pasta": "kumo-3d-rodin/v6-dev/olhos-novos",
    "relatorio": "kumo-3d-rodin/v6-dev/olhos-novos/RELATORIO.md",
-   "descricao": "Pedido do Caio (22/11): olhos novos com a arte dele, feitos como no vídeo do decal. Uma superfície e um material por olho, sem camadas empilhadas; íris e pupila por decal preso ao osso do olho. É o modelo que esta página mostra.",
+   "descricao": "Pedido do Caio (22/11): olhos novos com a arte dele, feitos como no vídeo do decal. Uma superfície e um material por olho, sem camadas empilhadas; íris e pupila por decal preso ao osso do olho. Substituída pelos olhos em calota (as pálpebras de cima brigavam com o globo).",
    "mudancas": [
     "Superfície única por olho, no lugar da pele",
     "Íris e pupila por decal com Damped Track",
@@ -394,6 +394,34 @@
    "data": "2026-11-22",
    "imagem": "versoes/olhos-novos.jpg",
    "origem_imagem": "kumo-3d-rodin/v6-dev/olhos-novos/renders/kumo-olhos-novos-corpo.png"
+  },
+  {
+   "id": "olhos-calota",
+   "nome": "Olhos em calota",
+   "grupo": "Olhos",
+   "situacao": "atual",
+   "pasta": "kumo-3d-rodin/v6-dev/olhos-novos/calota",
+   "relatorio": "kumo-3d-rodin/v6-dev/olhos-novos/calota/RELATORIO.md",
+   "descricao": "Pedido do Caio (25/11): o olho como esfera, para a íris, a pupila e a pálpebra não distorcerem. Calota de 10 cm presa ao osso do olho, pálpebras refeitas sobre a esfera. Aprovado pelo Caio. É o modelo que esta página mostra.",
+   "mudancas": [
+    "Globo esférico que gira inteiro",
+    "Pálpebras refeitas: não entram mais no globo",
+    "Faixa da borda e tampa da boca escondem a esfera quando ela gira",
+    "Mesma arte, cores e controles de antes"
+   ],
+   "testes": [
+    "Bordas conferidas nos 8 olhares extremos",
+    "Reimportação GLB, FBX e Central: 0,0 mm",
+    "Central: olhar pela mesma conta do rig"
+   ],
+   "arquivos": [
+    "kumo_v7_calota.blend",
+    "jogo/kumo_v7_jogo.glb",
+    ".fbx"
+   ],
+   "data": "2026-11-25",
+   "imagem": "versoes/olhos-calota.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/olhos-novos/calota/folha_frente.png"
   },
   {
    "id": "p2",

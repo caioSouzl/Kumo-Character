@@ -2,7 +2,7 @@
 
 Evolução do Estúdio do Kumo para uma central de desenvolvimento, feita em fases. O Estúdio original (`../kumo-studio/`) continua intacto até o Caio aprovar esta página.
 
-O modelo é o GLB dos olhos novos (`../olhos-novos/central/kumo_central.glb`, publicado como `kumo.wasm`), com as texturas do olho em `../olhos-novos/central/olhos/` (publicadas em `olhos/`). Sem ele, a página usa o do Estúdio (`../kumo-studio/kumo.glb`), com os olhos antigos.
+O modelo é o GLB dos olhos em calota (`../olhos-novos/calota/central/kumo_central.glb`, publicado como `kumo.wasm`). Sem ele, a página usa o do Estúdio (`../kumo-studio/kumo.glb`), com os olhos antigos.
 
 ## Fase 1 (feita): reorganização visual e navegação
 - **Barra de visualização:**
@@ -108,3 +108,14 @@ Navegador automático, em tela de computador e de celular:
 - **Versões:** entrou "Olhos novos (arte do Caio)" como atual.
 - **Testes:** no celular (Pixel 7) e no computador, sem erros de script e sem rolagem lateral.
 
+
+## Olhos em calota (25/11)
+- **O modelo da página tem os olhos em calota:** o globo é uma esfera presa ao osso do olho e gira inteiro.
+- **Olhar:** a página faz a conta do rig do Blender:
+  - o alvo anda com `controle_olhar`;
+  - o osso `olho.L/.R` gira para mirar o alvo.
+  - Números de `../olhos-novos/calota/central/olhar.json`.
+- **Losangos do olhar:** ficam no centro da pupila e acompanham a pupila até o olhar máximo.
+- **Decal:** o shader do decal saiu da página; não há mais texturas separadas em `olhos/`.
+- **Componentes:** cada olho mostra globo, pele em volta, faixa da borda, tampa da boca e pálpebras.
+- **Versões:** entrou "Olhos em calota" como atual; "Olhos novos (decal)" passou a substituída.

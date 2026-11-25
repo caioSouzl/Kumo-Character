@@ -543,7 +543,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   const matSolido = new THREE.MeshPhongMaterial({ color: 0x9fb09a, flatShading: true, shininess: 0 });   // facetado: o modelo da página vai sem normais
   function modoExibicao(m) {
     for (const o of meshes) {
-      const nome = o.userData.nome || '', corpo = /^Kumo(_Boca|_Lingua)?$/.test(nome) || /^KumoOlho\./.test(nome);
+      const nome = o.userData.nome || '', corpo = /^Kumo(_Boca|_Lingua)?$/.test(nome);
       if (nome === 'Kumo_Contorno') { o.visible = m === 'material'; continue; }
       if (/Moldura/.test(nome)) { o.visible = m === 'material'; continue; }     // cópia da pele em volta do olho: só faz sentido com material
       if (!corpo) continue;                              // os olhos ficam como são
@@ -679,8 +679,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   // ---------- carregar o modelo
   // o modelo é o GLB; no claude.ai ele vai publicado como kumo.wasm (mesmo conteúdo binário), então tenta os dois nomes
   // o modelo: publicado como kumo.wasm; no computador, o GLB da pasta dos olhos novos (ou o do Estúdio, com os olhos antigos)
-  const FONTES = ['kumo.wasm', '../olhos-novos/central/kumo_central.glb', '../kumo-studio/kumo.glb'];
-  const BASE_OLHOS = ['olhos/', '../olhos-novos/central/olhos/', ''];
+  const FONTES = ['kumo.wasm', '../olhos-novos/calota/central/kumo_central.glb', '../kumo-studio/kumo.glb'];
   let fonteUsada = 0;
   function carregar(i) {
     fonteUsada = i; new THREE.GLTFLoader().load(FONTES[i], montar,
@@ -688,50 +687,21 @@ button:disabled { opacity: 0.45; cursor: default; }
       () => { if (i + 1 < FONTES.length) carregar(i + 1); else $('loading').textContent = 'Não consegui abrir o modelo. No computador, abra a página por um servidor local (veja o LEIAME).'; });
   }
   carregar(0);
-  // ---------- olhos novos (arte do Caio, 22/11): uma superfície por olho, íris e pupila por decal, como no Blender
-  // (kumo-3d-rodin/v6-dev/olhos-novos). Os números vêm de olhos-novos/central/olhos.json, em coordenadas do Blender.
-  const OLHOS = {"L":{"H":[0.06711828708648682,-0.23588834702968597,1.350257396697998],"S":[0.36397993564605713,-0.41701361536979675,1.3898401260375977],"T0":[1.212156057357788,-0.9345144033432007,1.5029335021972656],"ex":[0.5208426117897034,0.8536527156829834,3.532664152317011e-07],"ez":[0.09654310345649719,-0.058903880417346954,-0.9935843348503113],"Lx":0.2624134123325348,"Lz":-0.2624134123325348,"D0":[[0.18963956832885742,-0.027791744098067284,0.8481761813163757,0.36397990584373474],[0.3108164966106415,0.016956694424152374,-0.5175006985664368,-0.417013555765152],[-2.9802322387695312e-08,0.2860235273838043,0.11309339851140976,1.389840006828308],[0.0,0.0,0.0,1.0]],"sd":0.4215227961540222,"artC":[0.5040000081062317,0.48750001192092896],"U0":-0.09234799939783214,"U1":1.0791153886007612},"R":{"H":[0.0465976744890213,-0.30694422125816345,1.3205666542053223],"S":[-0.17275339365005493,-0.5734193325042725,1.3786710500717163],"T0":[-0.7994707226753235,-1.3347768783569336,1.544683575630188],"ex":[0.7720707654953003,-0.6355366110801697,-1.8940445656312477e-08],"ez":[-0.10550695657730103,-0.12817338109016418,-0.9861237406730652],"Lx":0.2624134123325348,"Lz":-0.2624134123325348,"D0":[[0.21524478495121002,0.03147037327289581,-0.6267173290252686,-0.17275334894657135],[-0.1771804243326187,0.03823132440447807,-0.7613574266433716,-0.5734192132949829],[2.9802322387695312e-08,0.2941387891769409,0.1660124659538269,1.3786711692810059],[0.0,0.0,0.0,1.0]],"sd":0.4313064217567444,"artC":[0.5040000081062317,0.48750001192092896],"U0":-0.1007861094634626,"U1":1.1026803054901737}};
-  const olhoMesh = {}, olhoU = {};
-  const B2T = new THREE.Matrix4().set(1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1);      // Blender (z para cima) → GLB (y para cima)
-  const T2B = B2T.clone().invert();
-  function materialOlho(side, mapa) {
-    const p = OLHOS[side], tl = new THREE.TextureLoader(), base = BASE_OLHOS[fonteUsada];
-    const tex = (n, srgb) => { const t = tl.load(base + n); t.encoding = srgb ? THREE.sRGBEncoding : THREE.LinearEncoding; return t; };
-    const u = { uDecal: { value: new THREE.Matrix4() }, tFundo: { value: tex(`olho_${side}_fundo.png`, true) }, tAro: { value: tex(`olho_${side}_aro.png`, true) },
-      tDentro: { value: tex(`olho_${side}_dentro.png`, false) }, tIris: { value: tex('olho_decal_iris_pupila.png', true) },
-      uJan: { value: new THREE.Vector2(p.U0, p.U1) }, uSd: { value: p.sd }, uArt: { value: new THREE.Vector2(p.artC[0], p.artC[1]) } };
-    olhoU[side] = u;
-    const m = new THREE.MeshBasicMaterial({ map: mapa, color: 0xffffff });
-    m.onBeforeCompile = (sh) => {
-      Object.assign(sh.uniforms, u);
-      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nuniform mat4 uDecal; attribute vec2 uvJanela; varying vec3 vIris; varying vec2 vJan;')
-        .replace('#include <begin_vertex>', '#include <begin_vertex>\nvIris = (uDecal * vec4(position, 1.0)).xyz; vJan = uvJanela;');
-      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform sampler2D tFundo, tAro, tDentro, tIris; uniform vec2 uJan, uArt; uniform float uSd; varying vec3 vIris; varying vec2 vJan;')
-        .replace('#include <map_fragment>', `#include <map_fragment>
-          vec2 tj = (vec2(vJan.x, 1.0 - vJan.y) - uJan.x) / (uJan.y - uJan.x);   // UV da janela (o GLB guarda v invertido)
-          vec4 fu = texture2D(tFundo, tj); vec3 cor = mix(diffuseColor.rgb, fu.rgb, fu.a);        // pele → branco do globo / pele limpa
-          vec2 ti = vIris.xy * uSd + uArt;                                                          // decal: coordenada do Empty → arte
-          vec4 ir = (ti.x < 0.0 || ti.y < 0.0 || ti.x > 1.0 || ti.y > 1.0) ? vec4(0.0) : texture2D(tIris, ti);
-          cor = mix(cor, ir.rgb, ir.a * texture2D(tDentro, tj).r);                                  // → íris e pupila, só dentro da abertura
-          vec4 ar = texture2D(tAro, tj); cor = mix(cor, ar.rgb, ar.a);                              // → membrana e contorno
-          diffuseColor.rgb = cor;`);
-    };
-    return m;
-  }
-  // o olhar como no rig do Blender: o alvo anda com controle_olhar (restrição Transformation), o osso do olho
-  // mira o alvo (Damped Track, o menor giro) e o decal, preso à ponta do osso, gira junto em volta da base
+  // ---------- olhos em calota (arte do Caio; kumo-3d-rodin/v6-dev/olhos-novos/calota): o globo é uma esfera presa ao
+  // osso olho.L/.R. O GLB não leva constraints, então a página faz o que o rig do Blender faz: o alvo anda com
+  // controle_olhar (Transformation) e o osso do olho gira para mirar o alvo (Damped Track, o menor giro).
+  // Números de calota/central/olhar.json, já em coordenadas do GLB (y para cima).
+  const OLHOS = {"L":{"H":[0.161023,1.355465,0.143608],"S":[0.24584,1.366774,0.195358],"T0":[1.306061,1.508141,0.842234],"ex":[0.520843,0.0,-0.853653],"ez":[0.096543,-0.993584,0.058904],"Lx":0.2624134123325348,"Lz":-0.2624134123325348,"Rg":0.372,"P":[0.393875,1.391048,0.42328]},"R":{"H":[-0.10957,1.336502,0.340518],"S":[-0.172241,1.353103,0.416653],"T0":[-0.955638,1.560619,1.36835],"ex":[0.772071,-0.0,0.635537],"ez":[-0.105507,-0.986124,0.128173],"Lx":0.2624134123325348,"Lz":-0.2624134123325348,"Rg":0.2909,"P":[-0.205923,1.381963,0.603715]}};
+  const olhoRest = {};      // giro do osso do olho no mundo, em repouso (anotado ao montar)
   function olharOlhos() {
     if (!bones.controle_olhar) return;
-    const [gx, gy] = ctrlGet('controle_olhar');
+    const [gx, gy] = ctrlGet('controle_olhar'), V = (a) => new THREE.Vector3(a[0], a[1], a[2]);
     for (const side of ['L', 'R']) {
-      const u = olhoU[side]; if (!u) continue; const p = OLHOS[side], V = (a) => new THREE.Vector3(a[0], a[1], a[2]);
+      const b = bones['olho.' + side], W = olhoRest[side]; if (!b || !W) continue; const p = OLHOS[side];
       const H = V(p.H), y0 = V(p.S).sub(H).normalize();
       const alvo = V(p.T0).addScaledVector(V(p.ex), p.Lx * gx).addScaledVector(V(p.ez), p.Lz * gy);
-      const q = new THREE.Quaternion().setFromUnitVectors(y0, alvo.sub(H).normalize());
-      const D0 = new THREE.Matrix4().set(...p.D0.flat());
-      const D = new THREE.Matrix4().makeTranslation(H.x, H.y, H.z).multiply(new THREE.Matrix4().makeRotationFromQuaternion(q))
-        .multiply(new THREE.Matrix4().makeTranslation(-H.x, -H.y, -H.z)).multiply(D0);
-      u.uDecal.value.copy(D.invert().multiply(T2B));
+      const q = new THREE.Quaternion().setFromUnitVectors(y0, alvo.sub(H).normalize());          // giro no mundo, em repouso
+      b.quaternion.copy(rest['olho.' + side]).multiply(W.clone().invert().multiply(q).multiply(W));  // levado para o espaço do osso
     }
   }
   function montar(gltf) {
@@ -753,10 +723,6 @@ button:disabled { opacity: 0.45; cursor: default; }
         for (let q = o; q; q = q.parent) { const a = assoc.get(q); const nm = a && a.nodes !== undefined ? gltf.parser.json.nodes[a.nodes].name : null; if (nm && !nomeObj && DRIVERS.some((d) => d.o === nm)) nomeObj = nm; if (nm && !nmo && /^Kumo/.test(nm)) nmo = nm; }
         if (nomeObj && o.morphTargetDictionary) (morphAlvos[nomeObj] = morphAlvos[nomeObj] || []).push(o);
         if (nmo === 'KumoJogo_OlhoBase.L' || nmo === 'KumoJogo_OlhoBase.R') eyeGlobo[nmo.slice(-1)] = o;
-        if ((nmo === 'KumoOlho.L' || nmo === 'KumoOlho.R') && o.geometry.attributes.uv2) {
-          const side = nmo.slice(-1); o.geometry.setAttribute('uvJanela', o.geometry.attributes.uv2);
-          o.material = materialOlho(side, m.emissiveMap || m.map); olhoMesh[side] = o;
-        }
         o.userData.nome = nmo; o.userData.matOrig = o.material;
         // camadas do olho: desenhar na ordem certa (base, íris, pupila, brilho, moldura, pálpebras)
         // o branco (OlhoBase) tem relevo: se escrever profundidade, esconde a íris e a pupila que estão por baixo dele.
@@ -767,6 +733,8 @@ button:disabled { opacity: 0.45; cursor: default; }
     for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
     info3d.materiais = (gltf.parser.json.materials || []).map((m) => m.name); info3d.texturas = [...new Set((gltf.parser.json.images || []).map((m) => m.name))];
     scene.updateMatrixWorld(true); prepararOmbro();
+    for (const side of ['L', 'R']) if (bones['olho.' + side]) olhoRest[side] = bones['olho.' + side].getWorldQuaternion(new THREE.Quaternion());
+    if (bones.head) headRest = bones.head.matrixWorld.clone();
     buildDots(); buildUI(); buildGaze(); buildComponentes(); carregarVersoes(); afterPose(); histPush();
     $('loading').hidden = true;
     loadDraft();
@@ -774,7 +742,7 @@ button:disabled { opacity: 0.45; cursor: default; }
 
   // ---------- explorador de componentes (peças reais do arquivo; nada aqui altera o modelo)
   let mostrarPontos = true; const travados = new Set(); const info3d = { materiais: [], texturas: [] };
-  const ORIGEM = { corpo: ['Modelo oficial + mãos com dedos + ombros + boca', 'kumo-3d-rodin/v6-dev/boca/RELATORIO.md'], olho: ['Olhos novos (arte do Caio, decal)', 'kumo-3d-rodin/v6-dev/olhos-novos/RELATORIO.md'],
+  const ORIGEM = { corpo: ['Modelo oficial + mãos com dedos + ombros + boca', 'kumo-3d-rodin/v6-dev/boca/RELATORIO.md'], olho: ['Olhos em calota (arte do Caio)', 'kumo-3d-rodin/v6-dev/olhos-novos/calota/RELATORIO.md'],
     boca: ['Boca e língua', 'kumo-3d-rodin/v6-dev/boca/RELATORIO.md'], contorno: ['Mãos: contorno de jogo', 'kumo-3d-rodin/v6-dev/maos-corretivas/RELATORIO.md'], rig: ['Rig oficial + dedos, mandíbula, língua e controles', 'kumo-3d-rodin/rig-report.json'] };
   const REGIOES = [['Cabeça', /^(head|neck)$/, 'head'], ['Mandíbula', /^jaw$/, 'jaw'], ['Tronco', /^(hips|spine|chest)$/, 'chest'],
     ['Braço esquerdo', /^(shoulder|upper_arm|forearm)\.L$/, 'upper_arm.L'], ['Braço direito', /^(shoulder|upper_arm|forearm)\.R$/, 'upper_arm.R'],
@@ -800,8 +768,11 @@ button:disabled { opacity: 0.45; cursor: default; }
     const grupos = [];
     grupos.push(['Corpo (uma malha só)', REGIOES.map(([nome, re, osso]) => ({ nome, tipo: 'Região da malha do corpo', ossos: order.filter((n) => re.test(n)), foco: osso, origem: ORIGEM.corpo, nota: 'Faz parte da malha única do corpo: não dá para ocultar em separado.' }))
       .concat([{ nome: 'Malha do corpo inteira', tipo: 'Malha', malhas: corpo, origem: ORIGEM.corpo, ocultavel: true }])]);
-    for (const [lado, nomeL] of [['L', 'Olho esquerdo'], ['R', 'Olho direito']]) grupos.push([nomeL, (porNome[`KumoOlho.${lado}`] ? [{ nome: 'Olho (pele, globo, íris, membrana e contorno)', tipo: 'Superfície única, um material', malhas: porNome[`KumoOlho.${lado}`], origem: ORIGEM.olho, ocultavel: true,
-      nota: 'Íris e pupila são um decal que gira com o osso do olho; não há camadas empilhadas. O brilho entra depois, nas animações.' }] : []).concat(Object.keys(CAMADA).filter((k) => porNome[`KumoJogo_${k}.${lado}`]).map((k) => ({ nome: CAMADA[k], tipo: 'Camada do olho', malhas: porNome[`KumoJogo_${k}.${lado}`], origem: ORIGEM.olho, ocultavel: true })))]);
+    const PECA_OLHO = [['Globo', 'Globo (branco, íris e pupila)', 'Esfera presa ao osso do olho: gira inteira, sem esticar a íris. O brilho entra depois, nas animações.'],
+      ['Anel', 'Pele em volta, membrana e contorno', 'Pedaço da pele com a abertura do olho.'], ['Aro', 'Faixa da borda', 'Cobre a beirada da esfera quando o olho gira.'],
+      ['Tampa', 'Tampa da boca', 'Fica atrás da fenda da boca, na cor de dentro da boca: esconde o globo quando o olho olha para baixo.']];
+    for (const [lado, nomeL] of [['L', 'Olho esquerdo'], ['R', 'Olho direito']]) grupos.push([nomeL, PECA_OLHO.filter(([k]) => porNome[`KumoOlho_${k}.${lado}`]).map(([k, nome, nota]) => ({ nome, tipo: 'Malha', malhas: porNome[`KumoOlho_${k}.${lado}`], origem: ORIGEM.olho, ocultavel: true, nota }))
+      .concat(Object.keys(CAMADA).filter((k) => porNome[`KumoJogo_${k}.${lado}`]).map((k) => ({ nome: CAMADA[k], tipo: 'Camada do olho', malhas: porNome[`KumoJogo_${k}.${lado}`], origem: ORIGEM.olho, ocultavel: true })))]);
     grupos.push(['Boca e língua', [['Kumo_Boca', 'Interior da boca'], ['Kumo_Lingua', 'Língua']].filter(([k]) => porNome[k]).map(([k, nome]) => ({ nome, tipo: 'Malha', malhas: porNome[k], origem: ORIGEM.boca, ocultavel: true }))]);
     grupos.push(['Contorno', porNome.Kumo_Contorno ? [{ nome: 'Contorno de jogo', tipo: 'Malha (casca invertida)', malhas: porNome.Kumo_Contorno, origem: ORIGEM.contorno, ocultavel: true }] : []]);
     grupos.push(['Esqueleto', [{ nome: 'Pontos das articulações', tipo: 'Controles da página', ossos: order.slice(), origem: ORIGEM.rig, pontos: true, ocultavel: true }]]);
@@ -1100,18 +1071,16 @@ ${fila}`;
     const gx = Math.max(-1, Math.min(1, dx / R)), gy = Math.max(-1, Math.min(1, -dy / R));
     ctrlSet('controle_olhar', [gx, gy]); afterPose();
   }
-  function centroOlhoNovo(side) {     // onde a íris descansa (S), levado pela pose da cabeça
-    const m = olhoMesh[side]; if (!m || !m.skeleton || !bones.head) return null;
-    const i = m.skeleton.bones.indexOf(bones.head); if (i < 0) return null;
-    const S = new THREE.Vector3(...OLHOS[side].S).applyMatrix4(B2T);
-    const delta = new THREE.Matrix4().multiplyMatrices(bones.head.matrixWorld, m.skeleton.boneInverses[i]);
-    return S.applyMatrix4(m.bindMatrix).applyMatrix4(delta);
+  let headRest = null;
+  function centroOlhoNovo(side) {     // centro da pupila em repouso (P, na superfície do globo), levado pela pose da cabeça
+    const p = OLHOS[side]; if (!p || !p.P || !bones.head || !headRest || !bones['olho.' + side]) return null;
+    return new THREE.Vector3(...p.P).applyMatrix4(new THREE.Matrix4().multiplyMatrices(bones.head.matrixWorld, headRest.clone().invert()));
   }
   function gazeCentro(side) {
     const novo = centroOlhoNovo(side);
     if (novo) {
       const r = canvas.getBoundingClientRect(); const q = novo.clone().project(camera); if (q.z > 1) return null;
-      const edge = novo.clone().add(new THREE.Vector3(0.12, 0, 0)).project(camera);
+      const edge = novo.clone().add(new THREE.Vector3(0.07, 0, 0)).project(camera);   // 0,07 m: quanto a pupila anda no olhar máximo
       return { x: (q.x + 1) / 2 * r.width, y: (1 - q.y) / 2 * r.height, r: Math.abs((edge.x - q.x) / 2 * r.width) || 40 };
     }
     const g = eyeGlobo[side]; if (!g) return null;
@@ -1757,7 +1726,7 @@ ${fila}`;
   }
   resize(); requestAnimationFrame(frame);
   window.__camera = camera;
-  window.__kumo = { olhoU, OLHOS, B2T, T2B, ctrlSet, olharOlhos, olhoMesh, bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots, mirrorAll, setAxis, histGo, applyPoseExt: (p) => applyPose(p),
+  window.__kumo = { OLHOS, olhoRest, ctrlSet, olharOlhos, bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots, mirrorAll, setAxis, histGo, applyPoseExt: (p) => applyPose(p),
     morphs: () => { const o = {}; for (const [ob, ms] of Object.entries(morphAlvos)) for (const [k, i] of Object.entries(ms[0].morphTargetDictionary)) o[ob + '|' + k] = ms[0].morphTargetInfluences[i]; return o; } };   // usado pelos testes
 })();
 </script>

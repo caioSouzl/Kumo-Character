@@ -1,0 +1,66 @@
+{
+ "kb": {
+  "glb": 9558,
+  "fbx": 5382,
+  "central": 7334
+ },
+ "alpha_glb": {
+  "KumoOlho_Anel.L": "MASK",
+  "KumoOlho_Anel.R": "MASK",
+  "KumoOlho_Aro.L": "MASK",
+  "KumoOlho_Aro.R": "MASK",
+  "KumoOlho_Globo.L": "OPAQUE",
+  "KumoOlho_Globo.R": "OPAQUE"
+ },
+ "glb_erro_max_mm": {
+  "Kumo": 0.0,
+  "Kumo_Boca": 0.0,
+  "Kumo_Lingua": 0.0,
+  "KumoJogo_Palpebra_inf.L": 0.0,
+  "KumoJogo_Palpebra_inf.R": 0.0,
+  "KumoJogo_Palpebra_sup.L": 0.0,
+  "KumoJogo_Palpebra_sup.R": 0.0,
+  "KumoOlho_Anel.L": 0.0,
+  "KumoOlho_Anel.R": 0.0,
+  "KumoOlho_Aro.L": 0.0,
+  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Globo.L": 0.0,
+  "KumoOlho_Globo.R": 0.0,
+  "KumoOlho_Tampa.L": 0.0,
+  "KumoOlho_Tampa.R": 0.0
+ },
+ "fbx_erro_max_mm": {
+  "Kumo": 0.0,
+  "Kumo_Boca": 0.0,
+  "Kumo_Lingua": 0.0,
+  "KumoJogo_Palpebra_inf.L": 0.0,
+  "KumoJogo_Palpebra_inf.R": 0.0,
+  "KumoJogo_Palpebra_sup.L": 0.0,
+  "KumoJogo_Palpebra_sup.R": 0.0,
+  "KumoOlho_Anel.L": 0.0,
+  "KumoOlho_Anel.R": 0.0,
+  "KumoOlho_Aro.L": 0.0,
+  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Globo.L": 0.0,
+  "KumoOlho_Globo.R": 0.0,
+  "KumoOlho_Tampa.L": 0.0,
+  "KumoOlho_Tampa.R": 0.0
+ },
+ "central_erro_max_mm": {
+  "Kumo": 0.0,
+  "Kumo_Boca": 0.0,
+  "Kumo_Lingua": 0.0,
+  "KumoJogo_Palpebra_inf.L": 0.0,
+  "KumoJogo_Palpebra_inf.R": 0.0,
+  "KumoJogo_Palpebra_sup.L": 0.0,
+  "KumoJogo_Palpebra_sup.R": 0.0,
+  "KumoOlho_Anel.L": 0.0,
+  "KumoOlho_Anel.R": 0.0,
+  "KumoOlho_Aro.L": 0.0,
+  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Globo.L": 0.0,
+  "KumoOlho_Globo.R": 0.0,
+  "KumoOlho_Tampa.L": 0.0,
+  "KumoOlho_Tampa.R": 0.0
+ }
+}
