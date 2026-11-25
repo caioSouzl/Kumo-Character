@@ -88,12 +88,15 @@ ART_R = float(np.hypot(xs + 0.5 - ART_C[0], ys + 0.5 - ART_C[1]).max())         
 BRANCO = A['globo'][int(ART_C[1]), int(ART_C[0]), :3].copy()
 # 25/11, pedido do Caio: o branco do globo em tom dourado suave (#F4E3B5), para não destoar do olho antigo (#E4BF74).
 # O valor vem em sRGB e vai para linear, como a arte que o Blender lê.
-_hex = np.array([0xF4, 0xE3, 0xB5], np.float32) / 255
+_hex = np.array([0xDE, 0xB0, 0x60], np.float32) / 255   # 26/11: a cor do globo do modelo oficial (renders/face-front.png)
 BRANCO = np.where(_hex <= 0.04045, _hex / 12.92, ((_hex + 0.055) / 1.055) ** 2.4).astype(np.float32)
 REP['arte'] = {'centro_px': ART_C.round(1).tolist(), 'raio_externo_px': round(ART_R, 1), 'branco': BRANCO.round(3).tolist()}
 # a imagem do decal: íris com a pupila por cima, no quadro da arte
 if os.path.exists(IRIS_PUPILA):
     ip = ler(IRIS_PUPILA)
+    # 26/11: o anel da íris em âmbar escuro (#DE9C1E), como no olho antigo; a arte tinha um âmbar mais claro
+    anel = (ip[..., 3] > 0.5) & (ip[..., 0] > 0.5) & (ip[..., 2] < 0.6)
+    ip[anel, 0:3] = np.array([0xDE, 0x9C, 0x1E], np.float32) / 255 * np.array([1, 1, 1], np.float32)
     # só a elipse da íris (a imagem tem um ponto solto perto da borda de baixo)
     yy_, xx_ = np.nonzero((ip[..., 3] > 0.5) & (ip[..., 0] > 0.5))
     cx_, cy_ = (xx_.min() + xx_.max()) / 2, (yy_.min() + yy_.max()) / 2; ax_, ay_ = (xx_.max() - xx_.min()) / 2 + 3, (yy_.max() - yy_.min()) / 2 + 3
