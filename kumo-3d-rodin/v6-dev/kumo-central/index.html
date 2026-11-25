@@ -1142,7 +1142,7 @@ ${fila}`;
   const dotGeo = new THREE.SphereGeometry(1, 16, 12);
   function buildDots() {
     for (const n of order) {
-      if (n === 'root' || /^(controle_|lingua_)/.test(n)) continue;
+      if (n === 'root' || /^(controle_|lingua_|MCH_|olho\.)/.test(n)) continue;   // ossos mecânicos e do olhar não têm ponto (os losangos do olhar cuidam dos olhos)
       const mat = new THREE.MeshBasicMaterial({ color: 0xf4b642, depthTest: false, transparent: true, opacity: 0.95 });
       const d = new THREE.Mesh(dotGeo, mat); d.renderOrder = 10; d.userData.bone = n;
       d.scale.setScalar(isFinger(n) ? 0.010 : /^tail_/.test(n) ? 0.014 : 0.020); scene.add(d); dots.push(d);
