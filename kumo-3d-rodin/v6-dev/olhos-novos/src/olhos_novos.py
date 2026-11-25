@@ -86,6 +86,10 @@ ys, xs = np.nonzero(A['circulo'][..., 3] > 0.5)
 ART_C = np.array([(xs.min() + xs.max() + 1) / 2, (ys.min() + ys.max() + 1) / 2])     # centro do contorno (px, y para cima)
 ART_R = float(np.hypot(xs + 0.5 - ART_C[0], ys + 0.5 - ART_C[1]).max())                # raio de fora do contorno
 BRANCO = A['globo'][int(ART_C[1]), int(ART_C[0]), :3].copy()
+# 25/11, pedido do Caio: o branco do globo em tom dourado suave (#F4E3B5), para não destoar do olho antigo (#E4BF74).
+# O valor vem em sRGB e vai para linear, como a arte que o Blender lê.
+_hex = np.array([0xF4, 0xE3, 0xB5], np.float32) / 255
+BRANCO = np.where(_hex <= 0.04045, _hex / 12.92, ((_hex + 0.055) / 1.055) ** 2.4).astype(np.float32)
 REP['arte'] = {'centro_px': ART_C.round(1).tolist(), 'raio_externo_px': round(ART_R, 1), 'branco': BRANCO.round(3).tolist()}
 # a imagem do decal: íris com a pupila por cima, no quadro da arte
 if os.path.exists(IRIS_PUPILA):
