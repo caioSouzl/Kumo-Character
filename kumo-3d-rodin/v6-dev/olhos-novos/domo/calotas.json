@@ -1,0 +1,22 @@
+{
+ "L": {
+  "calota_raio_m": 1.0884,
+  "abertura_raio_m": 0.2538,
+  "altura_m": 0.03,
+  "centro": [
+   -0.506,
+   0.2633,
+   1.2665
+  ]
+ },
+ "R": {
+  "calota_raio_m": 0.8179,
+  "abertura_raio_m": 0.2195,
+  "altura_m": 0.03,
+  "centro": [
+   0.2646,
+   0.114,
+   1.2374
+  ]
+ }
+}
