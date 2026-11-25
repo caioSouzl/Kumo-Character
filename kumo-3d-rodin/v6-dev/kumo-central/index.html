@@ -1399,7 +1399,7 @@ ${fila}`;
   function handPreset(sd, v) { Object.assign(HAND[sd], { fechar: 0, d1: 0, d2: 0, d3: 0, pol: 0, abrir: 0 }, v); syncHandSliders(sd); applyHand(sd); }
   const PRESETS = {
     'Repouso': () => { resetPose(); handPreset('L', {}); handPreset('R', {}); },
-    'Acenar': () => { resetPose(); rotWorld('upper_arm.R', W.Z, -95); rotWorld('forearm.R', W.Z, -45); handPreset('R', { abrir: 1 }); rotWorld('head', W.Z, -8); },
+    'Acenar': () => { resetPose(); rotWorld('upper_arm.R', W.Z, -75); handPreset('R', { abrir: 1 }); rotWorld('head', W.Z, -8); },   // 26/11: ombro a −75° (não −95°) para a mão não encostar na cabeça
     'Comemorar': () => { resetPose(); rotWorld('upper_arm.L', W.Z, 120); rotWorld('upper_arm.R', W.Z, -120); handPreset('L', { fechar: 100 }); handPreset('R', { fechar: 100 }); rotWorld('head', W.X, -12); },
     'Apontar': () => { resetPose(); rotWorld('upper_arm.R', W.X, -80); handPreset('R', { fechar: 100, d1: -70, pol: 30 }); rotWorld('head', W.Y, -10); },
     'Mãos fechadas': () => { handPreset('L', { fechar: 100 }); handPreset('R', { fechar: 100 }); },
