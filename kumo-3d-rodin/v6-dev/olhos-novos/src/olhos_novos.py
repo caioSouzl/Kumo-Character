@@ -88,7 +88,7 @@ ART_R = float(np.hypot(xs + 0.5 - ART_C[0], ys + 0.5 - ART_C[1]).max())         
 BRANCO = A['globo'][int(ART_C[1]), int(ART_C[0]), :3].copy()
 # 25/11, pedido do Caio: o branco do globo em tom dourado suave (#F4E3B5), para não destoar do olho antigo (#E4BF74).
 # O valor vem em sRGB e vai para linear, como a arte que o Blender lê.
-_hex = np.array([0xDE, 0xB0, 0x60], np.float32) / 255   # 26/11: a cor do globo do modelo oficial (renders/face-front.png)
+_hex = np.array([0xF7, 0xF3, 0xEA], np.float32) / 255   # 26/11: off-white, pedido do Caio (no lugar do dourado)
 BRANCO = np.where(_hex <= 0.04045, _hex / 12.92, ((_hex + 0.055) / 1.055) ** 2.4).astype(np.float32)
 REP['arte'] = {'centro_px': ART_C.round(1).tolist(), 'raio_externo_px': round(ART_R, 1), 'branco': BRANCO.round(3).tolist()}
 # a imagem do decal: íris com a pupila por cima, no quadro da arte
