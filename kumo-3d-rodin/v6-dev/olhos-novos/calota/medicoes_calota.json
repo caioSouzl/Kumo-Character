@@ -1,0 +1,36 @@
+{
+ "L": {
+  "abertura_raio_m": 0.2538,
+  "globo_raio_m": 0.372,
+  "abertura_angulo_graus": 43.0,
+  "anel_faces_tiradas": 130,
+  "palpebra_abre_sup_graus": 57.0,
+  "palpebra_abre_inf_graus": -41.0,
+  "driver": [
+   "controle_olhos",
+   "LOC_X"
+  ],
+  "tampa_boca_faces": 464,
+  "globo_pontos_afundados": 439,
+  "aparo_Globo": 1536,
+  "aro_ilhas_tiradas": 1,
+  "aparo_Aro": 2462
+ },
+ "R": {
+  "abertura_raio_m": 0.2195,
+  "globo_raio_m": 0.2909,
+  "abertura_angulo_graus": 49.0,
+  "anel_faces_tiradas": 121,
+  "palpebra_abre_sup_graus": 63.0,
+  "palpebra_abre_inf_graus": -47.0,
+  "driver": [
+   "controle_olhos",
+   "LOC_Y"
+  ],
+  "tampa_boca_faces": 628,
+  "globo_pontos_afundados": 512,
+  "aparo_Globo": 1408,
+  "aro_ilhas_tiradas": 2,
+  "aparo_Aro": 2737
+ }
+}
