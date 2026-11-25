@@ -2,8 +2,8 @@
  "bake_L": "/home/user/Kumo-Character/kumo-3d-rodin/v6-dev/olhos-novos/jogo/olho_L_jogo.png",
  "bake_R": "/home/user/Kumo-Character/kumo-3d-rodin/v6-dev/olhos-novos/jogo/olho_R_jogo.png",
  "kb": {
-  "glb": 12000,
-  "fbx": 4582
+  "glb": 11974,
+  "fbx": 4550
  },
  "glb_erro_max_mm": {
   "Kumo": 0.0,
