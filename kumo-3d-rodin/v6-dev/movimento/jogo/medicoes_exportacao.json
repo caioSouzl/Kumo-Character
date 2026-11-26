@@ -1,0 +1,82 @@
+{
+ "kb": {
+  "glb": 9855,
+  "fbx": 8023,
+  "central": 7748
+ },
+ "alpha_glb": {
+  "KumoOlho_Anel.L": "MASK",
+  "KumoOlho_Anel.R": "MASK",
+  "KumoOlho_Aro.L": "MASK",
+  "KumoOlho_Aro.R": "MASK",
+  "KumoOlho_Globo.L": "OPAQUE",
+  "KumoOlho_Globo.R": "OPAQUE"
+ },
+ "animacoes_glb": [
+  "Boca_Abrir",
+  "Caminhar",
+  "Correr",
+  "Lingua_Lancar",
+  "Pose_Apresentacao",
+  "Pular"
+ ],
+ "animacoes_central": [
+  "Boca_Abrir",
+  "Caminhar",
+  "Correr",
+  "Lingua_Lancar",
+  "Pose_Apresentacao",
+  "Pular"
+ ],
+ "glb_erro_max_mm": {
+  "Kumo": 0.01,
+  "Kumo_Boca": 0.01,
+  "Kumo_Lingua": 0.0,
+  "KumoJogo_Palpebra_inf.L": 0.01,
+  "KumoJogo_Palpebra_inf.R": 0.0,
+  "KumoJogo_Palpebra_sup.L": 0.01,
+  "KumoJogo_Palpebra_sup.R": 0.0,
+  "KumoOlho_Anel.L": 0.01,
+  "KumoOlho_Anel.R": 0.01,
+  "KumoOlho_Aro.L": 0.01,
+  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Globo.L": 0.01,
+  "KumoOlho_Globo.R": 0.01,
+  "KumoOlho_Tampa.L": 0.01,
+  "KumoOlho_Tampa.R": 0.0
+ },
+ "fbx_erro_max_mm": {
+  "Kumo": 0.01,
+  "Kumo_Boca": 0.01,
+  "Kumo_Lingua": 0.0,
+  "KumoJogo_Palpebra_inf.L": 0.01,
+  "KumoJogo_Palpebra_inf.R": 0.0,
+  "KumoJogo_Palpebra_sup.L": 0.01,
+  "KumoJogo_Palpebra_sup.R": 0.0,
+  "KumoOlho_Anel.L": 0.01,
+  "KumoOlho_Anel.R": 0.01,
+  "KumoOlho_Aro.L": 0.01,
+  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Globo.L": 0.01,
+  "KumoOlho_Globo.R": 0.01,
+  "KumoOlho_Tampa.L": 0.01,
+  "KumoOlho_Tampa.R": 0.0
+ },
+ "central_erro_max_mm": {
+  "Kumo": 0.01,
+  "Kumo_Boca": 0.01,
+  "Kumo_Lingua": 0.0,
+  "KumoJogo_Palpebra_inf.L": 0.01,
+  "KumoJogo_Palpebra_inf.R": 0.0,
+  "KumoJogo_Palpebra_sup.L": 0.01,
+  "KumoJogo_Palpebra_sup.R": 0.0,
+  "KumoOlho_Anel.L": 0.01,
+  "KumoOlho_Anel.R": 0.01,
+  "KumoOlho_Aro.L": 0.01,
+  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Globo.L": 0.01,
+  "KumoOlho_Globo.R": 0.01,
+  "KumoOlho_Tampa.L": 0.01,
+  "KumoOlho_Tampa.R": 0.0
+ }
+}
