@@ -1,8 +1,8 @@
 {
  "kb": {
-  "glb": 9855,
-  "fbx": 8023,
-  "central": 7748
+  "glb": 13917,
+  "fbx": 11390,
+  "central": 10208
  },
  "alpha_glb": {
   "KumoOlho_Anel.L": "MASK",
@@ -39,7 +39,7 @@
   "KumoOlho_Anel.L": 0.01,
   "KumoOlho_Anel.R": 0.01,
   "KumoOlho_Aro.L": 0.01,
-  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Aro.R": 0.01,
   "KumoOlho_Globo.L": 0.01,
   "KumoOlho_Globo.R": 0.01,
   "KumoOlho_Tampa.L": 0.01,
@@ -56,7 +56,7 @@
   "KumoOlho_Anel.L": 0.01,
   "KumoOlho_Anel.R": 0.01,
   "KumoOlho_Aro.L": 0.01,
-  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Aro.R": 0.01,
   "KumoOlho_Globo.L": 0.01,
   "KumoOlho_Globo.R": 0.01,
   "KumoOlho_Tampa.L": 0.01,
@@ -73,7 +73,7 @@
   "KumoOlho_Anel.L": 0.01,
   "KumoOlho_Anel.R": 0.01,
   "KumoOlho_Aro.L": 0.01,
-  "KumoOlho_Aro.R": 0.0,
+  "KumoOlho_Aro.R": 0.01,
   "KumoOlho_Globo.L": 0.01,
   "KumoOlho_Globo.R": 0.01,
   "KumoOlho_Tampa.L": 0.01,

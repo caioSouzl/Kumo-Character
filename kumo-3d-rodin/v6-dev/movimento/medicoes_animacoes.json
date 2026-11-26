@@ -60,5 +60,27 @@
    0.1,
    0.1
   ]
- }
+ },
+ "euler_para_quaternio": {
+  "Boca_Abrir": [
+   "jaw"
+  ],
+  "Lingua_Lancar": [
+   "jaw"
+  ],
+  "Pose_Apresentacao": [
+   "upper_arm.L",
+   "thigh.L",
+   "upper_arm.R",
+   "thigh.R"
+  ]
+ },
+ "Boca_Abrir_mandibula_graus": [
+  0.0,
+  29.7,
+  32.0,
+  32.0,
+  25.7,
+  0.0
+ ]
 }

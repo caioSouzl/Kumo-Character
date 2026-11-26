@@ -135,6 +135,35 @@ CHAVES_PULO = [
 for f, kw in CHAVES_PULO: pulo(f, **kw)
 REP['Pular'] = dict(quadros=36, segundos=1.5, altura_m=0.40)
 
+# ---------------------------------------------------------------- ações antigas com giro em euler
+# Boca_Abrir (e outras antigas) gravam o giro da mandíbula em euler, mas os ossos giram por quatérnio:
+# as chaves não faziam nada e a boca não abria. Aqui viram chaves de quatérnio, com os mesmos valores.
+from mathutils import Euler
+CONVERTIDAS = {}
+for a_ in bpy.data.actions:
+    for ly in a_.layers:
+        for st in ly.strips:
+            for cb in st.channelbags:
+                por_osso = {}
+                for fc in list(cb.fcurves):
+                    if fc.data_path.endswith('.rotation_euler') and fc.data_path.startswith('pose.bones["'):
+                        por_osso.setdefault(fc.data_path.split('"')[1], {})[fc.array_index] = fc
+                for osso, eixos in por_osso.items():
+                    if osso not in pb or pb[osso].rotation_mode != 'QUATERNION': continue
+                    quadros = sorted({k.co.x for fc in eixos.values() for k in fc.keyframe_points})
+                    caminho = f'pose.bones["{osso}"].rotation_quaternion'
+                    for fc in [f for f in cb.fcurves if f.data_path == caminho]: cb.fcurves.remove(fc)
+                    novas = [cb.fcurves.new(caminho, index=i) for i in range(4)]
+                    q_ant = None
+                    for f in quadros:
+                        e = Euler([eixos[i].evaluate(f) if i in eixos else 0.0 for i in range(3)], 'XYZ'); q = e.to_quaternion()
+                        if q_ant is not None and q.dot(q_ant) < 0: q.negate()
+                        q_ant = q
+                        for i in range(4): novas[i].keyframe_points.insert(f, q[i])
+                    for fc in eixos.values(): cb.fcurves.remove(fc)
+                    CONVERTIDAS.setdefault(a_.name, []).append(osso)
+REP['euler_para_quaternio'] = CONVERTIDAS
+
 # ---------------------------------------------------------------- conferências
 def pe_mundo(s): return (rig.matrix_world @ pb[f'foot.{s}'].matrix).translation.copy()
 for nome in ('Caminhar', 'Correr'):
@@ -154,6 +183,11 @@ for nome in ('Caminhar', 'Correr'):
     REP[nome]['pe_longe_do_controle_mm'] = round(alc * 1000, 1)
     sc.frame_set(0); q0 = [x.copy() for x in (pb['hips'].location, pb['pe_ik.L'].location)]; sc.frame_set(T)
     REP[nome]['loop_fecha'] = all((a_ - b_).length < 1e-5 for a_, b_ in zip(q0, (pb['hips'].location, pb['pe_ik.L'].location)))
+a = bpy.data.actions['Boca_Abrir']; rig.animation_data.action = a
+ab = []
+for f in range(int(a.frame_range[0]), int(a.frame_range[1]) + 1, 5):
+    sc.frame_set(f); ab.append(round(math.degrees(pb['jaw'].rotation_quaternion.angle), 1))
+REP['Boca_Abrir_mandibula_graus'] = ab
 a = bpy.data.actions['Pular']; rig.animation_data.action = a
 alt = []
 for f in range(0, 37):

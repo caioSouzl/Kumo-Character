@@ -23,8 +23,8 @@ INFO = json.load(open(os.path.join(AQUI, 'janelas_v5.json')))
 MED = json.load(open(os.path.join(OLHO, 'medicoes_olhos_novos.json')))
 V5 = '/home/user/Kumo-Character/kumo-3d-rodin/olhos-v5'; OLDTEX = '/home/user/Kumo-Character/kumo-3d-rodin/v6-dev/olhos-jogo/texturas'
 ALTURA = 0.10            # altura da calota acima do plano da abertura
-EXTRA_GLOBO = 30.0       # graus de calota além da abertura: cobre o giro do olhar (até 15,6° na diagonal) sem sair da pele
-FOLGA_PALP = 0.006       # a pálpebra fica 6 mm acima da calota
+EXTRA_GLOBO = 36.0       # graus de calota além da abertura: cobre o giro do olhar (até 15,6° na diagonal) sem sair da pele
+FOLGA_PALP = 0.004       # a pálpebra fica 4 mm acima da calota (a faixa da borda fica a 3 mm)
 ENCONTRO = -8.0          # graus: onde as pálpebras se encontram fechadas (um pouco abaixo do meio)
 GAZE_DEG = 11.0; DIST_ALVO = 1.35
 ART_C = np.array(MED['arte']['centro_px'], float); ART_R = MED['arte']['raio_externo_px']
@@ -209,7 +209,7 @@ for s in 'LR':
     for k_, o_ in old.items():
         if o_: bpy.data.objects.remove(o_)
     for lado, (p0, p1, abre) in (('sup', (psim, topo, abre_sup)), ('inf', (base, psim, abre_inf))):
-        NP, NB = 36, 64
+        NP, NB = 72, 128                     # malha fina: a beira da parte escondida acompanha a abertura
         pss = [p0 + (p1 - p0) * i / NP for i in range(NP + 1)]; bs = [-lat + 2 * lat * j / NB for j in range(NB + 1)]
         Vl = [pt(ps, b_) for ps in pss for b_ in bs]
         Fl = [(i * (NB + 1) + j, i * (NB + 1) + j + 1, (i + 1) * (NB + 1) + j + 1, (i + 1) * (NB + 1) + j) for i in range(NP) for j in range(NB)]
@@ -262,7 +262,7 @@ for s in 'LR':
     ao.parent = rig; amo = ao.modifiers.new('Armature', 'ARMATURE'); amo.object = rig
     ao.vertex_groups.new(name='head').add(range(len(Va)), 1.0, 'REPLACE')
     R_.update(palpebra_abre_sup_graus=round(math.degrees(abre_sup), 1), palpebra_abre_inf_graus=round(math.degrees(abre_inf), 1), driver=list(drv))
-    DADOS[s] = dict(Cs=Cs, zw=zw); REP[s] = R_
+    DADOS[s] = dict(Cs=Cs, zw=zw, Mw=Mw, U0=U0, U1=U1, den=den); REP[s] = R_
 
 # ---------- aparo: faces do globo e da faixa que, além da abertura, ficam por fora da pele (bochecha que recua)
 from mathutils.bvhtree import BVHTree
@@ -301,7 +301,7 @@ for s in 'LR':
             p = o.matrix_world @ v.co
             ang = (p - Cs).normalized().angle(zw)
             if gira:
-                if ang > ang_ab + math.radians(GAZE_DEG + 2): return True     # globo: o que nunca chega à abertura
+                if ang > ang_ab + math.radians(GAZE_DEG * 1.414 + 2): return True     # globo: o que nunca chega à abertura (o olhar na diagonal vai a 15,6°)
                 qs = [Cs + R @ (p - Cs) for R in poses]
                 if any((q - Cs).normalized().angle(zw) < ang_ab + math.radians(1) for q in qs): return False   # aparece na abertura em algum olhar
                 return any(boca.find_nearest(q, 0.04)[0] is not None for q in qs)   # nunca na abertura e passaria pela boca
@@ -309,7 +309,7 @@ for s in 'LR':
             if boca.find_nearest(p, 0.04)[0] is not None: return True     # perto da boca: a faixa projetaria o desenho da boca
             loc, nrm, _, _ = pele.find_nearest(p)
             if loc is not None and (p - loc).dot(nrm) < -0.008: return True     # bem por dentro da pele: o globo também está, não precisa cobrir
-            if ang < ang_ab + math.radians(GAZE_DEG + 2 + GAZE_DEG * 1.414 + 1): return False     # faixa: cobre o globo enquanto ele gira
+            if ang < ang_ab + math.radians(2 * GAZE_DEG * 1.414 + 3): return False     # faixa: cobre o globo enquanto ele gira
             for R in poses:
                 q = Cs + R @ (p - Cs)
                 loc, nrm, _, _ = pele.find_nearest(q)
@@ -350,6 +350,35 @@ for s in 'LR':
             REP[s]['aro_ilhas_tiradas'] = len(ilhas) - 1
         bm.to_mesh(me); bm.free(); me.update()
         REP[s][f'aparo_{nome.split("_")[1].split(".")[0]}'] = len(tira)
+
+# ---------- pálpebras escondidas fora da abertura: em cada estágio da piscada, o ponto da pálpebra que fica sob a pele
+# (o raio que sai do centro do globo encontra a pele) desce para 3 mm abaixo dela. Só aparece o que está na abertura;
+# antes, os cantos da pálpebra apareciam na bochecha e embaixo da mandíbula, maiores que o olho.
+for s in 'LR':
+    Cs = DADOS[s]['Cs']; zw = DADOS[s]['zw']; ang_ab = math.radians(REP[s]['abertura_angulo_graus']); Rg = REP[s]['globo_raio_m']
+    afund = 0
+    for lado in ('sup', 'inf'):
+        lo = bpy.data.objects[f'KumoJogo_Palpebra_{lado}.{s}']; me = lo.data; M = lo.matrix_world; Mi = M.inverted()
+        for kb in me.shape_keys.key_blocks:
+            for i, d in enumerate(kb.data):
+                p = M @ d.co; r = (p - Cs).length; dr = (p - Cs).normalized()
+                uu, vv = janela(DADOS[s]['Mw'], p, DADOS[s]['U0'], DADOS[s]['U1']); D_ = DADOS[s]['den'][..., 0]
+                perto = False
+                if 0 <= uu < 1 and 0 <= vv < 1:
+                    h_, w_ = D_.shape[:2]; x0 = int(uu * w_); y0 = int(vv * h_)
+                    janela_ = lambda k_: D_[max(0, y0 - k_):y0 + k_ + 1, max(0, x0 - k_):x0 + k_ + 1].max() > 0.05
+                    if janela_(max(2, w_ // 100)): continue                    # dentro da abertura desenhada: fica
+                    perto = janela_(max(3, w_ // 25))                           # na beira (até ~4 %): desce, mas não abaixo do globo
+                hit = pele.ray_cast(Cs + dr * (Rg * 0.5), dr, 2.0)[0]
+                if hit is not None:
+                    alvo = min(r, (hit - Cs).length - 0.003)
+                    if perto: alvo = max(alvo, Rg + 0.0015)                    # senão o globo aparece entre a pálpebra e a beira
+                elif dr.angle(zw) > ang_ab + math.radians(5): alvo = Rg - 0.01     # sem pele no caminho, mas longe da abertura (fenda da boca): atrás do globo
+                else: continue                                                  # na abertura: fica
+                if alvo < r - 1e-5: d.co = Mi @ (Cs + dr * alvo); afund += 1
+        for i, v in enumerate(me.vertices): v.co = me.shape_keys.key_blocks['Basis'].data[i].co
+        me.update()
+    REP[s]['palpebra_pontos_escondidos'] = afund
 
 # ---------- ossos do olho: base no centro da esfera do globo; alvo do Damped Track a 1,35 m
 for s in 'LR':

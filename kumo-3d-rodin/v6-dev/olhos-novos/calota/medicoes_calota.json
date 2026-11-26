@@ -10,11 +10,12 @@
    "controle_olhos",
    "LOC_X"
   ],
-  "tampa_boca_faces": 464,
-  "globo_pontos_afundados": 439,
-  "aparo_Globo": 1536,
+  "tampa_boca_faces": 409,
+  "globo_pontos_afundados": 651,
+  "aparo_Globo": 1597,
   "aro_ilhas_tiradas": 1,
-  "aparo_Aro": 2462
+  "aparo_Aro": 2560,
+  "palpebra_pontos_escondidos": 11053
  },
  "R": {
   "abertura_raio_m": 0.2195,
@@ -27,10 +28,11 @@
    "controle_olhos",
    "LOC_Y"
   ],
-  "tampa_boca_faces": 628,
-  "globo_pontos_afundados": 512,
-  "aparo_Globo": 1408,
-  "aro_ilhas_tiradas": 2,
-  "aparo_Aro": 2737
+  "tampa_boca_faces": 615,
+  "globo_pontos_afundados": 562,
+  "aparo_Globo": 1470,
+  "aro_ilhas_tiradas": 1,
+  "aparo_Aro": 2896,
+  "palpebra_pontos_escondidos": 8648
  }
 }
