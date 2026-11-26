@@ -1,0 +1,14 @@
+{
+ "polo_L_graus": 86.5,
+ "polo_R_graus": 93.2,
+ "repouso_ik_ligado_vs_desligado_mm": 0.0,
+ "agachar_12cm_pe_moveu_mm": {
+  "L": 0.0,
+  "R": 0.01
+ },
+ "agachar_12cm_joelho_graus": {
+  "L": 109.9,
+  "R": 100.1
+ },
+ "cabeca_estavel_desvio_graus": 0.0
+}
