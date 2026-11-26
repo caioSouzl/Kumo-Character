@@ -1,0 +1,17 @@
+{
+ "ossos_antigos": 10,
+ "comprimento_m": 1.546,
+ "ossos_novos": 26,
+ "osso_base_m": 0.1,
+ "osso_ponta_m": 0.006,
+ "repesados_Kumo": 1206,
+ "repesados_Kumo_Contorno": 1206,
+ "repesados_KumoOlho_Anel.L": 0,
+ "repesados_KumoOlho_Anel.R": 0,
+ "esticada_ponta_desvio_medio_m": 0.054,
+ "esticada": {
+  "alcance_m": 1.535,
+  "comprimento_linha_m": 1.546,
+  "desvio_lateral_max_m": 0.102
+ }
+}
