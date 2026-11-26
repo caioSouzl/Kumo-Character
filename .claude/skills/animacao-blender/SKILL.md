@@ -1,6 +1,6 @@
 ---
 name: animacao-blender
-description: Processo de criação, rig e animação 3D estilizada no Blender para o Kumo. Animação (blocking em degraus, poses-chave, intermediários, em 2s com trechos em 1s, correção de câmera, smear); rig (deformadores, mecânicos e controladores, pintura de peso, IK, rig de rosto, boca e língua); criação de personagem a partir de modelo gerado (modelo base, retopologia em loops); modelagem com imagens de frente e de lado cruzadas; olhos estilizados (pupila 2D por decal presa a ossos, íris que afunda para dentro). Use ao criar ou revisar animação, rig ou modelo 3D do Kumo ou de outro personagem do projeto, e ao exportar para o jogo.
+description: Processo de criação, rig e animação 3D estilizada no Blender para o Kumo. Animação (blocking em degraus, poses-chave, intermediários, em 2s com trechos em 1s, correção de câmera, smear); rig (deformadores, mecânicos e controladores, pintura de peso, IK, rig de rosto, boca e língua); criação de personagem a partir de modelo gerado (modelo base, retopologia em loops); modelagem com imagens de frente e de lado cruzadas; olhos estilizados (pupila 2D por decal presa a ossos, íris que afunda para dentro). Use ao criar ou revisar animação, rig ou modelo 3D do Kumo ou de outro personagem do projeto, e ao exportar para o jogo. Também o básico do Blender (modelagem, modificadores, materiais por nós, pintura de textura, Geometry Nodes, animação no Graph Editor, compositor e render).
 ---
 
 # Animação 3D estilizada no Blender (Kumo)
@@ -52,6 +52,12 @@ Três regras de lá que valem sempre:
 - **Frente e lado bastam:** com as duas imagens cruzadas atrás do modelo, a frente dá largura e altura e o lado dá profundidade. Modele em ortográfica com raio X (`Alt+Z`), alternando as duas vistas.
 - **Pivô do olho por dentro:** um osso que gira no próprio olho não move a pupila. A base fica no centro da esfera do olho (ou do rosto), e a ponta na superfície.
 - **Íris para dentro:** normais invertidas na íris e Backface Culling. Funciona no EEVEE e no Godot, mas não no Cycles.
+
+Para o **básico do Blender** (modelagem, modificadores, materiais por nós, pintura de textura, Geometry Nodes, Graph Editor, compositor e render), leia `referencias/curso-basico.md`. Fonte: a playlist do Caio, estudada em 26/11.
+
+Duas regras de lá que valem sempre:
+- **Escala aplicada:** escala diferente de 1 faz modificadores, Geometry Nodes e exportação errarem. Aplique com `Ctrl+A` → Scale.
+- **Loop perfeito:** a primeira e a última chave precisam do mesmo valor e da mesma inclinação.
 
 Três regras de rig que valem sempre:
 - **Pesos são relativos:** um osso com peso baixo sozinho move o vértice por inteiro. Defeito de deformação quase sempre é outro osso puxando junto.
