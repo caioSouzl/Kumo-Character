@@ -61,19 +61,10 @@
    0.1
   ]
  },
- "euler_para_quaternio": {
-  "Boca_Abrir": [
-   "jaw"
-  ],
-  "Lingua_Lancar": [
-   "jaw"
-  ],
-  "Pose_Apresentacao": [
-   "upper_arm.L",
-   "thigh.L",
-   "upper_arm.R",
-   "thigh.R"
-  ]
+ "euler_para_quaternio": {},
+ "emenda_inclinacao_max": {
+  "Caminhar": 0.0,
+  "Correr": 0.0
  },
  "Boca_Abrir_mandibula_graus": [
   0.0,

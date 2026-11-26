@@ -137,11 +137,9 @@ No Kumo:
 
 No Kumo (medido em 26/11 em `kumo_v8_movimento.blend`):
 - **Valores:** `Caminhar` e `Correr` fecham o loop com o mesmo valor em todas as 274 curvas.
-- **Inclinação:** muda um pouco na emenda em 3 curvas da caminhada e 9 da corrida (pés IK e braços).
-  - Pior caso: `pe_ik.L` na corrida, cerca de 2 cm por quadro de diferença de velocidade.
-  - As chaves das pontas são Auto Clamped e não sabem que a ação repete.
-- **Conserto possível:** modificador Cycles nessas curvas (as alças automáticas passam a considerar a volta), depois reexportar e conferir o deslize dos pés.
-  - Não foi aplicado: espera a decisão do Caio.
+- **Inclinação (corrigido em 26/11):** a medida por diferença de quadros enganava; o certo é comparar a inclinação das alças nas pontas.
+  - Cada curva de `Caminhar` e `Correr` agora tem modificador Cycles, e as alças automáticas contam a volta.
+  - Inclinação da emenda: 0,0 nas duas ações. Pés sem deslize (0,0 mm) e arquivos reexportados.
 
 ## 8. Compositor em tempo real (aula 13)
 

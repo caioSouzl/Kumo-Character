@@ -164,6 +164,25 @@ for a_ in bpy.data.actions:
                     CONVERTIDAS.setdefault(a_.name, []).append(osso)
 REP['euler_para_quaternio'] = CONVERTIDAS
 
+# ---------------------------------------------------------------- emenda do loop
+# Cycles em todas as curvas de Caminhar e Correr: as alças automáticas passam a contar a volta,
+# e a velocidade na emenda (quadro final -> inicial) fica contínua.
+def cb_de(a_):
+    return [cb for l in a_.layers for st in l.strips for cb in st.channelbags]
+EMENDA = {}
+for nome in ('Caminhar', 'Correr'):
+    a_ = bpy.data.actions[nome]; pior = 0.0
+    for cb in cb_de(a_):
+        for fc in cb.fcurves:
+            if not any(m.type == 'CYCLES' for m in fc.modifiers): fc.modifiers.new('CYCLES')
+            fc.update()
+            k0, k1 = fc.keyframe_points[0], fc.keyframe_points[-1]      # inclinação exata nas pontas, pelas alças
+            s0 = (k0.handle_right[1] - k0.co[1]) / (k0.handle_right[0] - k0.co[0])
+            s1 = (k1.co[1] - k1.handle_left[1]) / (k1.co[0] - k1.handle_left[0])
+            pior = max(pior, abs(s0 - s1))
+    EMENDA[nome] = round(pior, 6)
+REP['emenda_inclinacao_max'] = EMENDA
+
 # ---------------------------------------------------------------- conferências
 def pe_mundo(s): return (rig.matrix_world @ pb[f'foot.{s}'].matrix).translation.copy()
 for nome in ('Caminhar', 'Correr'):
