@@ -2,7 +2,7 @@
 
 Evolução do Estúdio do Kumo para uma central de desenvolvimento, feita em fases. O Estúdio original (`../kumo-studio/`) continua intacto até o Caio aprovar esta página.
 
-O modelo é o GLB dos olhos em calota (`../olhos-novos/calota/central/kumo_central.glb`, publicado como `kumo.wasm`). Sem ele, a página usa o do Estúdio (`../kumo-studio/kumo.glb`), com os olhos antigos.
+O modelo é o GLB do Kumo em movimento (`../movimento/central/kumo_central.glb`, publicado como `kumo.wasm`), com os olhos em calota, a cauda nova, os corretivos e as animações. Sem ele, a página usa o do Estúdio (`../kumo-studio/kumo.glb`), com os olhos antigos.
 
 ## Fase 1 (feita): reorganização visual e navegação
 - **Barra de visualização:**
@@ -119,3 +119,11 @@ Navegador automático, em tela de computador e de celular:
 - **Decal:** o shader do decal saiu da página; não há mais texturas separadas em `olhos/`.
 - **Componentes:** cada olho mostra globo, pele em volta, faixa da borda, tampa da boca e pálpebras.
 - **Versões:** entrou "Olhos em calota" como atual; "Olhos novos (decal)" passou a substituída.
+
+## Kumo em movimento (26/11)
+- **Modelo:** `../movimento/central/kumo_central.glb`. Relatório em `../movimento/RELATORIO.md`.
+- **Losangos de piscar:** em cima de cada olho. Arrastar para baixo fecha a pálpebra; dois toques abrem ou fecham de uma vez.
+- **Animações do Kumo** (aba Animação): Caminhar, Correr, Pular, Abrir a boca e Lançar a língua, tocadas direto do arquivo do jogo. "Parar e voltar à pose" devolve a pose de antes.
+- **Cauda:** 26 ossos. "Enrolar" para a esquerda estica até a reta; para a direita, enrola mais. "Abanar" balança de lado.
+- **Corretivos:** os ossos `corr_*` andam sozinhos conforme a cabeça e o tronco giram. A conta é a mesma do Blender (diferença de 0 mm contra o pulo gravado).
+- **Pontos:** os ossos mecânicos (`corr_*`, `pe_ik`, `joelho`, `MCH_*`) não têm ponto no palco.

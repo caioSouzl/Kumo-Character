@@ -399,10 +399,10 @@
    "id": "olhos-calota",
    "nome": "Olhos em calota",
    "grupo": "Olhos",
-   "situacao": "atual",
+   "situacao": "em uso",
    "pasta": "kumo-3d-rodin/v6-dev/olhos-novos/calota",
    "relatorio": "kumo-3d-rodin/v6-dev/olhos-novos/calota/RELATORIO.md",
-   "descricao": "Pedido do Caio (25/11): o olho como esfera, para a íris, a pupila e a pálpebra não distorcerem. Calota de 10 cm presa ao osso do olho, pálpebras refeitas sobre a esfera. Aprovado pelo Caio. É o modelo que esta página mostra.",
+   "descricao": "Pedido do Caio (25/11): o olho como esfera, para a íris, a pupila e a pálpebra não distorcerem. Calota de 10 cm presa ao osso do olho, pálpebras refeitas sobre a esfera. Aprovado pelo Caio. É a base do Kumo em movimento.",
    "mudancas": [
     "Globo esférico que gira inteiro",
     "Pálpebras refeitas: não entram mais no globo",
@@ -422,6 +422,37 @@
    "data": "2026-11-25",
    "imagem": "versoes/olhos-calota.jpg",
    "origem_imagem": "kumo-3d-rodin/v6-dev/olhos-novos/calota/folha_frente.png"
+  },
+  {
+   "id": "movimento",
+   "nome": "Kumo em movimento",
+   "grupo": "Kumo 3D",
+   "situacao": "atual",
+   "pasta": "kumo-3d-rodin/v6-dev/movimento",
+   "relatorio": "kumo-3d-rodin/v6-dev/movimento/RELATORIO.md",
+   "descricao": "As pendências antigas resolvidas (26/11): cauda que estica até a ponta, ossos corretivos de pescoço e costas, pés presos ao chão com IK, cabeça estável e as animações de caminhar, correr e pular. É o modelo que esta página mostra.",
+   "mudancas": [
+    "Cauda com 26 ossos seguindo a espiral",
+    "8 ossos corretivos (pescoço, ombros, lombar)",
+    "IK das pernas e cabeça estável",
+    "Animações Caminhar, Correr e Pular",
+    "Central: botões das animações e losangos de piscar"
+   ],
+   "testes": [
+    "Cauda reta até ~3 cm da ponta; contorno a 2 cm da pele",
+    "Cabeça de lado: cruzamentos 56 → 14",
+    "Pé no apoio: 0,0 mm de deslize",
+    "GLB e FBX iguais ao Blender (0,0 mm)"
+   ],
+   "arquivos": [
+    "kumo_v8_movimento.blend",
+    "jogo/kumo_v8_jogo.glb",
+    ".fbx",
+    "animacoes_kumo.mp4"
+   ],
+   "data": "2026-11-26",
+   "imagem": "versoes/movimento.jpg",
+   "origem_imagem": "kumo-3d-rodin/v6-dev/movimento/folha_animacoes.png"
   },
   {
    "id": "p2",

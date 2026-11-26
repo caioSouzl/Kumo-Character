@@ -312,8 +312,8 @@ button:disabled { opacity: 0.45; cursor: default; }
       </div>
       <div class="group">
         <div class="group-label">Cauda</div>
-        <div class="slider"><label for="tailCurl">Enrolar</label><input type="range" id="tailCurl" min="-60" max="60" step="1" value="0"><output id="otail">0°</output></div>
-        <div class="slider"><label for="tailSwing">Abanar</label><input type="range" id="tailSwing" min="-40" max="40" step="1" value="0"><output id="otsw">0°</output></div>
+        <div class="slider"><label for="tailCurl">Enrolar</label><input type="range" id="tailCurl" min="-60" max="60" step="1" value="0"><output id="otail">enrolar 0%</output></div>
+        <div class="slider"><label for="tailSwing">Abanar</label><input type="range" id="tailSwing" min="-40" max="40" step="1" value="0"><output id="otsw">0%</output></div>
       </div>
       <p class="hint kbd-hint"><span class="kbd">Esc</span> solta a articulação · <span class="kbd">Espaço</span> toca ou pausa · <span class="kbd">K</span> grava quadro · todos os atalhos na aba Personalizar</p>
     </div>
@@ -351,6 +351,11 @@ button:disabled { opacity: 0.45; cursor: default; }
       <div class="group">
         <div class="group-label">Exemplos</div>
         <div class="chips" id="anims"></div>
+      </div>
+      <div class="group">
+        <div class="group-label">Animações do Kumo (do arquivo do jogo)</div>
+        <div class="chips" id="animsArquivo"></div>
+        <div class="row"><button id="pararArquivo" disabled>■ Parar e voltar à pose</button></div>
       </div>
       <div class="group">
         <div class="group-label">Quadros-chave</div>
@@ -681,7 +686,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   // ---------- carregar o modelo
   // o modelo é o GLB; no claude.ai ele vai publicado como kumo.wasm (mesmo conteúdo binário), então tenta os dois nomes
   // o modelo: publicado como kumo.wasm; no computador, o GLB da pasta dos olhos novos (ou o do Estúdio, com os olhos antigos)
-  const FONTES = ['kumo.wasm', '../olhos-novos/calota/central/kumo_central.glb', '../kumo-studio/kumo.glb'];
+  const FONTES = ['kumo.wasm', '../movimento/central/kumo_central.glb', '../olhos-novos/calota/central/kumo_central.glb', '../kumo-studio/kumo.glb'];
   let fonteUsada = 0;
   function carregar(i) {
     fonteUsada = i; new THREE.GLTFLoader().load(FONTES[i], montar,
@@ -705,6 +710,66 @@ button:disabled { opacity: 0.45; cursor: default; }
       const q = new THREE.Quaternion().setFromUnitVectors(y0, alvo.sub(H).normalize());          // giro no mundo, em repouso
       b.quaternion.copy(rest['olho.' + side]).multiply(W.clone().invert().multiply(q).multiply(W));  // levado para o espaço do osso
     }
+  }
+  // ---------- ossos corretivos (kumo-3d-rodin/v6-dev/movimento): fora das animações do arquivo a página refaz a conta
+  // do Blender. Giro = cabeça (ou peito) em relação ao peito (ou quadril), em euler XYZ do Blender (ZYX no three.js);
+  // o osso corr_* anda de para_min a para_max no próprio espaço enquanto o giro no eixo vai de de_graus[0] a de_graus[1].
+  const CORRETIVOS = {"corr_trapezio.L":{"pai":"shoulder.L","mch":"MCH_cabeca_rel","fonte":"head","eixo":"Z","de_graus":[-45.0,0.0],"para_min":[0.017597336322069168,-0.08825226873159409,0.0013682568678632379],"para_max":[0.0,0.0,0.0],"ref":"chest"},"corr_trapezio.R":{"pai":"shoulder.R","mch":"MCH_cabeca_rel","fonte":"head","eixo":"Z","de_graus":[0.0,45.0],"para_min":[0.0,0.0,0.0],"para_max":[-0.023463115096092224,-0.11766967922449112,0.0018243422964587808],"ref":"chest"},"corr_borda.L":{"pai":"head","mch":"MCH_cabeca_rel","fonte":"head","eixo":"Z","de_graus":[0.0,45.0],"para_min":[0.0,0.0,0.0],"para_max":[3.4106050554155156e-15,0.11999999731779099,-4.846761293344337e-29],"ref":"chest"},"corr_borda.R":{"pai":"head","mch":"MCH_cabeca_rel","fonte":"head","eixo":"Z","de_graus":[0.0,45.0],"para_min":[0.0,0.0,0.0],"para_max":[1.7053025277077578e-15,0.05999999865889549,-2.4233806466721686e-29],"ref":"chest"},"corr_nuca":{"pai":"chest","mch":"MCH_cabeca_rel","fonte":"head","eixo":"X","de_graus":[0.0,45.0],"para_min":[0.0,0.0,0.0],"para_max":[0.0,-0.0,-0.0],"ref":"chest"},"corr_borda_tras":{"pai":"head","mch":"MCH_cabeca_rel","fonte":"head","eixo":"X","de_graus":[-45.0,0.0],"para_min":[0.0,0.1149391457438469,-0.03448174148797989],"para_max":[0.0,0.0,0.0],"ref":"chest"},"corr_garganta":{"pai":"chest","mch":"MCH_cabeca_rel","fonte":"head","eixo":"X","de_graus":[0.0,45.0],"para_min":[0.0,0.0,0.0],"para_max":[0.0,-0.025724787265062332,-0.015434873290359974],"ref":"chest"},"corr_lombar":{"pai":"hips","mch":"MCH_peito_rel","fonte":"chest","eixo":"X","de_graus":[0.0,45.0],"para_min":[0.0,0.0,0.0],"para_max":[0.0,0.0,0.11999999731779099],"ref":"hips"}};
+  function corretivos() {
+    for (const [n, c] of Object.entries(CORRETIVOS)) {
+      const b = bones[n], f = bones[c.fonte], r = bones[c.ref]; if (!b || !f || !r) continue;
+      r.updateWorldMatrix(true, false); f.updateWorldMatrix(true, false);
+      const q = r.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(f.getWorldQuaternion(new THREE.Quaternion()));
+      const e = new THREE.Euler().setFromQuaternion(q, 'ZYX'), a = e[c.eixo.toLowerCase()] / DEG;
+      const [a0, a1] = c.de_graus, t = Math.max(0, Math.min(1, (a - a0) / (a1 - a0 || 1)));
+      const d = new THREE.Vector3(...c.para_min.map((v, i) => v + (c.para_max[i] - v) * t));
+      b.position.copy(restPos[n]).add(d.applyQuaternion(rest[n]));
+    }
+  }
+  // ---------- cauda (26 ossos que seguem a espiral até a ponta): Enrolar < 0 estica (até reta), > 0 enrola mais
+  const CAUDA_RETA = new THREE.Vector3(0, -0.25, -1).normalize();   // reta: para trás, descendo um pouco (no espaço do quadril em repouso)
+  function aplicaCauda(curl, swing) {
+    const tb = order.filter((n) => /^tail_/.test(n));
+    const enrola = Math.max(0, curl) / 60 * 12, abana = swing / 40 * 8, estica = Math.max(0, -curl) / 60;
+    for (const n of tb) setEuler(n, enrola, 0, abana);
+    if (estica <= 0 || !bones.hips) return;
+    const hq = bones.hips.getWorldQuaternion(new THREE.Quaternion()), D = CAUDA_RETA.clone().applyQuaternion(hq.multiply(hipsRestQ.clone().invert()));
+    const antes = tb.map((n) => bones[n].quaternion.clone());
+    for (const n of tb) {                                            // primeiro a cauda toda reta...
+      const b = bones[n]; b.updateWorldMatrix(true, false);
+      const wq = b.getWorldQuaternion(new THREE.Quaternion()), cur = new THREE.Vector3(0, 1, 0).applyQuaternion(wq);
+      const q = new THREE.Quaternion().setFromUnitVectors(cur, D);
+      b.quaternion.copy(b.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(q.multiply(wq)));
+    }
+    tb.forEach((n, i) => bones[n].quaternion.copy(antes[i].clone().slerp(bones[n].quaternion, estica)));   // ...e o meio-termo osso a osso
+  }
+  let hipsRestQ = new THREE.Quaternion();
+  // ---------- animações do arquivo (Caminhar, Correr, Pular...): tocadas direto do GLB, com tudo já gravado em cada quadro
+  let mixer = null, clipes = [], tocandoArquivo = null, poseAntesArquivo = null;
+  function tocarArquivo(nome) {
+    const clip = clipes.find((c) => c.name === nome); if (!clip || !mixer) return;
+    if (!tocandoArquivo) poseAntesArquivo = pose();
+    playing = false; updatePlay(); mixer.stopAllAction();
+    const a = mixer.clipAction(clip); const loop = /Caminhar|Correr/.test(nome);
+    a.reset(); a.setLoop(loop ? THREE.LoopRepeat : THREE.LoopOnce, Infinity); a.clampWhenFinished = true; a.play();
+    tocandoArquivo = nome; $('pararArquivo').disabled = false;
+    document.querySelectorAll('#animsArquivo .chip').forEach((b) => b.setAttribute('aria-pressed', String(b.textContent === nome)));
+  }
+  function pararArquivo() {
+    if (!mixer) return; mixer.stopAllAction(); tocandoArquivo = null; $('pararArquivo').disabled = true;
+    for (const n of order) if (restPos[n]) bones[n].position.copy(restPos[n]);
+    if (poseAntesArquivo) applyPose(poseAntesArquivo); else { resetPose(); afterPose(); }
+    document.querySelectorAll('#animsArquivo .chip').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+  }
+  function buildAnimsArquivo() {
+    const box = $('animsArquivo'); if (!box) return; box.innerHTML = '';
+    const NOMES = { Caminhar: 'Caminhar', Correr: 'Correr', Pular: 'Pular', Boca_Abrir: 'Abrir a boca', Lingua_Lancar: 'Lançar a língua' };
+    for (const c of clipes) {
+      if (!NOMES[c.name]) continue;
+      const b = document.createElement('button'); b.className = 'chip'; b.textContent = c.name; b.title = NOMES[c.name]; b.setAttribute('aria-pressed', 'false');
+      b.onclick = () => tocarArquivo(c.name); box.appendChild(b);
+    }
+    $('pararArquivo').onclick = pararArquivo;
   }
   function montar(gltf) {
     const root = gltf.scene; scene.add(root);
@@ -732,12 +797,13 @@ button:disabled { opacity: 0.45; cursor: default; }
         for (const [k, r] of [['OlhoBase', 1], ['Iris', 2], ['Pupil', 3], ['Catchlight', 4], ['Moldura', 5], ['Palpebra', 6]]) if (nmo.includes(k)) { o.renderOrder = r + (/borda/.test(nmo) ? 0.5 : 0); o.material.polygonOffset = true; o.material.polygonOffsetFactor = -4 * o.renderOrder; o.material.polygonOffsetUnits = -4 * o.renderOrder; o.material.depthWrite = false; o.material.transparent = true; }
       }
     });
-    for (const a of gltf.animations) void a; // as ações do arquivo não tocam sozinhas
+    mixer = new THREE.AnimationMixer(root); clipes = gltf.animations;   // as ações do arquivo só tocam pelos botões
     info3d.materiais = (gltf.parser.json.materials || []).map((m) => m.name); info3d.texturas = [...new Set((gltf.parser.json.images || []).map((m) => m.name))];
     scene.updateMatrixWorld(true); prepararOmbro();
     for (const side of ['L', 'R']) if (bones['olho.' + side]) olhoRest[side] = bones['olho.' + side].getWorldQuaternion(new THREE.Quaternion());
     if (bones.head) { headRest = bones.head.matrixWorld.clone(); headRestQ = bones.head.getWorldQuaternion(new THREE.Quaternion()); }
-    buildDots(); buildUI(); buildGaze(); buildComponentes(); carregarVersoes(); afterPose(); histPush();
+    if (bones.hips) hipsRestQ = bones.hips.getWorldQuaternion(new THREE.Quaternion());
+    buildDots(); buildUI(); buildGaze(); buildComponentes(); buildAnimsArquivo(); carregarVersoes(); afterPose(); histPush();
     $('loading').hidden = true;
     loadDraft();
   }
@@ -1147,7 +1213,7 @@ ${fila}`;
   const dotGeo = new THREE.SphereGeometry(1, 16, 12);
   function buildDots() {
     for (const n of order) {
-      if (n === 'root' || /^(controle_|lingua_|MCH_|olho\.)/.test(n)) continue;   // ossos mecânicos e do olhar não têm ponto (os losangos do olhar cuidam dos olhos)
+      if (n === 'root' || /^(controle_|lingua_|MCH_|olho\.|corr_|pe_ik\.|joelho\.)/.test(n)) continue;   // ossos mecânicos e do olhar não têm ponto (os losangos do olhar cuidam dos olhos)
       const mat = new THREE.MeshBasicMaterial({ color: 0xf4b642, depthTest: false, transparent: true, opacity: 0.95 });
       const d = new THREE.Mesh(dotGeo, mat); d.renderOrder = 10; d.userData.bone = n;
       d.scale.setScalar(isFinger(n) ? 0.010 : /^tail_/.test(n) ? 0.014 : 0.020); scene.add(d); dots.push(d);
@@ -1267,7 +1333,7 @@ ${fila}`;
     const e = eulerOf(selected); const v = [e.x / DEG, e.y / DEG, e.z / DEG];
     v[ax] = Math.max(-180, Math.min(180, deg)); setEuler(selected, v[0], v[1], v[2]); ombroAuto(); updateMorphs(); syncSliders();
   }
-  function afterPose() { ombroAuto(); aplicaLingua(); updateMorphs(); olharOlhos(); syncSliders(); syncHands(); syncOlhos(); syncBoca(); }
+  function afterPose() { ombroAuto(); aplicaLingua(); corretivos(); updateMorphs(); olharOlhos(); syncSliders(); syncHands(); syncOlhos(); syncBoca(); }
 
   function buildUI() {
     const sel = $('boneSel');
@@ -1307,8 +1373,9 @@ ${fila}`;
     const tailBones = order.filter((n) => /^tail_/.test(n));
     let tail = { curl: 0, swing: 0 };
     const applyTail = () => {
-      for (const n of tailBones) setEuler(n, tail.curl, 0, tail.swing);
-      $('otail').textContent = tail.curl + '°'; $('otsw').textContent = tail.swing + '°'; afterPose();
+      aplicaCauda(tail.curl, tail.swing); void tailBones;
+      $('otail').textContent = tail.curl < 0 ? `esticar ${Math.round(-tail.curl / 60 * 100)}%` : `enrolar ${Math.round(tail.curl / 60 * 100)}%`;
+      $('otsw').textContent = Math.round(tail.swing / 40 * 100) + '%'; afterPose();
     };
     $('tailCurl').oninput = () => { tail.curl = Number($('tailCurl').value); applyTail(); };
     $('tailSwing').oninput = () => { tail.swing = Number($('tailSwing').value); applyTail(); };
@@ -1423,7 +1490,7 @@ ${fila}`;
     'Abrir e fechar as mãos': { d: 2, ks: [[0, () => PRESETS['Repouso']()], [1, () => { PRESETS['Repouso'](); PRESETS['Mãos fechadas'](); }], [2, () => PRESETS['Repouso']()]] },
     'Abanar a cauda': { d: 1.6, ks: [[0, () => { resetPose(); tailSet(0, 25); }], [0.8, () => { resetPose(); tailSet(0, -25); }], [1.6, () => { resetPose(); tailSet(0, 25); }]] }
   };
-  function tailSet(c, s) { for (const n of order.filter((n) => /^tail_/.test(n))) setEuler(n, c, 0, s); }
+  function tailSet(c, s) { aplicaCauda(c, s); }
   function buildAnims() {
     const box = $('anims'); box.innerHTML = '';
     for (const [n, a] of Object.entries(ANIMS)) {
@@ -1757,12 +1824,13 @@ ${fila}`;
       if (time > duration) { if ($('loop').checked) time %= duration; else { time = duration; playing = false; updatePlay(); } }
       evalAt(time); updateTime();
     }
+    if (tocandoArquivo && mixer) { mixer.update(dt); updateMorphs(); }
     orbit.update(); updateDots(); renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
   resize(); requestAnimationFrame(frame);
   window.__camera = camera;
-  window.__kumo = { OLHOS, olhoRest, ctrlSet, olharOlhos, bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots, mirrorAll, setAxis, histGo, applyPoseExt: (p) => applyPose(p),
+  window.__kumo = { OLHOS, olhoRest, restPos, CORRETIVOS, corretivos, aplicaCauda, tocarArquivo, pararArquivo, mixer: () => mixer, clipes: () => clipes, ctrlSet, olharOlhos, bones, rest, select, PRESETS, afterPose, pose: () => pose(), keys, dots: () => dots, mirrorAll, setAxis, histGo, applyPoseExt: (p) => applyPose(p),
     morphs: () => { const o = {}; for (const [ob, ms] of Object.entries(morphAlvos)) for (const [k, i] of Object.entries(ms[0].morphTargetDictionary)) o[ob + '|' + k] = ms[0].morphTargetInfluences[i]; return o; } };   // usado pelos testes
 })();
 </script>

@@ -27,21 +27,23 @@ def pesos_cauda(o):
     return np.array([sum(g.weight for g in v.groups if vg.get(g.group, '').startswith('tail_')) for v in o.data.vertices])
 
 # ---------------------------------------------------------------- 1. linha central
-me = corpo.data; P = np.array([tuple(corpo.matrix_world @ v.co) for v in me.vertices]); F = pesos_cauda(corpo)
-T = set(np.nonzero(F > 0.01)[0].tolist())
-viz = {i: [] for i in T}
-for e in me.edges:
-    a, b = e.vertices
-    if a in T and b in T:
-        d = float(np.linalg.norm(P[a] - P[b])); viz[a].append((b, d)); viz[b].append((a, d))
-base = [i for i in T if F[i] < 0.5]                      # onde a cauda ainda divide peso com o quadril
-dist = {i: 0.0 for i in base}; fila = [(0.0, i) for i in base]; heapq.heapify(fila)
-while fila:
-    d, i = heapq.heappop(fila)
-    if d > dist.get(i, 1e9): continue
-    for j, w in viz[i]:
-        if d + w < dist.get(j, 1e9): dist[j] = d + w; heapq.heappush(fila, (d + w, j))
-idx = np.array(sorted(dist)); g = np.array([dist[i] for i in idx]); Q = P[idx]
+def geodesica(o):
+    # distância pela superfície, desde a base da cauda, de cada vértice da cauda do objeto o
+    me = o.data; P = np.array([tuple(o.matrix_world @ v.co) for v in me.vertices]); F = pesos_cauda(o)
+    T = set(np.nonzero(F > 0.01)[0].tolist()); viz = {i: [] for i in T}
+    for e in me.edges:
+        a, b = e.vertices
+        if a in T and b in T:
+            d = float(np.linalg.norm(P[a] - P[b])); viz[a].append((b, d)); viz[b].append((a, d))
+    base = [i for i in T if F[i] < 0.5]                  # onde a cauda ainda divide peso com o quadril
+    dist = {i: 0.0 for i in base}; fila = [(0.0, i) for i in base]; heapq.heapify(fila)
+    while fila:
+        d, i = heapq.heappop(fila)
+        if d > dist.get(i, 1e9): continue
+        for j, w in viz[i]:
+            if d + w < dist.get(j, 1e9): dist[j] = d + w; heapq.heappush(fila, (d + w, j))
+    idx = np.array(sorted(dist)); return P, F, T, dist, idx, np.array([dist[i] for i in idx])
+P, F, T, dist, idx, g = geodesica(corpo); Q = P[idx]
 raiz = Vector(rig.matrix_world @ rig.data.bones['tail_01'].head_local)
 PONTA = Q[int(np.argmax(g))]
 
@@ -125,11 +127,20 @@ def repesar(o, sv=None):
     sel = np.nonzero(F > 1e-4)[0]
     if not len(sel): return 0
     if o == corpo: sp = np.array([S_KUMO.get(int(i), 0.0) for i in sel])
-    else:                                                  # outra malha (contorno): a posição do vértice do corpo mais perto
+    else:
+        # outra malha (contorno de jogo: uma casca 2 cm para fora da pele): cada ponto pega a posição do vértice do
+        # corpo de onde ele saiu, isto é, o vizinho cujo ponto + normal × 2 cm cai mais perto dele. Só "o mais perto"
+        # erra no caracol, onde as voltas ficam coladas, e o contorno faz uma cunha quando a cauda desenrola.
         from mathutils.kdtree import KDTree
         kd = KDTree(len(idx))
         for j, i in enumerate(idx): kd.insert(Vector(P[i]), j)
-        kd.balance(); sp = np.array([s[kd.find(Vector(Pw[i]))[1]] for i in sel])
+        kd.balance(); NRM = [corpo.matrix_world.to_3x3() @ corpo.data.vertices[int(i)].normal for i in idx]
+        sp = []
+        for i in sel:
+            c = Vector(Pw[i]); cand = kd.find_n(c, 12)
+            j = min(cand, key=lambda r: (c - (Vector(P[idx[r[1]]]) + NRM[r[1]].normalized() * 0.02)).length)[1]
+            sp.append(s[j])
+        sp = np.array(sp)
     c = finv(sp / COMP) * N - 0.5                              # posição em "ossos", centro do osso i em i
     for j, vi in enumerate(sel):
         k = int(math.floor(c[j])); u = c[j] - k
@@ -140,7 +151,8 @@ def repesar(o, sv=None):
             if w > 1e-4: G[NOVOS[b]].add([int(vi)], float(F[vi] * w), 'REPLACE')
     return len(sel)
 
-for o in [x for x in bpy.data.objects if x.type == 'MESH' and any(g.name.startswith('tail_') for g in x.vertex_groups)]:
+COM_CAUDA = [x for x in bpy.data.objects if x.type == 'MESH' and any(g.name.startswith('tail_') for g in x.vertex_groups)]
+for o in COM_CAUDA:
     REP['repesados_' + o.name] = repesar(o)
 
 # ações: chaves dos ossos antigos da cauda não servem mais
