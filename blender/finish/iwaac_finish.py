@@ -3,7 +3,8 @@
 Estilo estudado do perfil @alexandr.iwaac (TikTok): render em tempo real
 (EEVEE) com cara de pintura digital. Três camadas:
 
-1. Material  -> normal "pincelada" (Voronoi sobre a normal) + textura de traço.
+1. Material  -> normal "pincelada" (Voronoi sobre a normal), sombra roxa em
+                degraus, borda quente e variação de cor por pincelada.
 2. Geometria -> contorno por casca invertida com espessura irregular (GN).
 3. Compositor-> tremor de borda, bloom, sharpen + Kuwahara + sharpen, papel,
                 pontilhado, grão, aberração cromática, vinheta.
@@ -149,6 +150,133 @@ def painterly_material(mat, *, voronoi_scale=6.0, warp=0.15, strength=1.0):
 
     # superfície mais "tinta": pouco brilho especular
     _sock(bsdf, "Roughness", max(0.55, bsdf.inputs["Roughness"].default_value))
+    return True
+
+
+def _base_color_source(nt, bsdf):
+    """Socket que alimenta a cor base (ou um nó RGB com o valor fixo)."""
+    s = bsdf.inputs["Base Color"]
+    if s.is_linked:
+        return s.links[0].from_socket
+    rgb = nt.nodes.new("ShaderNodeRGB")
+    rgb.outputs[0].default_value = tuple(s.default_value)
+    rgb.location = (bsdf.location.x - 500, bsdf.location.y + 200)
+    return rgb.outputs[0]
+
+
+def paint_shading(mat, *, dabs=0.12, shadow_tint=(0.36, 0.22, 0.72), shadow_mix=0.85,
+                  steps=(0.22, 0.55), rim=1.6, rim_color=(1.0, 0.62, 0.35)):
+    """Sombra tingida em degraus + variação de cor por pincelada + borda quente.
+
+    Precisa rodar depois de painterly_material (usa o mesmo Voronoi).
+    Principled -> Shader to RGB -> luminância -> ColorRamp (degrau suave):
+      claro  = cor iluminada
+      sombra = mistura da cor iluminada com base * tinta roxa
+    + Layer Weight (Facing) -> borda quente somada -> Emission.
+    """
+    if not mat or not mat.use_nodes:
+        return False
+    nt = mat.node_tree
+    bsdf = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+    vor = nt.nodes.get(f"{TAG}_voronoi")
+    out = next((n for n in nt.nodes if n.type == "OUTPUT_MATERIAL" and n.is_active_output), None)
+    if bsdf is None or out is None or nt.nodes.get(f"{TAG}_paint"):
+        return False
+    L = nt.links
+    x, y = bsdf.location.x + 350, bsdf.location.y
+    base = _base_color_source(nt, bsdf)
+
+    # 1) variação de valor por "pincelada" (mesmas células da normal)
+    if vor is not None and dabs > 0:
+        bw = nt.nodes.new("ShaderNodeRGBToBW")
+        bw.location = (x - 900, y + 350)
+        L.new(vor.outputs["Color"], bw.inputs[0])
+        mr = nt.nodes.new("ShaderNodeMapRange")
+        mr.location = (x - 700, y + 350)
+        mr.inputs["To Min"].default_value = 1 - dabs
+        mr.inputs["To Max"].default_value = 1 + dabs
+        L.new(bw.outputs[0], mr.inputs["Value"])
+        mul = nt.nodes.new("ShaderNodeMix")
+        mul.data_type = "RGBA"
+        mul.blend_type = "MULTIPLY"
+        mul.inputs["Factor"].default_value = 1.0
+        mul.location = (x - 500, y + 350)
+        L.new(base, mul.inputs["A"])
+        L.new(mr.outputs["Result"], mul.inputs["B"])
+        base = mul.outputs["Result"]
+        L.new(base, bsdf.inputs["Base Color"])
+
+    # 2) luz -> degrau
+    s2r = nt.nodes.new("ShaderNodeShaderToRGB")
+    s2r.name = f"{TAG}_paint"
+    s2r.location = (x, y)
+    L.new(bsdf.outputs[0], s2r.inputs[0])
+    lum = nt.nodes.new("ShaderNodeRGBToBW")
+    lum.location = (x + 200, y - 150)
+    L.new(s2r.outputs["Color"], lum.inputs[0])
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    ramp.location = (x + 380, y - 150)
+    e = ramp.color_ramp.elements
+    e[0].position, e[0].color = steps[0], (0, 0, 0, 1)
+    e[1].position, e[1].color = steps[1], (1, 1, 1, 1)
+    L.new(lum.outputs[0], ramp.inputs["Factor"])
+
+    tint = nt.nodes.new("ShaderNodeMix")
+    tint.data_type = "RGBA"
+    tint.blend_type = "MULTIPLY"
+    tint.inputs["Factor"].default_value = 1.0
+    tint.inputs["B"].default_value = (*shadow_tint, 1)
+    tint.location = (x + 200, y + 200)
+    L.new(base, tint.inputs["A"])
+    shadow = nt.nodes.new("ShaderNodeMix")
+    shadow.data_type = "RGBA"
+    shadow.inputs["Factor"].default_value = shadow_mix
+    shadow.location = (x + 400, y + 200)
+    L.new(s2r.outputs["Color"], shadow.inputs["A"])
+    L.new(tint.outputs["Result"], shadow.inputs["B"])
+
+    toon = nt.nodes.new("ShaderNodeMix")
+    toon.data_type = "RGBA"
+    toon.location = (x + 650, y)
+    L.new(ramp.outputs["Color"], toon.inputs["Factor"])
+    L.new(shadow.outputs["Result"], toon.inputs["A"])
+    L.new(s2r.outputs["Color"], toon.inputs["B"])
+    col = toon.outputs["Result"]
+
+    # 3) borda quente (rim) usando a normal pincelada
+    if rim > 0:
+        lw = nt.nodes.new("ShaderNodeLayerWeight")
+        lw.location = (x + 400, y - 400)
+        lw.inputs["Blend"].default_value = 0.35
+        if bsdf.inputs["Normal"].is_linked:
+            L.new(bsdf.inputs["Normal"].links[0].from_socket, lw.inputs["Normal"])
+        rr = nt.nodes.new("ShaderNodeMapRange")
+        rr.location = (x + 600, y - 400)
+        rr.inputs["From Min"].default_value = 0.35
+        rr.inputs["From Max"].default_value = 0.85
+        rr.inputs["To Max"].default_value = rim
+        L.new(lw.outputs["Facing"], rr.inputs["Value"])
+        rc = nt.nodes.new("ShaderNodeMix")
+        rc.data_type = "RGBA"
+        rc.blend_type = "MULTIPLY"
+        rc.inputs["Factor"].default_value = 1.0
+        rc.inputs["B"].default_value = (*rim_color, 1)
+        rc.location = (x + 600, y - 250)
+        L.new(base, rc.inputs["A"])
+        add = nt.nodes.new("ShaderNodeMix")
+        add.data_type = "RGBA"
+        add.blend_type = "ADD"
+        add.location = (x + 850, y)
+        L.new(rr.outputs["Result"], add.inputs["Factor"])
+        L.new(col, add.inputs["A"])
+        L.new(rc.outputs["Result"], add.inputs["B"])
+        col = add.outputs["Result"]
+
+    em = nt.nodes.new("ShaderNodeEmission")
+    em.location = (x + 1050, y)
+    L.new(col, em.inputs["Color"])
+    L.new(em.outputs[0], out.inputs["Surface"])
+    out.location = (x + 1250, y)
     return True
 
 
@@ -509,8 +637,8 @@ def compositor(scene, *, boil=True, displace_px=3.0, bloom=0.37, kuwahara=4,
 # ------------------------------------------------------------------ apply
 
 
-def apply(scene=None, *, materials=True, outlines=True, comp=True, lights=False,
-          render=True, **comp_kw):
+def apply(scene=None, *, materials=True, shading=True, outlines=True, comp=True,
+          lights=False, render=True, shading_kw=None, **comp_kw):
     scene = scene or bpy.context.scene
     if render:
         setup_render(scene)
@@ -522,6 +650,8 @@ def apply(scene=None, *, materials=True, outlines=True, comp=True, lights=False,
             for slot in ob.material_slots:
                 if slot.material and slot.material.name != f"{TAG}_outline":
                     done["materials"] += painterly_material(slot.material)
+                    if shading:
+                        paint_shading(slot.material, **(shading_kw or {}))
         if outlines:
             done["outlines"] += add_outline(ob)
     if lights:

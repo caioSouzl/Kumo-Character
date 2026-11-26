@@ -39,6 +39,24 @@ O Voronoi quantiza a normal em manchas: a sombra quebra em "pinceladas" chapadas
 em vez de um degradê liso. O ruído entorta as manchas para não ficarem geométricas.
 Ele junta a isso uma textura pintada à mão (Image Texture na cor base, roughness alto).
 
+### 1b. Material: sombra tingida em degraus (`paint_shading`)
+
+Nas peças dele a sombra nunca é só "mais escuro": ela vira roxo/vinho e muda em
+poucos degraus, como em anime ("light → Color Ramp" no vídeo da moto).
+
+```
+Principled → Shader to RGB → luminância → ColorRamp (degrau 0.22 → 0.55)
+   claro  = cor iluminada
+   sombra = mistura 85% da cor base × roxo (0.36, 0.22, 0.72)
++ Layer Weight (Facing) → borda quente laranja somada
++ Voronoi.Color → ±12% de valor por "pincelada" na cor base
+→ Emission
+```
+
+Os degraus dependem da exposição da cena. Se tudo ficar em sombra, abaixe `steps`;
+se nada ficar, suba. Ajuste por cena com
+`apply(shading_kw={"steps": (0.15, 0.4), "shadow_tint": (...)})`.
+
 ### 2. Geometria: contorno de Geometry Nodes
 
 "geonode outline": casca invertida (Set Position pela normal → Flip Faces → material
@@ -82,6 +100,9 @@ blender minha_cena.blend -b --python blender/finish/iwaac_finish.py -- --lights 
 
 # teste completo (gera antes.png / depois.png)
 blender -b --factory-startup --python blender/finish/test_scene.py -- /pasta/saida
+
+# teste de animação: turntable de 48 quadros com tremor de borda
+blender -b --factory-startup --python blender/finish/test_anim.py -- /pasta/saida
 ```
 
 Dentro do Blender: `import iwaac_finish as f; f.apply(bpy.context.scene, kuwahara=8, paper=0.4)`.
