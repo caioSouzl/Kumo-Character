@@ -550,11 +550,21 @@ button:disabled { opacity: 0.45; cursor: default; }
   const matSolido = new THREE.MeshPhongMaterial({ color: 0x9fb09a, flatShading: true, shininess: 0 });   // facetado: o modelo da página vai sem normais
   function modoExibicao(m) {
     for (const o of meshes) {
-      const nome = o.userData.nome || '', corpo = /^Kumo(_Boca|_Lingua)?$/.test(nome);
+      const nome = o.userData.nome || '', corpo = /^Kumo(_Boca|_Lingua)?$/.test(nome) || /^Kumo(Olho_|Jogo_Palpebra)/.test(nome);
       if (nome === 'Kumo_Contorno') { o.visible = m === 'material'; continue; }
       if (/Moldura/.test(nome)) { o.visible = m === 'material'; continue; }     // cópia da pele em volta do olho: só faz sentido com material
       if (!corpo) continue;                              // os olhos ficam como são
-      if (m === 'solido') o.material = matSolido;
+      if (m === 'solido') {
+        // peças do olho com recorte (pele em volta, faixa, íris): o sólido usa o mesmo recorte, senão tapa o olho
+        const mo = o.userData.matOrig;
+        if (mo && mo.map && (mo.alphaTest > 0 || mo.transparent)) { if (!o.userData.matSolidoRec) {
+          const ms = Object.assign(matSolido.clone(), { map: mo.map, alphaTest: 0.5 });
+          ms.onBeforeCompile = (sh) => { sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', 'diffuseColor.a *= texture2D( map, vUv ).a;'); };   // da textura, só o recorte
+          o.userData.matSolidoRec = ms;
+        }
+        o.material = o.userData.matSolidoRec; }
+        else o.material = matSolido;
+      }
       else { o.material = o.userData.matOrig; o.material.wireframe = m === 'aramado'; }
     }
   }
@@ -698,7 +708,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   // osso olho.L/.R. O GLB não leva constraints, então a página faz o que o rig do Blender faz: o alvo anda com
   // controle_olhar (Transformation) e o osso do olho gira para mirar o alvo (Damped Track, o menor giro).
   // Números de calota/central/olhar.json, já em coordenadas do GLB (y para cima).
-  const OLHOS = {"L":{"H":[0.161023,1.355465,0.143608],"S":[0.24584,1.366774,0.195358],"T0":[1.306061,1.508141,0.842234],"ex":[0.520843,0.0,-0.853653],"ez":[0.096543,-0.993584,0.058904],"Lx":0.2624134123325348,"Lz":-0.2624134123325348,"Rg":0.372,"P":[0.393875,1.391048,0.42328]},"R":{"H":[-0.10957,1.336502,0.340518],"S":[-0.172241,1.353103,0.416653],"T0":[-0.955638,1.560619,1.36835],"ex":[0.772071,-0.0,0.635537],"ez":[-0.105507,-0.986124,0.128173],"Lx":0.2624134123325348,"Lz":-0.2624134123325348,"Rg":0.2909,"P":[-0.205923,1.381963,0.603715]}};
+  const OLHOS = {"L":{"H":[0.161023,1.355465,0.143608],"S":[0.24584,1.366774,0.195358],"T0":[1.306061,1.508141,0.842234],"ex":[0.520843,0.0,-0.853653],"ez":[0.096543,-0.993584,0.058904],"Lx":0.2624134123325348,"Lz":-0.2624134123325348,"Rg":0.372,"P":[0.395116,1.391131,0.42347]},"R":{"H":[-0.10957,1.336502,0.340518],"S":[-0.172241,1.353103,0.416653],"T0":[-0.955638,1.560619,1.36835],"ex":[0.772071,-0.0,0.635537],"ez":[-0.105507,-0.986124,0.128173],"Lx":0.2624134123325348,"Lz":-0.2624134123325348,"Rg":0.2909,"P":[-0.206777,1.383103,0.604242]}};
   const olhoRest = {};      // giro do osso do olho no mundo, em repouso (anotado ao montar)
   function olharOlhos() {
     if (!bones.controle_olhar) return;
@@ -836,7 +846,8 @@ button:disabled { opacity: 0.45; cursor: default; }
     const grupos = [];
     grupos.push(['Corpo (uma malha só)', REGIOES.map(([nome, re, osso]) => ({ nome, tipo: 'Região da malha do corpo', ossos: order.filter((n) => re.test(n)), foco: osso, origem: ORIGEM.corpo, nota: 'Faz parte da malha única do corpo: não dá para ocultar em separado.' }))
       .concat([{ nome: 'Malha do corpo inteira', tipo: 'Malha', malhas: corpo, origem: ORIGEM.corpo, ocultavel: true }])]);
-    const PECA_OLHO = [['Globo', 'Globo (branco, íris e pupila)', 'Esfera presa ao osso do olho: gira inteira, sem esticar a íris. O brilho entra depois, nas animações.'],
+    const PECA_OLHO = [['Globo', 'Globo (branco)', 'Pedaço de esfera parado, preso à cabeça. Só a íris e a pupila giram por cima dele.'],
+      ['Iris', 'Íris e pupila', 'Pedaço da mesma esfera, 1 mm acima do globo, preso ao osso do olho: é o que gira com o olhar. O brilho entra depois, nas animações.'],
       ['Anel', 'Pele em volta, membrana e contorno', 'Pedaço da pele com a abertura do olho.'], ['Aro', 'Faixa da borda', 'Cobre a beirada da esfera quando o olho gira.'],
       ['Tampa', 'Tampa da boca', 'Fica atrás da fenda da boca, na cor de dentro da boca: esconde o globo quando o olho olha para baixo.']];
     for (const [lado, nomeL] of [['L', 'Olho esquerdo'], ['R', 'Olho direito']]) grupos.push([nomeL, PECA_OLHO.filter(([k]) => porNome[`KumoOlho_${k}.${lado}`]).map(([k, nome, nota]) => ({ nome, tipo: 'Malha', malhas: porNome[`KumoOlho_${k}.${lado}`], origem: ORIGEM.olho, ocultavel: true, nota }))

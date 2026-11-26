@@ -59,12 +59,12 @@ MED = json.load(open(os.path.join(os.path.dirname(bpy.data.filepath), 'medicoes_
 for s in 'LR':
     for k in ('gltf', 'blender'): OLH[k][s]['Rg'] = MED[s]['globo_raio_m']     # raio do globo: o centro da íris fica em H + (S-H)/|S-H| * Rg
 def pupila(s):   # centro da pupila no globo em repouso (média dos pontos pretos da textura): onde a Central põe o losango
-    o = bpy.data.objects[f'KumoOlho_Globo.{s}']; me = o.data; uv = me.uv_layers['Jogo']
+    o = bpy.data.objects.get(f'KumoOlho_Iris.{s}') or bpy.data.objects[f'KumoOlho_Globo.{s}']; me = o.data; uv = me.uv_layers['Jogo']   # a pupila mora na íris (o globo é só branco)
     im = next(n.image for n in o.material_slots[0].material.node_tree.nodes if n.type == 'TEX_IMAGE'); W, H = im.size
     px = np.array(im.pixels[:]).reshape(H, W, 4); soma = Vector(); n = 0
     for l in me.loops:
         u, v = uv.data[l.index].uv; c = px[min(H - 1, max(0, int(v * H))), min(W - 1, max(0, int(u * W)))]
-        if c[:3].max() < 0.08: soma += o.matrix_world @ me.vertices[l.vertex_index].co; n += 1
+        if c[3] > 0.5 and c[:3].max() < 0.08: soma += o.matrix_world @ me.vertices[l.vertex_index].co; n += 1
     return soma / max(n, 1)
 for s in 'LR':
     P = pupila(s); OLH['blender'][s]['P'] = [round(x, 6) for x in P]; OLH['gltf'][s]['P'] = g(P)

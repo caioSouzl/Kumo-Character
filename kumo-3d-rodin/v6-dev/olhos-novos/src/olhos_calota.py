@@ -178,15 +178,42 @@ for s in 'LR':
     for p in gm.polygons: p.use_smooth = True
     gm.update()
     if sum((gm.polygons[k].normal.dot(gm.polygons[k].center - Cs)) for k in range(0, len(gm.polygons), 50)) < 0: gm.flip_normals()
-    # textura do globo: branco + íris e pupila (na janela), girando junto com a calota
+    # o globo (branco) fica PARADO, preso à cabeça; só a íris com a pupila gira por cima dele (pedido do Caio, 26/11).
+    # Assim o globo nunca precisa sair da abertura: nada de fresta nos cantos nem de beirada aparecendo na bochecha.
     RESG = 1536; g = U0 + (np.arange(RESG) + 0.5) / RESG * (U1 - U0); gx, gy = np.meshgrid(g, g)
     ic = np.array(INFO[s]['iris_centro']); esc = ART_R / r_med
     tex = np.zeros((RESG, RESG, 4), np.float32); tex[..., :3] = BRANCO; tex[..., 3] = 1
-    tex = sobre(tex, amostra(IP, ART_C[0] + (gx - ic[0]) * esc, ART_C[1] + (gy - ic[1]) * esc)); tex[..., 3] = 1
     gm.materials.append(mat_emissao(f'KumoOlho_Globo.{s}', salvar(tex, f'olho_{s}_globo'), 'Jogo'))
     go = bpy.data.objects.new(f'KumoOlho_Globo.{s}', gm); bpy.context.scene.collection.objects.link(go)
     go.parent = rig; am = go.modifiers.new('Armature', 'ARMATURE'); am.object = rig
-    go.vertex_groups.new(name=f'olho.{s}').add(range(len(V)), 1.0, 'REPLACE')
+    go.vertex_groups.new(name='head').add(range(len(V)), 1.0, 'REPLACE')
+    # íris e pupila: um pedaço da mesma esfera, 1 mm acima do globo, só onde a arte existe; gira com o osso olho
+    iris = amostra(IP, ART_C[0] + (gx - ic[0]) * esc, ART_C[1] + (gy - ic[1]) * esc)
+    im_iris = salvar(iris, f'olho_{s}_iris')
+    RI = Rg + 0.001; uvl = [None] * len(V)
+    for lp in gm.loops: uvl[lp.vertex_index] = janela(Mw, V[lp.vertex_index], U0, U1)
+    def alfa_iris(uv):
+        x = min(RESG - 1, max(0, int(uv[0] * RESG))); y = min(RESG - 1, max(0, int(uv[1] * RESG))); return iris[y, x, 3]
+    tem = [alfa_iris(uv) > 0.01 for uv in uvl]
+    # um anel de folga em volta (2 faces), para a borda da íris não cortar no meio de um triângulo
+    viz_ = {}
+    for f in F:
+        for a in f: viz_.setdefault(a, set()).update(f)
+    for _ in range(2): tem = [t or any(tem[b] for b in viz_[a]) for a, t in enumerate(tem)]
+    Fi = [f for f in F if all(tem[a] for a in f)]
+    usados = sorted({a for f in Fi for a in f}); novo = {a: k for k, a in enumerate(usados)}
+    Vi = [Cs + (V[a] - Cs).normalized() * RI for a in usados]
+    im_ = bpy.data.meshes.new(f'KumoOlho_Iris.{s}'); im_.from_pydata([tuple(v) for v in Vi], [], [tuple(novo[a] for a in f) for f in Fi])
+    uvi = im_.uv_layers.new(name='Jogo')
+    for lp in im_.loops: uvi.data[lp.index].uv = uvl[usados[lp.vertex_index]]
+    for p_ in im_.polygons: p_.use_smooth = True
+    im_.update()
+    if sum((im_.polygons[k].normal.dot(im_.polygons[k].center - Cs)) for k in range(0, len(im_.polygons), 10)) < 0: im_.flip_normals()
+    im_.materials.append(mat_emissao(f'KumoOlho_Iris.{s}', im_iris, 'Jogo', alfa=True))
+    io_ = bpy.data.objects.new(f'KumoOlho_Iris.{s}', im_); bpy.context.scene.collection.objects.link(io_)
+    io_.parent = rig; am = io_.modifiers.new('Armature', 'ARMATURE'); am.object = rig
+    io_.vertex_groups.new(name=f'olho.{s}').add(range(len(Vi)), 1.0, 'REPLACE')
+    R_['iris_raio_graus'] = round(max(math.degrees((v - Cs).normalized().angle(zw)) for v in Vi), 1)
 
     # ---------- pálpebras: cascas de esfera sobre o globo, que giram para fechar
     up = Vector((0, 0, 1)); u = (up - zw * up.dot(zw)).normalized(); hax = zw.cross(u).normalized()
@@ -290,7 +317,7 @@ for s in 'LR':
     REP[s]['tampa_boca_faces'] = len(tm.polygons)
     for nome in (f'KumoOlho_Globo.{s}', f'KumoOlho_Aro.{s}'):
         o = bpy.data.objects[nome]; me = o.data
-        gira = nome.startswith('KumoOlho_Globo')
+        gira = False; parado = nome.startswith('KumoOlho_Globo')     # o globo não gira mais (só a íris)
         eixos = [zw.orthogonal().normalized()]; eixos.append(zw.cross(eixos[0]).normalized())
         poses = [Matrix.Identity(3)]
         if gira:   # o globo gira com o olhar: confere as 8 direções extremas do controle
@@ -300,6 +327,7 @@ for s in 'LR':
         def fora(v):
             p = o.matrix_world @ v.co
             ang = (p - Cs).normalized().angle(zw)
+            if parado: return ang > ang_ab + math.radians(4)     # globo parado: basta a abertura e uma folga sob a pele
             if gira:
                 if ang > ang_ab + math.radians(GAZE_DEG * 1.414 + 2): return True     # globo: o que nunca chega à abertura (o olhar na diagonal vai a 15,6°)
                 qs = [Cs + R @ (p - Cs) for R in poses]

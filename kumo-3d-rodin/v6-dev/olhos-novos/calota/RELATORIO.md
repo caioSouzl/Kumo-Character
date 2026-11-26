@@ -78,3 +78,12 @@ blender --background kumo_v6_olhos_novos.blend --python src/olhos_calota.py -- $
 blender --background calota/kumo_v7_calota.blend --python src/fotos.py -- $PWD/calota/renders
 blender --background calota/kumo_v7_calota.blend --python src/exportar_calota.py -- $PWD/calota/jogo $PWD/calota/central
 ```
+
+## Ajustes de 26/11 (depois do teste do Caio na Central)
+
+- **Olho fixo, só a íris gira** (ideia do Caio):
+  - o globo branco (`KumoOlho_Globo.L/.R`) fica parado, preso à cabeça;
+  - a íris com a pupila virou uma peça própria (`KumoOlho_Iris.L/.R`), um pedaço da mesma esfera 1 mm acima do globo, preso ao osso do olho;
+  - o globo não sai mais da abertura, então não há fresta nos cantos nem beirada na bochecha, nem olhando na diagonal (15,6°).
+- **Pálpebras dentro da abertura:** em cada estágio da piscada, a parte da pálpebra que fica sob a pele desce para baixo dela. Não aparece mais maior que o olho, nem embaixo da mandíbula. Fechada, cobre o olho inteiro.
+- **Arquivos:** os do jogo e da Central foram refeitos.

@@ -1,8 +1,8 @@
 {
  "kb": {
-  "glb": 13917,
-  "fbx": 11390,
-  "central": 10208
+  "glb": 14202,
+  "fbx": 11593,
+  "central": 10490
  },
  "alpha_glb": {
   "KumoOlho_Anel.L": "MASK",
@@ -10,7 +10,9 @@
   "KumoOlho_Aro.L": "MASK",
   "KumoOlho_Aro.R": "MASK",
   "KumoOlho_Globo.L": "OPAQUE",
-  "KumoOlho_Globo.R": "OPAQUE"
+  "KumoOlho_Globo.R": "OPAQUE",
+  "KumoOlho_Iris.L": "MASK",
+  "KumoOlho_Iris.R": "MASK"
  },
  "animacoes_glb": [
   "Boca_Abrir",
@@ -41,7 +43,9 @@
   "KumoOlho_Aro.L": 0.01,
   "KumoOlho_Aro.R": 0.01,
   "KumoOlho_Globo.L": 0.01,
-  "KumoOlho_Globo.R": 0.01,
+  "KumoOlho_Globo.R": 0.0,
+  "KumoOlho_Iris.L": 0.01,
+  "KumoOlho_Iris.R": 0.0,
   "KumoOlho_Tampa.L": 0.01,
   "KumoOlho_Tampa.R": 0.0
  },
@@ -58,7 +62,9 @@
   "KumoOlho_Aro.L": 0.01,
   "KumoOlho_Aro.R": 0.01,
   "KumoOlho_Globo.L": 0.01,
-  "KumoOlho_Globo.R": 0.01,
+  "KumoOlho_Globo.R": 0.0,
+  "KumoOlho_Iris.L": 0.01,
+  "KumoOlho_Iris.R": 0.0,
   "KumoOlho_Tampa.L": 0.01,
   "KumoOlho_Tampa.R": 0.0
  },
@@ -75,7 +81,9 @@
   "KumoOlho_Aro.L": 0.01,
   "KumoOlho_Aro.R": 0.01,
   "KumoOlho_Globo.L": 0.01,
-  "KumoOlho_Globo.R": 0.01,
+  "KumoOlho_Globo.R": 0.0,
+  "KumoOlho_Iris.L": 0.01,
+  "KumoOlho_Iris.R": 0.0,
   "KumoOlho_Tampa.L": 0.01,
   "KumoOlho_Tampa.R": 0.0
  }

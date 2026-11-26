@@ -113,3 +113,12 @@ blender --background kumo_v8_movimento.blend --python src/exportar.py -- $PWD/jo
 ```
 
 Fotos e vídeo: `src/fotos_cauda.py`, `src/fotos_tronco.py`, `src/fotos_ik.py`, `src/video_anim.py`. A medida dos cruzamentos está em `src/medir_tronco.py`.
+
+## Ajustes de 26/11 (depois do teste do Caio na Central)
+
+- **Abrir a boca:**
+  - a animação gravava o giro da mandíbula em euler, mas o osso gira por quatérnio, e as chaves não faziam nada;
+  - agora são chaves de quatérnio, e a boca abre 32°;
+  - o mesmo conserto vale para `Lingua_Lancar` e `Pose_Apresentacao`.
+- **Olhos:** vêm da versão de olho fixo (`../olhos-novos/calota/RELATORIO.md`). Só a íris gira.
+- **Central:** os modos Sólido e Aramado agora também valem para as peças do olho. Antes elas ficavam com a textura, e a pele verde em volta dos olhos aparecia no modo sólido. Era só exibição: não causava os defeitos do olho.
