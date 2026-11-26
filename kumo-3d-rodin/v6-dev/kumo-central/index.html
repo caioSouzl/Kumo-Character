@@ -38,6 +38,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-body); 
 .app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; height: 100%; }
 .gaze-h { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; transform: rotate(45deg); background: var(--amber, #f4b642); border: 2px solid var(--ink, #3a2a1e); border-radius: 4px; cursor: grab; touch-action: none; pointer-events: auto; opacity: .9; }
 .gaze-h.on { background: #fff; }
+.pisca-h { width: 20px; height: 20px; margin: -10px 0 0 -10px; background: #fff7e6; border-color: var(--amber, #f4b642); border-width: 3px; cursor: ns-resize; }
+.pisca-h.on { background: var(--amber, #f4b642); }
 .gaze-h:active { cursor: grabbing; }
 .stage { position: relative; background: var(--stage); min-height: 0; overflow: hidden; }
 #c { display: block; width: 100%; height: 100%; touch-action: none; }
@@ -734,7 +736,7 @@ button:disabled { opacity: 0.45; cursor: default; }
     info3d.materiais = (gltf.parser.json.materials || []).map((m) => m.name); info3d.texturas = [...new Set((gltf.parser.json.images || []).map((m) => m.name))];
     scene.updateMatrixWorld(true); prepararOmbro();
     for (const side of ['L', 'R']) if (bones['olho.' + side]) olhoRest[side] = bones['olho.' + side].getWorldQuaternion(new THREE.Quaternion());
-    if (bones.head) headRest = bones.head.matrixWorld.clone();
+    if (bones.head) { headRest = bones.head.matrixWorld.clone(); headRestQ = bones.head.getWorldQuaternion(new THREE.Quaternion()); }
     buildDots(); buildUI(); buildGaze(); buildComponentes(); carregarVersoes(); afterPose(); histPush();
     $('loading').hidden = true;
     loadDraft();
@@ -1048,7 +1050,22 @@ ${fila}`;
   // o centro de cada olho é o centro da malha do globo (KumoJogo_OlhoBase.L/R), no sistema de coordenadas do GLB
   const eyeGlobo = {};                            // malha do globo de cada olho, achada ao montar o modelo
   const EYE_R = 0.46;                             // raio de referência (em metros) para o alcance total do olhar
-  const gazeH = {};
+  const gazeH = {}, piscaH = {};
+  const ABERTURA = 0.2;                           // meia altura da abertura do olho (m): o losango de piscar anda isso até o meio
+  function piscaGeo(side) {                       // centro do olho e quanto a pálpebra percorre, em pixels da tela
+    const P = centroOlhoNovo(side); if (!P) return null;
+    const r = canvas.getBoundingClientRect(), q = P.clone().project(camera); if (q.z > 1) return null;
+    const cima = new THREE.Vector3(0, ABERTURA, 0).applyQuaternion(bones.head.getWorldQuaternion(new THREE.Quaternion()).multiply(headRestQ.clone().invert()));
+    const t = P.clone().add(cima).project(camera);
+    const cx = (q.x + 1) / 2 * r.width, cy = (1 - q.y) / 2 * r.height, tx = (t.x + 1) / 2 * r.width, ty = (1 - t.y) / 2 * r.height;
+    return { cx, cy, tx, ty };
+  }
+  function movePisca(side, e) {
+    const g = piscaGeo(side); if (!g) return; const r = canvas.getBoundingClientRect();
+    const vx = g.cx - g.tx, vy = g.cy - g.ty, L2 = vx * vx + vy * vy || 1;
+    const k = Math.max(0, Math.min(1, ((e.clientX - r.left - g.tx) * vx + (e.clientY - r.top - g.ty) * vy) / L2));   // projeção no trilho de cima até o meio
+    const p = ctrlGet('controle_olhos'); p[side === 'L' ? 0 : 1] = k; ctrlSet('controle_olhos', p); afterPose();
+  }
   function buildGaze() {
     const host = canvas.parentElement; host.style.position = host.style.position || 'relative';
     for (const side of ['L', 'R']) {
@@ -1059,6 +1076,17 @@ ${fila}`;
       d.addEventListener('pointermove', (e) => { if (drag !== e.pointerId) return; moveGaze(side, e); });
       const up = (e) => { if (drag !== e.pointerId) return; drag = null; d.classList.remove('on'); onPoseEdited(); };
       d.addEventListener('pointerup', up); d.addEventListener('pointercancel', up);
+    }
+    // losangos de piscar: um na borda de cima de cada olho; arrastar para baixo fecha (controle_olhos: x = esquerdo, y = direito)
+    for (const side of ['L', 'R']) {
+      const d = document.createElement('div'); d.className = 'gaze-h pisca-h'; d.title = 'Arraste para baixo para piscar'; d.setAttribute('role', 'slider');
+      d.setAttribute('aria-label', 'Piscar ' + (side === 'L' ? 'esquerdo' : 'direito')); host.appendChild(d); piscaH[side] = d;
+      let drag = null;
+      d.addEventListener('pointerdown', (e) => { drag = e.pointerId; d.setPointerCapture(e.pointerId); d.classList.add('on'); e.preventDefault(); e.stopPropagation(); });
+      d.addEventListener('pointermove', (e) => { if (drag !== e.pointerId) return; movePisca(side, e); });
+      const up = (e) => { if (drag !== e.pointerId) return; drag = null; d.classList.remove('on'); onPoseEdited(); };
+      d.addEventListener('pointerup', up); d.addEventListener('pointercancel', up);
+      d.addEventListener('dblclick', () => { const p = ctrlGet('controle_olhos'); p[side === 'L' ? 0 : 1] = p[side === 'L' ? 0 : 1] > 0.5 ? 0 : 1; ctrlSet('controle_olhos', p); afterPose(); onPoseEdited(); });
     }
     const ajusta = () => { updateGaze(); requestAnimationFrame(ajusta); };
     requestAnimationFrame(ajusta);
@@ -1071,7 +1099,7 @@ ${fila}`;
     const gx = Math.max(-1, Math.min(1, dx / R)), gy = Math.max(-1, Math.min(1, -dy / R));
     ctrlSet('controle_olhar', [gx, gy]); afterPose();
   }
-  let headRest = null;
+  let headRest = null, headRestQ = new THREE.Quaternion();
   function centroOlhoNovo(side) {     // centro da pupila em repouso (P, na superfície do globo), levado pela pose da cabeça
     const p = OLHOS[side]; if (!p || !p.P || !bones.head || !headRest || !bones['olho.' + side]) return null;
     return new THREE.Vector3(...p.P).applyMatrix4(new THREE.Matrix4().multiplyMatrices(bones.head.matrixWorld, headRest.clone().invert()));
@@ -1104,6 +1132,14 @@ ${fila}`;
       // o losango fica no centro do olho mais o deslocamento do olhar
       const px = r.left - hr.left + c.x + gx * c.r, py = r.top - hr.top + c.y - gy * c.r;
       d.style.left = px + 'px'; d.style.top = py + 'px';
+    }
+    if (!bones.controle_olhos) return;
+    const pis = ctrlGet('controle_olhos');
+    for (const side of ['L', 'R']) {
+      const d = piscaH[side]; if (!d) continue; const g = piscaGeo(side);
+      if (!g) { d.style.display = 'none'; continue; }
+      const k = pis[side === 'L' ? 0 : 1]; d.style.display = '';
+      d.style.left = (r.left - hr.left + g.tx + (g.cx - g.tx) * k) + 'px'; d.style.top = (r.top - hr.top + g.ty + (g.cy - g.ty) * k) + 'px';
     }
   }
 
