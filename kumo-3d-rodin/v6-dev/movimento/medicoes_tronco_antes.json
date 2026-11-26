@@ -1,0 +1,43 @@
+{
+ "faces_medidas": 3560,
+ "repouso": {
+  "pares": 10,
+  "pontos": 44
+ },
+ "cabeca_cima_55": {
+  "pares": 36,
+  "pontos": 99
+ },
+ "cabeca_baixo_55": {
+  "pares": 16,
+  "pontos": 65
+ },
+ "cabeca_lado_45_E": {
+  "pares": 56,
+  "pontos": 124
+ },
+ "cabeca_lado_45_D": {
+  "pares": 49,
+  "pontos": 125
+ },
+ "cabeca_girar_70": {
+  "pares": 9,
+  "pontos": 44
+ },
+ "costas_frente_50": {
+  "pares": 15,
+  "pontos": 62
+ },
+ "costas_tras_40": {
+  "pares": 11,
+  "pontos": 48
+ },
+ "costas_lado_40": {
+  "pares": 12,
+  "pontos": 53
+ },
+ "costas_torcer_40": {
+  "pares": 7,
+  "pontos": 33
+ }
+}

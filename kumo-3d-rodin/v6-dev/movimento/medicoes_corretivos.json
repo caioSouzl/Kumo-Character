@@ -1,0 +1,236 @@
+{
+ "antes": {
+  "cabeca_cima_55": 36,
+  "cabeca_baixo_55": 16,
+  "cabeca_lado_45_E": 56,
+  "cabeca_lado_45_D": 41,
+  "cabeca_girar_70": 9,
+  "costas_frente_50": 15,
+  "costas_tras_40": 11,
+  "costas_lado_40": 12,
+  "costas_torcer_40": 7
+ },
+ "escolha": {
+  "corr_trapezio.L": {
+   "deslocamento_m": 0.09,
+   "sinal": -1,
+   "cruzamentos": 42
+  },
+  "corr_trapezio.R": {
+   "deslocamento_m": 0.12,
+   "sinal": 1,
+   "cruzamentos": 28
+  },
+  "corr_borda.L": {
+   "deslocamento_m": 0.12,
+   "sinal": 1,
+   "cruzamentos": 18
+  },
+  "corr_borda.R": {
+   "deslocamento_m": 0.06,
+   "sinal": 1,
+   "cruzamentos": 6
+  },
+  "corr_nuca": {
+   "deslocamento_m": 0.0,
+   "sinal": 1,
+   "cruzamentos": 32
+  },
+  "corr_borda_tras": {
+   "deslocamento_m": 0.12,
+   "sinal": -1,
+   "cruzamentos": 14
+  },
+  "corr_garganta": {
+   "deslocamento_m": 0.03,
+   "sinal": 1,
+   "cruzamentos": 4
+  },
+  "corr_lombar": {
+   "deslocamento_m": 0.12,
+   "sinal": 1,
+   "cruzamentos": 6
+  }
+ },
+ "depois": {
+  "cabeca_cima_55": 10,
+  "cabeca_baixo_55": 13,
+  "cabeca_lado_45_E": 14,
+  "cabeca_lado_45_D": 12,
+  "cabeca_girar_70": 12,
+  "costas_frente_50": 17,
+  "costas_tras_40": 12,
+  "costas_lado_40": 9,
+  "costas_torcer_40": 8
+ },
+ "parametros": {
+  "corr_trapezio.L": {
+   "pai": "shoulder.L",
+   "mch": "MCH_cabeca_rel",
+   "fonte": "head",
+   "eixo": "Z",
+   "sinal": -1,
+   "de_graus": [
+    -45.0,
+    0.0
+   ],
+   "para_min": [
+    0.017597336322069168,
+    -0.08825226873159409,
+    0.0013682568678632379
+   ],
+   "para_max": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "corr_trapezio.R": {
+   "pai": "shoulder.R",
+   "mch": "MCH_cabeca_rel",
+   "fonte": "head",
+   "eixo": "Z",
+   "sinal": 1,
+   "de_graus": [
+    0.0,
+    45.0
+   ],
+   "para_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "para_max": [
+    -0.023463115096092224,
+    -0.11766967922449112,
+    0.0018243422964587808
+   ]
+  },
+  "corr_borda.L": {
+   "pai": "head",
+   "mch": "MCH_cabeca_rel",
+   "fonte": "head",
+   "eixo": "Z",
+   "sinal": 1,
+   "de_graus": [
+    0.0,
+    45.0
+   ],
+   "para_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "para_max": [
+    3.4106050554155156e-15,
+    0.11999999731779099,
+    -4.846761293344337e-29
+   ]
+  },
+  "corr_borda.R": {
+   "pai": "head",
+   "mch": "MCH_cabeca_rel",
+   "fonte": "head",
+   "eixo": "Z",
+   "sinal": 1,
+   "de_graus": [
+    0.0,
+    45.0
+   ],
+   "para_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "para_max": [
+    1.7053025277077578e-15,
+    0.05999999865889549,
+    -2.4233806466721686e-29
+   ]
+  },
+  "corr_nuca": {
+   "pai": "chest",
+   "mch": "MCH_cabeca_rel",
+   "fonte": "head",
+   "eixo": "X",
+   "sinal": 1,
+   "de_graus": [
+    0.0,
+    45.0
+   ],
+   "para_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "para_max": [
+    0.0,
+    -0.0,
+    -0.0
+   ]
+  },
+  "corr_borda_tras": {
+   "pai": "head",
+   "mch": "MCH_cabeca_rel",
+   "fonte": "head",
+   "eixo": "X",
+   "sinal": -1,
+   "de_graus": [
+    -45.0,
+    0.0
+   ],
+   "para_min": [
+    0.0,
+    0.1149391457438469,
+    -0.03448174148797989
+   ],
+   "para_max": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "corr_garganta": {
+   "pai": "chest",
+   "mch": "MCH_cabeca_rel",
+   "fonte": "head",
+   "eixo": "X",
+   "sinal": 1,
+   "de_graus": [
+    0.0,
+    45.0
+   ],
+   "para_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "para_max": [
+    0.0,
+    -0.025724787265062332,
+    -0.015434873290359974
+   ]
+  },
+  "corr_lombar": {
+   "pai": "hips",
+   "mch": "MCH_peito_rel",
+   "fonte": "chest",
+   "eixo": "X",
+   "sinal": 1,
+   "de_graus": [
+    0.0,
+    45.0
+   ],
+   "para_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "para_max": [
+    0.0,
+    0.0,
+    0.11999999731779099
+   ]
+  }
+ }
+}
