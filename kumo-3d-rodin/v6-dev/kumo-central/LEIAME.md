@@ -127,3 +127,7 @@ Navegador automático, em tela de computador e de celular:
 - **Cauda:** 26 ossos. "Enrolar" para a esquerda estica até a reta; para a direita, enrola mais. "Abanar" balança de lado.
 - **Corretivos:** os ossos `corr_*` andam sozinhos conforme a cabeça e o tronco giram. A conta é a mesma do Blender (diferença de 0 mm contra o pulo gravado).
 - **Pontos:** os ossos mecânicos (`corr_*`, `pe_ik`, `joelho`, `MCH_*`) não têm ponto no palco.
+- **Pálpebras embaixo da mandíbula (26/11):**
+  - a página ainda tinha uma regra dos olhos antigos em camadas, que desenhava as peças "Palpebra" e "Iris" por cima de tudo, atravessando a pele;
+  - agora essa regra vale só para o modelo antigo do Estúdio;
+  - os olhos em calota usam a profundidade normal, e vistos de baixo não aparecem mais.

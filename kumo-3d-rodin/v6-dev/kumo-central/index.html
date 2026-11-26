@@ -783,6 +783,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   }
   function montar(gltf) {
     const root = gltf.scene; scene.add(root);
+    const temCalota = (gltf.parser.json.nodes || []).some((n) => /^KumoOlho_/.test(n.name || ''));   // olhos em calota no arquivo?
     const assoc = gltf.parser.associations;
     root.traverse((o) => {
       if (o.isBone) {
@@ -804,7 +805,10 @@ button:disabled { opacity: 0.45; cursor: default; }
         // camadas do olho: desenhar na ordem certa (base, íris, pupila, brilho, moldura, pálpebras)
         // o branco (OlhoBase) tem relevo: se escrever profundidade, esconde a íris e a pupila que estão por baixo dele.
         // Por isso ele não escreve profundidade, e cada camada do olho é desenhada na ordem certa, por cima da anterior.
-        for (const [k, r] of [['OlhoBase', 1], ['Iris', 2], ['Pupil', 3], ['Catchlight', 4], ['Moldura', 5], ['Palpebra', 6]]) if (nmo.includes(k)) { o.renderOrder = r + (/borda/.test(nmo) ? 0.5 : 0); o.material.polygonOffset = true; o.material.polygonOffsetFactor = -4 * o.renderOrder; o.material.polygonOffsetUnits = -4 * o.renderOrder; o.material.depthWrite = false; o.material.transparent = true; }
+        // só para os olhos antigos em camadas (modelo do Estúdio). Os olhos em calota usam a profundidade normal:
+        // com esta regra, a íris e as pálpebras eram desenhadas por cima da pele e apareciam embaixo da mandíbula.
+        const olhosAntigos = !temCalota;
+        if (olhosAntigos) for (const [k, r] of [['OlhoBase', 1], ['Iris', 2], ['Pupil', 3], ['Catchlight', 4], ['Moldura', 5], ['Palpebra', 6]]) if (nmo.includes(k)) { o.renderOrder = r + (/borda/.test(nmo) ? 0.5 : 0); o.material.polygonOffset = true; o.material.polygonOffsetFactor = -4 * o.renderOrder; o.material.polygonOffsetUnits = -4 * o.renderOrder; o.material.depthWrite = false; o.material.transparent = true; }
       }
     });
     mixer = new THREE.AnimationMixer(root); clipes = gltf.animations;   // as ações do arquivo só tocam pelos botões
