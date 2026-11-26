@@ -23,5 +23,6 @@ for fc in pivot.animation_data.action.layers[0].strips[0].channelbags[0].fcurves
     for k in fc.keyframe_points: k.interpolation = "SINE"
 fin.apply(sc, render=False)
 sc.render.image_settings.file_format = "PNG"
+sc.render.use_overwrite = False  # retoma de onde parou
 sc.render.filepath = os.path.join(out, "frames", "f_")
 bpy.ops.render.render(animation=True)

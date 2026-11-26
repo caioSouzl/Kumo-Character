@@ -123,7 +123,12 @@ def painterly_material(mat, *, voronoi_scale=6.0, warp=0.15, strength=1.0):
     mix.blend_type = "LINEAR_LIGHT"
     mix.location = (x + 220, y)
     mix.inputs["Factor"].default_value = warp
-    nt.links.new(geo.outputs["Normal"], mix.inputs["A"])
+    # normal em espaço do objeto: as pinceladas giram junto com o personagem
+    to_obj = nt.nodes.new("ShaderNodeVectorTransform")
+    to_obj.vector_type, to_obj.convert_from, to_obj.convert_to = "NORMAL", "WORLD", "OBJECT"
+    to_obj.location = (x + 100, y + 150)
+    nt.links.new(geo.outputs["Normal"], to_obj.inputs[0])
+    nt.links.new(to_obj.outputs[0], mix.inputs["A"])
     nt.links.new(noise.outputs["Color"], mix.inputs["B"])
 
     vor = nt.nodes.new("ShaderNodeTexVoronoi")
@@ -137,7 +142,11 @@ def painterly_material(mat, *, voronoi_scale=6.0, warp=0.15, strength=1.0):
     norm = nt.nodes.new("ShaderNodeVectorMath")
     norm.operation = "NORMALIZE"
     norm.location = (x + 660, y)
-    nt.links.new(vor.outputs["Position"], norm.inputs[0])
+    to_world = nt.nodes.new("ShaderNodeVectorTransform")
+    to_world.vector_type, to_world.convert_from, to_world.convert_to = "NORMAL", "OBJECT", "WORLD"
+    to_world.location = (x + 560, y + 150)
+    nt.links.new(vor.outputs["Position"], to_world.inputs[0])
+    nt.links.new(to_world.outputs[0], norm.inputs[0])
 
     # mistura com a normal original (strength=1 -> só pincelada)
     blend = nt.nodes.new("ShaderNodeMix")
