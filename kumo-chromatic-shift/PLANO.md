@@ -50,6 +50,27 @@ o vermelho da boca e o resto ficam como estão.
 **Paletas** (escuro, médio, destaque, barriga), trocadas sem refazer material:
 cibernético, vulcânico, fantasma, cristal. Qualquer cor pode ser editada no grupo.
 
+**Renders:** `renders/cabeca_cibernetico.mp4` (2,5 s), `renders/sequencia.jpg`,
+`renders/paletas.jpg` (meio e fim das 4 paletas), `renders/ruido_de_borda.jpg`.
+
+## 2b. O que veio do tutorial de transição de cor (@genzanimates)
+
+A técnica dele: dois materiais num Mix Shader; a máscara é um gradiente nas
+coordenadas de um **Empty**, com **ruído misturado** antes de um ColorRamp de corte
+seco, e uma **linha brilhante** na fronteira. Mover o Empty move a transição.
+
+O que entrou no Kumo:
+
+- **`Edge Noise`** (padrão 0.08): ruído gravado na pose de repouso empurra a frente
+  da onda, deixando a faixa de energia irregular e elétrica. Fica estável quando o
+  Kumo se mexe (no tutorial o ruído "escorrega" se o objeto deforma).
+- **Origem por Empty:** `bake_attributes(origin=objeto)` faz a onda nascer no ponto
+  da pele mais perto do Empty: a cor pode começar na mão que toca um produto, no pé
+  que pisa numa plataforma etc. A distância continua sendo medida pela superfície.
+
+O que **não** entrou: a máscara em linha reta pelo espaço (a nossa segue a superfície)
+e a troca de material inteiro (a nossa troca só a cor e mantém a finalização toon).
+
 ## 3. Ajustes que o protótipo pediu
 
 1. **Pálpebras e o anel verde em volta do olho** são objetos separados. Eles herdam a

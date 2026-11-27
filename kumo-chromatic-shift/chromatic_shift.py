@@ -343,7 +343,7 @@ def chromatic_group():
     inp("Wave Width", "NodeSocketFloat", 0.18, 0.01, 1.0)
     inp("Facet Mix", "NodeSocketFloat", 0.9, 0.0, 1.0)
     inp("Facet Variation", "NodeSocketFloat", 0.5, 0.0, 2.0)
-    inp("Edge Noise", "NodeSocketFloat", 0.06, 0.0, 0.5)
+    inp("Edge Noise", "NodeSocketFloat", 0.08, 0.0, 0.5)
     inp("Energy", "NodeSocketFloat", 1.0, 0.0, 5.0)
     for name, col in zip(("Dark", "Mid", "Accent", "Belly"), PALETTES["cibernetico"]):
         inp(name, "NodeSocketColor", (*col, 1))
