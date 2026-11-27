@@ -23,6 +23,7 @@ INFO = json.load(open(os.path.join(AQUI, 'janelas_v5.json')))
 MED = json.load(open(os.path.join(OLHO, 'medicoes_olhos_novos.json')))
 V5 = '/home/user/Kumo-Character/kumo-3d-rodin/olhos-v5'; OLDTEX = '/home/user/Kumo-Character/kumo-3d-rodin/v6-dev/olhos-jogo/texturas'
 ALTURA = 0.10            # altura da calota acima do plano da abertura
+FOLGA_ABERTURA_M = 0.003   # o globo termina 3 mm além da borda da abertura, sob a pele
 EXTRA_GLOBO = 36.0       # graus de calota além da abertura: cobre o giro do olhar (até 15,6° na diagonal) sem sair da pele
 FOLGA_PALP = 0.004       # a pálpebra fica 4 mm acima da calota (a faixa da borda fica a 3 mm)
 ENCONTRO = -8.0          # graus: onde as pálpebras se encontram fechadas (um pouco abaixo do meio)
@@ -289,7 +290,7 @@ for s in 'LR':
     ao.parent = rig; amo = ao.modifiers.new('Armature', 'ARMATURE'); amo.object = rig
     ao.vertex_groups.new(name='head').add(range(len(Va)), 1.0, 'REPLACE')
     R_.update(palpebra_abre_sup_graus=round(math.degrees(abre_sup), 1), palpebra_abre_inf_graus=round(math.degrees(abre_inf), 1), driver=list(drv))
-    DADOS[s] = dict(Cs=Cs, zw=zw, Mw=Mw, U0=U0, U1=U1, den=den); REP[s] = R_
+    DADOS[s] = dict(Cs=Cs, zw=zw, Mw=Mw, U0=U0, U1=U1, den=den, cm=cm, rb=rb_at, r_med=r_med, a=a); REP[s] = R_
 
 # ---------- aparo: faces do globo e da faixa que, além da abertura, ficam por fora da pele (bochecha que recua)
 from mathutils.bvhtree import BVHTree
@@ -327,7 +328,11 @@ for s in 'LR':
         def fora(v):
             p = o.matrix_world @ v.co
             ang = (p - Cs).normalized().angle(zw)
-            if parado: return ang > ang_ab + math.radians(4)     # globo parado: basta a abertura e uma folga sob a pele
+            if parado:   # globo parado: acompanha o formato da abertura (elipse), com uma folga sob a pele
+                if ang > ang_ab + math.radians(8): return True
+                q = DADOS[s]['Mw'].inverted() @ p; du = (q.x + 1) / 2 - DADOS[s]['cm'][0]; dv = (q.y + 1) / 2 - DADOS[s]['cm'][1]
+                folga = FOLGA_ABERTURA_M * DADOS[s]['r_med'] / DADOS[s]['a']          # metros -> unidades da máscara
+                return math.hypot(du, dv) > float(DADOS[s]['rb'](math.atan2(dv, du))) + folga
             if gira:
                 if ang > ang_ab + math.radians(GAZE_DEG * 1.414 + 2): return True     # globo: o que nunca chega à abertura (o olhar na diagonal vai a 15,6°)
                 qs = [Cs + R @ (p - Cs) for R in poses]
