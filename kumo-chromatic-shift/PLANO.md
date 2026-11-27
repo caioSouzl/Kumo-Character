@@ -113,6 +113,12 @@ e a troca de material inteiro (a nossa troca só a cor e mantém a finalização
   0, 6, 12 e 18 da caminhada.
 - **Tempo:** ativação ~0,4 s → onda ~1,6 s → faíscas ~0,4 s.
 
+- **Cauda:** com a câmera girada 90° (`--cam-angle 90`) a espiral aparece; ela é a
+  última a virar, da base até a ponta enrolada.
+
+Renders da fase 2: `renders/corpo_cibernetico.mp4` (3 s), `renders/corpo_sequencia.jpg`,
+`renders/corpo_paletas.jpg`.
+
 Instalar no arquivo de produção continua dependendo da sua aprovação.
 
 ## 7. Decisões antigas (respondidas acima)
