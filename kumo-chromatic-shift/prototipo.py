@@ -81,7 +81,11 @@ c, size = (lo + hi) / 2, max(hi - lo)
 cam = bpy.data.objects.new("cam_cs", bpy.data.cameras.new("cam_cs")); sc.collection.objects.link(cam)
 sc.camera = cam; cam.data.lens = 50
 k = 2.25 if REGION == "head" else 1.55
-cam.location = c + Vector((-size * k * 0.42, -size * k, size * 0.3 * k / 2.25))
+import math
+off = Vector((-size * k * 0.42, -size * k, size * 0.3 * k / 2.25))
+ang = math.radians(float(arg("--cam-angle", 0)))  # gira a câmera em volta do Kumo
+off = Vector((off.x * math.cos(ang) - off.y * math.sin(ang), off.x * math.sin(ang) + off.y * math.cos(ang), off.z))
+cam.location = c + off
 cam.rotation_euler = (c + Vector((0, 0, -size * 0.08)) - cam.location).to_track_quat("-Z", "Y").to_euler()
 w = sc.world or bpy.data.worlds.new("w"); sc.world = w
 w.use_nodes = True
@@ -117,6 +121,14 @@ if "--quick" in argv:  # compara o ruído de borda no meio da onda
         for m in cs_mats:
             m.node_tree.nodes["CS"].inputs["Edge Noise"].default_value = en
         shot(f"edge_{en:.2f}.png", 0.45, 0, 0, "cibernetico")
+
+if "--angles" in argv:  # acha o ângulo que mostra a cauda
+    for a in (0, 45, 90, 135):
+        off2 = Vector((off.x * math.cos(math.radians(a)) - off.y * math.sin(math.radians(a)),
+                       off.x * math.sin(math.radians(a)) + off.y * math.cos(math.radians(a)), off.z))
+        cam.location = c + off2
+        cam.rotation_euler = (c + Vector((0, 0, -size * 0.08)) - cam.location).to_track_quat("-Z", "Y").to_euler()
+        shot(f"ang_{a:03d}.png", 0.8, 0, 0, "cibernetico")
 
 if "--walkcheck" in argv:  # onda parada no meio enquanto o Kumo anda
     walk = bpy.data.actions.get("Caminhar")

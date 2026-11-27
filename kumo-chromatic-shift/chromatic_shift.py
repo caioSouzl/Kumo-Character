@@ -286,7 +286,11 @@ def bake_followers(skin, objects, uniform=("KumoOlho_Iris", "KumoOlho_Aro")):
             me.attributes["cs_facet_t"].data.foreach_set("value", [vd[0]] * len(me.polygons))
         else:
             me.attributes["cs_facet_t"].data.foreach_set("value", [ft[i] for i in near])
-        me.attributes["cs_facet_rand"].data.foreach_set("value", [fr[i] for i in near])
+        if ob.name.startswith(tuple(uniform)):
+            # peça que vira inteira não solta faísca (acenderia o olho todo)
+            me.attributes["cs_facet_rand"].data.foreach_set("value", [0.0] * len(me.polygons))
+        else:
+            me.attributes["cs_facet_rand"].data.foreach_set("value", [fr[i] for i in near])
         done.append(ob.name)
     return done
 
