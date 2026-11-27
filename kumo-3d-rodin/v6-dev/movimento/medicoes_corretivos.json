@@ -1,67 +1,67 @@
 {
  "antes": {
-  "cabeca_cima_55": 36,
-  "cabeca_baixo_55": 16,
-  "cabeca_lado_45_E": 56,
-  "cabeca_lado_45_D": 41,
-  "cabeca_girar_70": 9,
-  "costas_frente_50": 15,
-  "costas_tras_40": 11,
-  "costas_lado_40": 12,
-  "costas_torcer_40": 7
+  "cabeca_cima_55": 31,
+  "cabeca_baixo_55": 8,
+  "cabeca_lado_45_E": 47,
+  "cabeca_lado_45_D": 32,
+  "cabeca_girar_70": 5,
+  "costas_frente_50": 8,
+  "costas_tras_40": 4,
+  "costas_lado_40": 6,
+  "costas_torcer_40": 6
  },
  "escolha": {
   "corr_trapezio.L": {
    "deslocamento_m": 0.09,
    "sinal": -1,
-   "cruzamentos": 42
+   "cruzamentos": 34
   },
   "corr_trapezio.R": {
    "deslocamento_m": 0.12,
    "sinal": 1,
-   "cruzamentos": 28
+   "cruzamentos": 17
   },
   "corr_borda.L": {
-   "deslocamento_m": 0.12,
+   "deslocamento_m": 0.03,
    "sinal": 1,
-   "cruzamentos": 18
+   "cruzamentos": 16
   },
   "corr_borda.R": {
-   "deslocamento_m": 0.06,
+   "deslocamento_m": 0.03,
    "sinal": 1,
-   "cruzamentos": 6
+   "cruzamentos": 8
   },
   "corr_nuca": {
    "deslocamento_m": 0.0,
    "sinal": 1,
-   "cruzamentos": 32
+   "cruzamentos": 30
   },
   "corr_borda_tras": {
    "deslocamento_m": 0.12,
    "sinal": -1,
-   "cruzamentos": 14
-  },
-  "corr_garganta": {
-   "deslocamento_m": 0.03,
-   "sinal": 1,
    "cruzamentos": 4
   },
-  "corr_lombar": {
-   "deslocamento_m": 0.12,
+  "corr_garganta": {
+   "deslocamento_m": 0.06,
    "sinal": 1,
-   "cruzamentos": 6
+   "cruzamentos": 5
+  },
+  "corr_lombar": {
+   "deslocamento_m": 0.06,
+   "sinal": 1,
+   "cruzamentos": 4
   }
  },
  "depois": {
-  "cabeca_cima_55": 10,
-  "cabeca_baixo_55": 13,
-  "cabeca_lado_45_E": 14,
-  "cabeca_lado_45_D": 12,
-  "cabeca_girar_70": 12,
-  "costas_frente_50": 17,
-  "costas_tras_40": 12,
-  "costas_lado_40": 9,
-  "costas_torcer_40": 8
+  "cabeca_cima_55": 5,
+  "cabeca_baixo_55": 5,
+  "cabeca_lado_45_E": 4,
+  "cabeca_lado_45_D": 5,
+  "cabeca_girar_70": 5,
+  "costas_frente_50": 8,
+  "costas_tras_40": 4,
+  "costas_lado_40": 6,
+  "costas_torcer_40": 4
  },
  "parametros": {
   "corr_trapezio.L": {
@@ -122,9 +122,9 @@
     0.0
    ],
    "para_max": [
-    3.4106050554155156e-15,
-    0.11999999731779099,
-    -4.846761293344337e-29
+    8.526512638538789e-16,
+    0.029999999329447746,
+    -1.2116903233360843e-29
    ]
   },
   "corr_borda.R": {
@@ -143,9 +143,9 @@
     0.0
    ],
    "para_max": [
-    1.7053025277077578e-15,
-    0.05999999865889549,
-    -2.4233806466721686e-29
+    8.526512638538789e-16,
+    0.029999999329447746,
+    -1.2116903233360843e-29
    ]
   },
   "corr_nuca": {
@@ -207,8 +207,8 @@
    ],
    "para_max": [
     0.0,
-    -0.025724787265062332,
-    -0.015434873290359974
+    -0.051449574530124664,
+    -0.030869746580719948
    ]
   },
   "corr_lombar": {
@@ -229,7 +229,7 @@
    "para_max": [
     0.0,
     0.0,
-    0.11999999731779099
+    0.05999999865889549
    ]
   }
  }
