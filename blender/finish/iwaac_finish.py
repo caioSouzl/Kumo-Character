@@ -174,8 +174,13 @@ def _base_color_source(nt, bsdf):
 
 
 def paint_shading(mat, *, dabs=0.12, shadow_tint=(0.36, 0.22, 0.72), shadow_mix=0.85,
-                  steps=(0.22, 0.55), rim=1.6, rim_color=(1.0, 0.62, 0.35)):
+                  steps=(0.22, 0.55), rim=1.6, rim_color=(1.0, 0.62, 0.35),
+                  cel=0.0, cel_gain=1.0):
     """Sombra tingida em degraus + variação de cor por pincelada + borda quente.
+
+    cel (0..1): quanto o lado iluminado mostra a cor da textura em vez da
+    luz calculada. 0 = objeto (cone); ~0.6 = personagem estilo anime, que
+    fica com a cor da textura no claro e só a sombra muda de tom.
 
     Precisa rodar depois de painterly_material (usa o mesmo Voronoi).
     Principled -> Shader to RGB -> luminância -> ColorRamp (degrau suave):
@@ -244,12 +249,29 @@ def paint_shading(mat, *, dabs=0.12, shadow_tint=(0.36, 0.22, 0.72), shadow_mix=
     L.new(s2r.outputs["Color"], shadow.inputs["A"])
     L.new(tint.outputs["Result"], shadow.inputs["B"])
 
+    lit = s2r.outputs["Color"]
+    if cel > 0:
+        gain = nt.nodes.new("ShaderNodeMix")
+        gain.data_type = "RGBA"
+        gain.blend_type = "MULTIPLY"
+        gain.inputs["Factor"].default_value = 1.0
+        gain.inputs["B"].default_value = (cel_gain, cel_gain, cel_gain, 1)
+        gain.location = (x + 200, y + 450)
+        L.new(base, gain.inputs["A"])
+        celmix = nt.nodes.new("ShaderNodeMix")
+        celmix.data_type = "RGBA"
+        celmix.inputs["Factor"].default_value = cel
+        celmix.location = (x + 420, y + 450)
+        L.new(s2r.outputs["Color"], celmix.inputs["A"])
+        L.new(gain.outputs["Result"], celmix.inputs["B"])
+        lit = celmix.outputs["Result"]
+
     toon = nt.nodes.new("ShaderNodeMix")
     toon.data_type = "RGBA"
     toon.location = (x + 650, y)
     L.new(ramp.outputs["Color"], toon.inputs["Factor"])
     L.new(shadow.outputs["Result"], toon.inputs["A"])
-    L.new(s2r.outputs["Color"], toon.inputs["B"])
+    L.new(lit, toon.inputs["B"])
     col = toon.outputs["Result"]
 
     # 3) borda quente (rim) usando a normal pincelada
@@ -646,22 +668,108 @@ def compositor(scene, *, boil=True, displace_px=3.0, bloom=0.37, kuwahara=4,
 # ------------------------------------------------------------------ apply
 
 
+# Materiais que ficam limpos (olhos precisam de leitura nítida).
+SKIP_MATERIALS = ("olho", "iris", "globo", "aro", "anel", "eye", "pupil", "cornea")
+# Materiais de contorno já existentes: nunca recebem luz nem pincelada.
+OUTLINE_NAMES = ("outline", "contorno")
+
+
+def _is_outline_mat(mat):
+    n = mat.name.lower()
+    return mat.name == f"{TAG}_outline" or any(k in n for k in OUTLINE_NAMES)
+
+
+def light_flat_material(mat):
+    """Material chapado (só Emission) -> Principled que recebe luz.
+
+    Muitos personagens toon (o Kumo, por exemplo) usam Emission com a textura
+    para ficarem sem sombra. A finalização precisa de luz, então a cor que
+    alimentava o Emission passa a ser a cor base de um Principled.
+    """
+    if not mat or not mat.node_tree or _is_outline_mat(mat):
+        return False
+    nt = mat.node_tree
+    if any(n.type == "BSDF_PRINCIPLED" for n in nt.nodes):
+        return False
+    out = next((n for n in nt.nodes if n.type == "OUTPUT_MATERIAL" and n.is_active_output), None)
+    if out is None or not out.inputs["Surface"].is_linked:
+        return False
+    em = out.inputs["Surface"].links[0].from_node
+    if em.type != "EMISSION":
+        return False
+    bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
+    bsdf.location = (em.location.x, em.location.y - 300)
+    c = em.inputs["Color"]
+    if c.is_linked:
+        nt.links.new(c.links[0].from_socket, bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = tuple(c.default_value)
+    _sock(bsdf, "Roughness", 0.7)
+    nt.links.new(bsdf.outputs[0], out.inputs["Surface"])
+    return True
+
+
+def shadowless_outline(mat):
+    """Contorno existente (casca invertida) não pode fazer sombra no corpo."""
+    if not mat or not mat.node_tree or mat.node_tree.nodes.get(f"{TAG}_noshadow"):
+        return False
+    nt = mat.node_tree
+    out = next((n for n in nt.nodes if n.type == "OUTPUT_MATERIAL" and n.is_active_output), None)
+    if out is None or not out.inputs["Surface"].is_linked:
+        return False
+    src = out.inputs["Surface"].links[0].from_socket
+    lp = nt.nodes.new("ShaderNodeLightPath")
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    mix.name = f"{TAG}_noshadow"
+    mix.location = (out.location.x - 200, out.location.y - 200)
+    nt.links.new(lp.outputs["Is Shadow Ray"], mix.inputs["Fac"])
+    nt.links.new(src, mix.inputs[1])
+    nt.links.new(tr.outputs[0], mix.inputs[2])
+    nt.links.new(mix.outputs[0], out.inputs["Surface"])
+    if hasattr(mat, "use_transparent_shadow"):
+        mat.use_transparent_shadow = True
+    return True
+
+
+def _has_outline(obj):
+    if any(k in obj.name.lower() for k in OUTLINE_NAMES):
+        return True
+    if any(sl.material and _is_outline_mat(sl.material) and sl.material.name != f"{TAG}_outline"
+           for sl in obj.material_slots):
+        return True  # o objeto já tem um esquema de contorno próprio
+    return any(m.type == "SOLIDIFY" and m.use_flip_normals for m in obj.modifiers)
+
+
 def apply(scene=None, *, materials=True, shading=True, outlines=True, comp=True,
-          lights=False, render=True, shading_kw=None, **comp_kw):
+          lights=False, render=True, light_flat=True, shading_kw=None,
+          skip_materials=SKIP_MATERIALS, **comp_kw):
     scene = scene or bpy.context.scene
     if render:
         setup_render(scene)
-    done = {"materials": 0, "outlines": 0}
+    done = {"materials": 0, "flat_lit": 0, "outlines": 0}
     for ob in scene.objects:
-        if ob.type != "MESH":
+        if ob.type != "MESH" or ob.hide_render:
             continue
+        if any(k in ob.name.lower() for k in OUTLINE_NAMES):
+            ob.visible_shadow = False
+        for slot in ob.material_slots:
+            if slot.material and _is_outline_mat(slot.material) \
+                    and slot.material.name != f"{TAG}_outline":
+                shadowless_outline(slot.material)
         if materials:
             for slot in ob.material_slots:
-                if slot.material and slot.material.name != f"{TAG}_outline":
-                    done["materials"] += painterly_material(slot.material)
-                    if shading:
-                        paint_shading(slot.material, **(shading_kw or {}))
-        if outlines:
+                m = slot.material
+                if not m or _is_outline_mat(m):
+                    continue
+                if any(k in m.name.lower() for k in skip_materials):
+                    continue
+                if light_flat:
+                    done["flat_lit"] += light_flat_material(m)
+                done["materials"] += painterly_material(m)
+                if shading:
+                    paint_shading(m, **(shading_kw or {}))
+        if outlines and not _has_outline(ob):
             done["outlines"] += add_outline(ob)
     if lights:
         light_rig(scene)

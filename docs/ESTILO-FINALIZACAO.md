@@ -124,6 +124,30 @@ Dentro do Blender: `import iwaac_finish as f; f.apply(bpy.context.scene, kuwahar
 No material: `painterly_material(mat, voronoi_scale=6, warp=0.15, strength=1)`.
 Escala menor = manchas maiores. `strength` < 1 suaviza para personagens (rosto).
 
+## Personagem (o Kumo)
+
+![Kumo antes e depois](img/kumo_antes_depois.jpg)
+
+```bash
+blender kumo_v8_movimento.blend -b --python blender/finish/render_kumo.py -- \
+    --out /pasta/saida --textures <pasta kumo-3d-rodin> --action Pose_Apresentacao \
+    --shading '{"cel": 0.3}'
+# --anim renderiza a ação inteira (Caminhar, Correr, Pular...)
+```
+
+O que o script faz sozinho num personagem:
+
+- **Material chapado vira material com luz.** A pele do Kumo é só Emission com a
+  textura (sem sombra). `light_flat_material()` passa essa cor para um Principled.
+- **Olhos ficam limpos.** Materiais com `olho`, `iris`, `globo`, `aro`, `anel`
+  no nome não recebem pincelada nem sombra tingida.
+- **Contorno próprio é respeitado.** Objetos com Solidify invertido ou material
+  `outline`/`contorno` não ganham o contorno de Geometry Nodes.
+- **Contorno não faz sombra.** Cascas de contorno que envolvem o corpo escureciam
+  o personagem inteiro; agora são transparentes para raios de sombra.
+- **`cel`** (0 a 1): quanto o lado claro mostra a cor da textura em vez da luz
+  calculada. 0.3 no Kumo; 0.6 ou mais para um visual mais anime e chapado.
+
 ## O que ainda é manual
 
 - **Grease Pencil por cima** (riscos, "!?", faíscas): desenhar por cena.
