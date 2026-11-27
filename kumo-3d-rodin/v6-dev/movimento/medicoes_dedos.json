@@ -1,0 +1,14 @@
+{
+ "L": {
+  "faces_antes": 187,
+  "vertices_novos": 545,
+  "vertices_suavizados": 672,
+  "vertices_fixos": 36
+ },
+ "R": {
+  "faces_antes": 188,
+  "vertices_novos": 547,
+  "vertices_suavizados": 686,
+  "vertices_fixos": 29
+ }
+}

@@ -39,17 +39,39 @@ for s in 'LR':
     q_mao = sum(palma.values(), Vector()).normalized()
     palma[f'hand.{s}'] = q_mao; palma[f'metacarpo.{s}'] = q_mao
     vg = {g.index: g.name for g in o.vertex_groups if g.name in palma}
-    n_s = 0
+    # 1) faces da mão e se a normal aponta para o lado em que os dedos fecham
+    mao = {}; palma_ini = set()
     for pl in me.polygons:
         pesos = {}
         for v in pl.vertices:
             for g in me.vertices[v].groups:
                 if g.group in vg: pesos[vg[g.group]] = pesos.get(vg[g.group], 0.0) + g.weight
         if not pesos or sum(pesos.values()) / len(pl.vertices) < 0.6: continue          # só faces da mão
-        osso = max(pesos, key=pesos.get)
-        if pl.normal.dot(palma[osso]) > 0.25:
-            for l in pl.loop_indices: uv.data[l].uv = uv_barriga
-            n_s += 1
+        osso = max(pesos, key=pesos.get); mao[pl.index] = osso
+        nm = sum((me.vertices[v].normal for v in pl.vertices), Vector()).normalized()     # normal suave (média dos vértices): borda menos serrilhada
+        if nm.dot(palma[osso]) > 0.25: palma_ini.add(pl.index)
+    # 2) maioria entre vizinhos (arestas): tira ilhas e fecha buracos, para a borda da cor não ficar serrilhada
+    viz = {i: set() for i in mao}
+    aresta = {}
+    for i in mao:
+        for k in range(len(me.polygons[i].vertices)):
+            a, b = me.polygons[i].vertices[k], me.polygons[i].vertices[(k + 1) % len(me.polygons[i].vertices)]
+            aresta.setdefault(frozenset((a, b)), []).append(i)
+    for fs in aresta.values():
+        if len(fs) == 2: viz[fs[0]].add(fs[1]); viz[fs[1]].add(fs[0])
+    palma_set = set(palma_ini)
+    for _ in range(8):
+        novo = set()
+        for i in mao:
+            n = len(viz[i]); c = sum(1 for j in viz[i] if j in palma_set)
+            if n and c / n >= 0.6: novo.add(i)
+            elif n and c / n <= 0.4: pass
+            elif i in palma_set: novo.add(i)
+        palma_set = novo
+    n_s = 0
+    for i in palma_set:
+        for l in me.polygons[i].loop_indices: uv.data[l].uv = uv_barriga
+        n_s += 1
     REP[s] = dict(faces_da_palma=n_s); total += n_s
 REP['cor_palma_rgb'] = COR_PALMA
 json.dump(REP, open(REL, 'w'), indent=1); print('MAOS', REP)

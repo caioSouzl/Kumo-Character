@@ -102,10 +102,22 @@ As três são animadas no lugar (o jogo move o personagem), a 24 quadros por seg
 - **Corretivos:** a página faz a mesma conta do Blender. Contra o que o Blender gravou no pulo, a diferença é de 0 mm.
 - **Losangos de piscar:** em cima de cada olho. Arrastar para baixo fecha; dois toques abrem ou fecham de uma vez.
 
+## Ajustes de 27/11 (depois do teste do Caio)
+
+- **Olho:** o globo agora termina na forma da abertura (elipse), 3 mm além da borda e sob a pele (`../olhos-novos/src/olhos_calota.py`).
+- **Axila (`src/axila.py`):** o buraco preto do aceno era um pedaço da pele sob o braço apontando para um trecho preto da textura. Pesos de pontos colados igualados, pesos suavizados em volta da axila e UV corrigido.
+- **Dedos (`src/dedos.py`):** a malha da mão ganhou uma subdivisão e suavização que mantém o volume (Taubin); os dedos deixam de ser blocos. Pesos, UV, shape keys (mão fechada e ombros, com os mesmos deltas) e o encaixe no punho continuam. Mão fechada conferida em render.
+- **Palma (`src/maos.py`):** a palma e a parte de baixo dos dedos usam a cor da barriga, só pelo UV (a textura oficial não muda).
+- **Ordem:** cauda → axila → dedos → maos → corretivos → ik → animacoes → exportar.
+- **Exportação:** GLB, FBX e Central reimportados com até 0,01 mm de diferença.
+
 ## Para refazer (a partir de `movimento/`)
 
 ```
 blender --background ../olhos-novos/calota/kumo_v7_calota.blend --python src/cauda.py -- $PWD/kumo_v8_movimento.blend $PWD/medicoes_cauda.json
+blender --background kumo_v8_movimento.blend --python src/axila.py -- $PWD/medicoes_axila.json
+DEDOS_PASSOS=8 blender --background kumo_v8_movimento.blend --python src/dedos.py -- $PWD/medicoes_dedos.json
+blender --background kumo_v8_movimento.blend --python src/maos.py -- $PWD/medicoes_maos.json
 blender --background kumo_v8_movimento.blend --python src/corretivos.py -- $PWD/medicoes_corretivos.json
 blender --background kumo_v8_movimento.blend --python src/ik.py -- $PWD/medicoes_ik.json
 blender --background kumo_v8_movimento.blend --python src/animacoes.py -- $PWD/medicoes_animacoes.json
