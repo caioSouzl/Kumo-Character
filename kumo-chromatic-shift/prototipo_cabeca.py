@@ -100,6 +100,12 @@ if "--stills" in argv:
         shot(f"pal_{pal}_meio.png", 0.5, 0, 0, pal)
         shot(f"pal_{pal}_fim.png", 1.0, 0, 0, pal)
 
+if "--quick" in argv:  # compara o ruído de borda no meio da onda
+    for en in (0.0, 0.08, 0.18):
+        for m in cs_mats:
+            m.node_tree.nodes["CS"].inputs["Edge Noise"].default_value = en
+        shot(f"edge_{en:.2f}.png", 0.45, 0, 0, "cibernetico")
+
 if "--anim" in argv:
     palette(arg("--palette", "cibernetico"))
     sc.frame_start, sc.frame_end = 1, 60

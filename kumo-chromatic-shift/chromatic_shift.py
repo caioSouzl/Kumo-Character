@@ -135,7 +135,21 @@ def _facets(bm, angle_deg):
     return label, n
 
 
-def bake_attributes(obj, *, region="head", facet_angle=22.0, seed=7):
+def nearest_vertex(obj, target):
+    """Vértice da pele mais perto de um objeto (Empty) na pose atual."""
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = obj.evaluated_get(dg)
+    me = ev.to_mesh()
+    n = len(obj.data.vertices)  # o Solidify acrescenta vértices depois destes
+    p = target.matrix_world.translation
+    mw = obj.matrix_world
+    best = min(range(n), key=lambda i: (mw @ me.vertices[i].co - p).length_squared)
+    ev.to_mesh_clear()
+    return best
+
+
+def bake_attributes(obj, *, region="head", facet_angle=22.0, seed=7, origin=None,
+                    noise_scale=9.0):
     """Grava cs_dist / cs_facet_t / cs_facet_rand na malha (pose de repouso).
 
     region="head": a distância é normalizada pela cabeça (protótipo: a onda
@@ -146,7 +160,12 @@ def bake_attributes(obj, *, region="head", facet_angle=22.0, seed=7):
     bm = bmesh.new()
     bm.from_mesh(me)  # malha sem modificadores = pose de repouso
     bm.normal_update()
-    src = forehead_vertex(obj)
+    if origin is None:
+        src = forehead_vertex(obj)
+    elif isinstance(origin, int):
+        src = origin
+    else:  # um objeto: a onda nasce no ponto da pele mais perto dele
+        src = nearest_vertex(obj, origin)
     dist = _geodesic(bm, src)
     finite = [d for d in dist if d < math.inf]
     if region == "head":
@@ -172,11 +191,17 @@ def bake_attributes(obj, *, region="head", facet_angle=22.0, seed=7):
     ft = [acc[k] / max(cnt[k], 1) for k in range(n)]
     bm.free()
 
-    for name, dom in (("cs_dist", "POINT"), ("cs_facet_t", "FACE"), ("cs_facet_rand", "FACE")):
+    from mathutils import noise as mnoise
+    sz = max(obj.dimensions) / max(max(obj.scale), 1e-6)
+    nz = [0.5 + 0.5 * mnoise.noise(v.co * (noise_scale / sz)) for v in me.vertices]
+
+    for name, dom in (("cs_dist", "POINT"), ("cs_noise", "POINT"),
+                      ("cs_facet_t", "FACE"), ("cs_facet_rand", "FACE")):
         if name in me.attributes:
             me.attributes.remove(me.attributes[name])
         me.attributes.new(name, "FLOAT", dom)
     me.attributes["cs_dist"].data.foreach_set("value", dn)
+    me.attributes["cs_noise"].data.foreach_set("value", nz)
     me.attributes["cs_facet_t"].data.foreach_set("value", [ft[label[i]] for i in range(len(me.polygons))])
     me.attributes["cs_facet_rand"].data.foreach_set("value", [rnd[label[i]] for i in range(len(me.polygons))])
     sizes = sorted(cnt, reverse=True)
@@ -191,6 +216,9 @@ def bake_followers(skin, objects):
     mw = skin.matrix_world
     dist = [0.0] * len(sme.vertices)
     sme.attributes["cs_dist"].data.foreach_get("value", dist)
+    nzs = [0.5] * len(sme.vertices)
+    if "cs_noise" in sme.attributes:
+        sme.attributes["cs_noise"].data.foreach_get("value", nzs)
     ft = [0.0] * len(sme.polygons)
     fr = [0.0] * len(sme.polygons)
     sme.attributes["cs_facet_t"].data.foreach_get("value", ft)
@@ -207,13 +235,16 @@ def bake_followers(skin, objects):
     for ob in objects:
         me = ob.data
         ow = ob.matrix_world
-        vd = [dist[kv.find(ow @ v.co)[1]] for v in me.vertices]
+        vi = [kv.find(ow @ v.co)[1] for v in me.vertices]
+        vd = [dist[i] for i in vi]
         near = [kf.find(ow @ p.center)[1] for p in me.polygons]
-        for name, dom in (("cs_dist", "POINT"), ("cs_facet_t", "FACE"), ("cs_facet_rand", "FACE")):
+        for name, dom in (("cs_dist", "POINT"), ("cs_noise", "POINT"),
+                          ("cs_facet_t", "FACE"), ("cs_facet_rand", "FACE")):
             if name in me.attributes:
                 me.attributes.remove(me.attributes[name])
             me.attributes.new(name, "FLOAT", dom)
         me.attributes["cs_dist"].data.foreach_set("value", vd)
+        me.attributes["cs_noise"].data.foreach_set("value", [nzs[i] for i in vi])
         me.attributes["cs_facet_t"].data.foreach_set("value", [ft[i] for i in near])
         me.attributes["cs_facet_rand"].data.foreach_set("value", [fr[i] for i in near])
         done.append(ob.name)
@@ -312,6 +343,7 @@ def chromatic_group():
     inp("Wave Width", "NodeSocketFloat", 0.18, 0.01, 1.0)
     inp("Facet Mix", "NodeSocketFloat", 0.9, 0.0, 1.0)
     inp("Facet Variation", "NodeSocketFloat", 0.5, 0.0, 2.0)
+    inp("Edge Noise", "NodeSocketFloat", 0.06, 0.0, 0.5)
     inp("Energy", "NodeSocketFloat", 1.0, 0.0, 5.0)
     for name, col in zip(("Dark", "Mid", "Accent", "Belly"), PALETTES["cibernetico"]):
         inp(name, "NodeSocketColor", (*col, 1))
@@ -341,7 +373,9 @@ def chromatic_group():
     jitter = B.math("MULTIPLY", B.math("MULTIPLY", B.math("SUBTRACT", B.attr("cs_facet_rand"), 0.5),
                                        I["Facet Variation"]), W)
     d_f = B.math("ADD", B.attr("cs_facet_t"), jitter)
-    d_v = B.attr("cs_dist")
+    # borda orgânica: ruído (gravado na pose de repouso) empurra a frente
+    d_v = B.math("ADD", B.attr("cs_dist"),
+                 B.math("MULTIPLY", B.math("SUBTRACT", B.attr("cs_noise"), 0.5), I["Edge Noise"]))
     fm = I["Facet Mix"]
     d = B.math("ADD", B.math("MULTIPLY", d_v, B.math("SUBTRACT", 1.0, fm)), B.math("MULTIPLY", d_f, fm))
     # facetas viram rápido (saltos), o modo contínuo usa a largura toda
