@@ -1,6 +1,6 @@
 # Kumo: Chromatic Shift (protótipo da cabeça)
 
-Status: **protótipo pronto, aguardando aprovação.** Nenhum arquivo de produção foi
+Status: **fase 2 (corpo inteiro) em protótipo, com as decisões do Caio aplicadas.** Nenhum arquivo de produção foi
 alterado. Os scripts abrem o `kumo_v8_movimento.blend` e trabalham numa cópia em memória;
 renders e o .blend de teste ficam nesta pasta.
 
@@ -92,7 +92,30 @@ e a troca de material inteiro (a nossa troca só a cor e mantém a finalização
 5. Jogo (Godot): o efeito é de render no Blender. Levar para o jogo é um port de
    shader à parte (os atributos exportam como cor de vértice / UV extra).
 
-## 5. Decisões que são suas
+## 5. Decisões do Caio (27/11)
+
+1. **Barriga não muda.** `Belly Shift` = 0: a barriga fica bege e não recebe nem o
+   reflexo violeta nem a faixa de energia.
+2. **Íris e aro laranja mudam de cor.** `Eye Mode` = 1 nos materiais do olho: o laranja
+   vira o tom da paleta; pupila preta e branco ficam. Íris e aro de cada olho viram
+   juntos, no tempo do anel do mesmo olho (senão a faixa riscava o olho e um olho
+   mudava antes do outro).
+3. **Facetas piscando bastam** como faíscas residuais (sem partículas).
+
+## 6. Fase 2: corpo inteiro (protótipo, ainda fora da produção)
+
+- `--region body`: a onda vai da testa até a ponta da cauda.
+- **Boca:** a abertura separava os lábios e a mandíbula ficava verde por último.
+  Pontes curtas (4 cm) entre pontos próximos, **só dentro de cabeça e mandíbula**,
+  deixam a onda atravessar a boca. Sem essa restrição, a ponte ligava o queixo ao
+  peito (a cabeça do Kumo encosta nos ombros) e a onda pulava o pescoço.
+- **Estabilidade:** com a onda parada no meio, a fronteira não se move nos quadros
+  0, 6, 12 e 18 da caminhada.
+- **Tempo:** ativação ~0,4 s → onda ~1,6 s → faíscas ~0,4 s.
+
+Instalar no arquivo de produção continua dependendo da sua aprovação.
+
+## 7. Decisões antigas (respondidas acima)
 
 - A barriga também muda de cor (hoje muda para o tom "barriga" da paleta) ou fica bege?
 - Os olhos devem refletir a nova cor (o aro laranja assumir o destaque da paleta) ou
@@ -103,10 +126,10 @@ e a troca de material inteiro (a nossa troca só a cor e mantém a finalização
 ## Arquivos
 
 - `chromatic_shift.py`: o sistema (atributos, node group, instalação, paletas)
-- `prototipo_cabeca.py`: abre o Kumo, aplica efeito + finalização, renderiza
+- `prototipo.py`: abre o Kumo, aplica efeito + finalização, renderiza
 - `renders/`: sequência, paletas e animação do protótipo
 
 ```bash
-blender kumo_v8_movimento.blend -b --python kumo-chromatic-shift/prototipo_cabeca.py -- \
+blender kumo_v8_movimento.blend -b --python kumo-chromatic-shift/prototipo.py -- \
     --out <pasta> --textures <pasta kumo-3d-rodin> --stills      # ou --anim
 ```

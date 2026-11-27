@@ -92,19 +92,37 @@ def forehead_vertex(obj):
     return best if best is not None else max(range(len(me.vertices)), key=lambda i: me.vertices[i].co.z)
 
 
-def _geodesic(bm, src):
+def _geodesic(bm, src, bridge=0.0, allow=None):
+    """Dijkstra pelas arestas. `bridge` (em metros) liga pontos próximos que a
+    malha separa (lábios, a boca aberta), para a onda não dar a volta."""
+    from mathutils.kdtree import KDTree
+    bm.verts.ensure_lookup_table()
+    extra = [[] for _ in bm.verts]
+    if bridge > 0:
+        kd = KDTree(len(bm.verts))
+        for v in bm.verts:
+            kd.insert(v.co, v.index)
+        kd.balance()
+        for v in bm.verts:
+            if allow is not None and not allow[v.index]:
+                continue
+            linked = {e.other_vert(v).index for e in v.link_edges}
+            for co, j, dd in kd.find_range(v.co, bridge):
+                if allow is not None and not allow[j]:
+                    continue
+                if j != v.index and j not in linked:
+                    extra[v.index].append((j, dd))
     dist = [math.inf] * len(bm.verts)
     dist[src] = 0.0
     heap = [(0.0, src)]
-    bm.verts.ensure_lookup_table()
     while heap:
         d, i = heapq.heappop(heap)
         if d > dist[i]:
             continue
         v = bm.verts[i]
-        for e in v.link_edges:
-            j = e.other_vert(v).index
-            nd = d + e.calc_length()
+        nbrs = [(e.other_vert(v).index, e.calc_length()) for e in v.link_edges] + extra[i]
+        for j, w in nbrs:
+            nd = d + w
             if nd < dist[j]:
                 dist[j] = nd
                 heapq.heappush(heap, (nd, j))
@@ -149,7 +167,7 @@ def nearest_vertex(obj, target):
 
 
 def bake_attributes(obj, *, region="head", facet_angle=22.0, seed=7, origin=None,
-                    noise_scale=9.0):
+                    noise_scale=9.0, bridge=0.04):
     """Grava cs_dist / cs_facet_t / cs_facet_rand na malha (pose de repouso).
 
     region="head": a distância é normalizada pela cabeça (protótipo: a onda
@@ -166,7 +184,9 @@ def bake_attributes(obj, *, region="head", facet_angle=22.0, seed=7, origin=None
         src = origin
     else:  # um objeto: a onda nasce no ponto da pele mais perto dele
         src = nearest_vertex(obj, origin)
-    dist = _geodesic(bm, src)
+    # pontes só dentro da cabeça/mandíbula (a boca); a cabeça encosta no peito
+    hj = [a + b for a, b in zip(_group_weights(obj, "head"), _group_weights(obj, "jaw"))]
+    dist = _geodesic(bm, src, bridge=bridge, allow=[w > 0.5 for w in hj])
     finite = [d for d in dist if d < math.inf]
     if region == "head":
         hw = _group_weights(obj, "head")
@@ -209,8 +229,12 @@ def bake_attributes(obj, *, region="head", facet_angle=22.0, seed=7, origin=None
             "faces_per_facet": round(len(me.polygons) / n, 1)}
 
 
-def bake_followers(skin, objects):
-    """Peças separadas (pálpebras...) herdam a onda da face de pele mais próxima."""
+def bake_followers(skin, objects, uniform=("KumoOlho_Iris", "KumoOlho_Aro")):
+    """Peças separadas (pálpebras...) herdam a onda da face de pele mais próxima.
+
+    Peças em `uniform` (íris, aro) viram de uma vez: recebem a média, senão a
+    faixa de energia atravessa o olho como um risco.
+    """
     from mathutils.kdtree import KDTree
     sme = skin.data
     mw = skin.matrix_world
@@ -238,6 +262,19 @@ def bake_followers(skin, objects):
         vi = [kv.find(ow @ v.co)[1] for v in me.vertices]
         vd = [dist[i] for i in vi]
         near = [kf.find(ow @ p.center)[1] for p in me.polygons]
+        if ob.name.startswith(tuple(uniform)) and vd:
+            # tempo do anel do mesmo olho (colado na órbita); senão a própria média
+            side = ob.name[ob.name.rfind("."):] if "." in ob.name else ""
+            anchor = bpy.data.objects.get("KumoOlho_Anel" + side)
+            if anchor is not None and "cs_dist" in anchor.data.attributes:
+                ad = [0.0] * len(anchor.data.vertices)
+                anchor.data.attributes["cs_dist"].data.foreach_get("value", ad)
+                avg = sum(ad) / len(ad)
+            else:
+                avg = sum(vd) / len(vd)
+            vd = [avg] * len(vd)
+            first = near[0] if near else 0
+            near = [first] * len(near)
         for name, dom in (("cs_dist", "POINT"), ("cs_noise", "POINT"),
                           ("cs_facet_t", "FACE"), ("cs_facet_rand", "FACE")):
             if name in me.attributes:
@@ -245,7 +282,10 @@ def bake_followers(skin, objects):
             me.attributes.new(name, "FLOAT", dom)
         me.attributes["cs_dist"].data.foreach_set("value", vd)
         me.attributes["cs_noise"].data.foreach_set("value", [nzs[i] for i in vi])
-        me.attributes["cs_facet_t"].data.foreach_set("value", [ft[i] for i in near])
+        if ob.name.startswith(tuple(uniform)) and vd:
+            me.attributes["cs_facet_t"].data.foreach_set("value", [vd[0]] * len(me.polygons))
+        else:
+            me.attributes["cs_facet_t"].data.foreach_set("value", [ft[i] for i in near])
         me.attributes["cs_facet_rand"].data.foreach_set("value", [fr[i] for i in near])
         done.append(ob.name)
     return done
@@ -345,6 +385,8 @@ def chromatic_group():
     inp("Facet Variation", "NodeSocketFloat", 0.5, 0.0, 2.0)
     inp("Edge Noise", "NodeSocketFloat", 0.08, 0.0, 0.5)
     inp("Energy", "NodeSocketFloat", 1.0, 0.0, 5.0)
+    inp("Belly Shift", "NodeSocketFloat", 0.0, 0.0, 1.0)  # 0: barriga fica bege
+    inp("Eye Mode", "NodeSocketFloat", 0.0, 0.0, 1.0)     # 1: laranja do olho também muda
     for name, col in zip(("Dark", "Mid", "Accent", "Belly"), PALETTES["cibernetico"]):
         inp(name, "NodeSocketColor", (*col, 1))
     inp("Energy Color", "NodeSocketColor", (*ENERGY, 1))
@@ -366,6 +408,12 @@ def chromatic_group():
     main = B.mix(I["Dark"], I["Mid"], B.maprange(V, 0.30, 0.85))
     target = B.mix(main, I["Accent"], spots)
     target = B.mix(target, I["Belly"], belly)
+    # olho: laranja da íris/aro vira a cor da paleta (pupila preta e branco ficam)
+    eye = B.math("MULTIPLY", B.math("MULTIPLY", B.maprange(H, 0.0, 0.03), B.maprange(H, 0.16, 0.12)),
+                 B.maprange(S, 0.30, 0.45))
+    eye = B.math("MULTIPLY", eye, I["Eye Mode"])
+    eye_target = B.mix(I["Mid"], I["Accent"], B.math("MULTIPLY", B.maprange(V, 0.5, 1.0), 0.6))
+    target = B.mix(target, eye_target, eye)
 
     # --- onda: frente, distância por faceta, máscara de transformação
     W = I["Wave Width"]
@@ -387,9 +435,11 @@ def chromatic_group():
     # só pele muda: família verde/amarela (matiz ~43°..200°) e a barriga.
     # laranja do olho, vermelho da boca etc. ficam como estão.
     skin = B.math("MULTIPLY", B.maprange(H, 0.10, 0.13), B.maprange(H, 0.58, 0.52))
-    skin = B.math("MAXIMUM", skin, belly)
+    skin = B.math("MULTIPLY", skin, B.math("SUBTRACT", 1.0, belly))       # barriga fora...
+    skin = B.math("MAXIMUM", skin, B.math("MULTIPLY", belly, I["Belly Shift"]))  # ...salvo se pedir
+    skin = B.math("MAXIMUM", skin, eye)
     color = B.mix(I["Base Color"], target, B.math("MULTIPLY", local, skin))
-    color = B.mix(color, I["Transition Color"], B.math("MULTIPLY", bell, 0.45))
+    color = B.mix(color, I["Transition Color"], B.math("MULTIPLY", B.math("MULTIPLY", bell, 0.45), skin))
     B.link(color, go.inputs["Color"])
 
     # --- brilho
@@ -398,9 +448,10 @@ def chromatic_group():
     x = B.math("DIVIDE", B.math("SUBTRACT", front, d_v), B.math("MULTIPLY", W, 0.18))
     band = B.math("EXPONENT", B.math("MULTIPLY", B.math("MULTIPLY", x, x), -1.0))
     band = B.math("MULTIPLY", band, started)
+    band = B.math("MULTIPLY", band, skin)  # a barriga não recebe a faixa
     pulse_col = B.mix(I["Energy Color"], target, 0.45)
     glow = B.add(B._scale(I["Energy Color"], B.math("MULTIPLY", band, 0.8)),
-                 B._scale(pulse_col, B.math("MULTIPLY", bell, 0.9)))
+                 B._scale(pulse_col, B.math("MULTIPLY", B.math("MULTIPLY", bell, 0.9), skin)))
     glow = B._scale(glow, I["Energy"])
     # ativação: faíscas nas facetas da crista/testa
     near = B.maprange(B.attr("cs_facet_t"), 0.12, 0.0)
